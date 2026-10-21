@@ -307,7 +307,7 @@
                 </form>
 
                 <div class="mt-6 pt-4 border-t border-slate-800 text-center">
-                    <button onclick="showAdminModal()" class="text-xs text-slate-500 hover:text-amber-400">
+                    <button onclick="showAdminModal()" class="text-xs text-slate-500 hover:text-amber-400 font-semibold">
                         <i class="fa-solid fa-user-shield"></i> Ingia kama Admin
                     </button>
                 </div>
@@ -407,8 +407,8 @@
                 </div>
             </div>
 
-            <!-- TAB: DIGITAL CARD DESIGNER -->
-            <div id="tab-card" class="dash-tab-content hidden grid lg:grid-cols-2 gap-8">
+            <!-- TAB: DIGITAL CARD DESIGNER (MOBILE SCREEN PERFECT SIZE) -->
+            <div id="tab-card" class="dash-tab-content hidden grid lg:grid-cols-2 gap-8 items-start">
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
                     <h3 class="text-lg font-bold text-white">Tengeneza Mwaliko Wako</h3>
                     <div>
@@ -425,13 +425,28 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 flex flex-col items-center justify-center">
-                    <div id="cardPreviewBox" class="w-full max-w-sm p-8 rounded-2xl border border-amber-500/40 text-center space-y-4 bg-slate-950 shadow-2xl relative">
-                        <span class="text-[10px] uppercase tracking-widest text-amber-400 block font-bold">MWALIKO WA SHEREHE</span>
-                        <h2 id="previewTitle" class="text-2xl font-serif text-amber-300 font-bold">Amina & Juma</h2>
-                        <p id="previewDate" class="text-xs text-slate-300">Jumamosi, 15 Disemba 2026 - Saa 12:00 Jioni</p>
-                        <p id="previewVenue" class="text-xs text-amber-400 font-semibold">Mlimani City Hall, Dar es Salaam</p>
-                        <div id="cardQrCode" class="flex justify-center my-4 p-2 bg-white rounded-lg inline-block mx-auto"></div>
+                <!-- CARD PREVIEW PERFECTED FOR MOBILE SCREEN FULL VIEW -->
+                <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 flex justify-center items-center">
+                    <div id="cardPreviewBox" class="w-full max-w-[340px] aspect-[9/16] p-6 sm:p-8 rounded-3xl border-2 border-amber-500/50 text-center flex flex-col justify-between items-center bg-slate-950 shadow-2xl relative overflow-hidden">
+                        <div class="w-full">
+                            <span class="text-[10px] uppercase tracking-[0.2em] text-amber-400 block font-extrabold mb-2">MWALIKO WA SHEREHE</span>
+                            <div class="w-8 h-0.5 bg-amber-500/50 mx-auto mb-4"></div>
+                        </div>
+
+                        <div class="space-y-3 w-full">
+                            <h2 id="previewTitle" class="text-2xl sm:text-3xl font-serif text-amber-300 font-bold leading-tight">Amina & Juma</h2>
+                            <p id="previewDate" class="text-xs text-slate-300 font-medium">Jumamosi, 15 Disemba 2026<br><span class="text-amber-400/80">Saa 12:00 Jioni</span></p>
+                            <p id="previewVenue" class="text-xs text-amber-300 font-semibold bg-amber-500/10 py-1 px-3 rounded-full border border-amber-500/20 inline-block">Mlimani City Hall, Dar es Salaam</p>
+                        </div>
+
+                        <!-- MODERATE NADIFU QR CODE -->
+                        <div class="my-3 p-2 bg-white rounded-xl shadow-lg inline-block">
+                            <div id="cardQrCode" class="w-[80px] h-[80px] flex items-center justify-center"></div>
+                        </div>
+
+                        <div class="text-[9px] text-slate-500 uppercase tracking-widest font-semibold">
+                            Skan QR Code Langoni
+                        </div>
                     </div>
                 </div>
             </div>
@@ -470,7 +485,7 @@
             </div>
         </section>
 
-        <!-- 6. ADMIN DASHBOARD VIEW (Na Mapato + Orodha ya Approved Users) -->
+        <!-- 6. ADMIN DASHBOARD VIEW (Mapato & Approved Users Active Table) -->
         <section id="admin-view" class="view-section hidden py-8 px-4 max-w-7xl mx-auto space-y-8">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex justify-between items-center">
                 <div>
@@ -518,7 +533,7 @@
                             </tr>
                         </thead>
                         <tbody id="adminPaymentsRows">
-                            <!-- Data za Realtime DB zitakaa hapa -->
+                            <!-- Realtime DB pending data -->
                         </tbody>
                     </table>
                 </div>
@@ -542,7 +557,7 @@
                             </tr>
                         </thead>
                         <tbody id="adminApprovedRows">
-                            <!-- Orodha ya walio-approved itakaa hapa -->
+                            <!-- Approved users data -->
                         </tbody>
                     </table>
                 </div>
@@ -780,8 +795,8 @@
             qrContainer.innerHTML = "";
             new QRCode(qrContainer, {
                 text: "SHEREHE-YAKO-" + title.replace(/\s+/g, '-'),
-                width: 100,
-                height: 100
+                width: 80,
+                height: 80
             });
         }
 
@@ -811,7 +826,7 @@
             }
         }
 
-        // ADMIN LOGIN WITH EMAIL & PASSWORD 1995
+        // ADMIN LOGIN WITH EMAIL eprazil@gmail.com & PASSWORD 1995
         function showAdminModal() {
             showModal('admin-login-modal');
         }
@@ -899,7 +914,7 @@
                     tbodyApproved.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Hakuna watumiaji waliothibitishwa bado.</td></tr>`;
                 }
 
-                // SASISHA DASHBOARD CALCULATIONS
+                // SASISHA REVENUE CALCULATIONS
                 document.getElementById('adminTotalRevenue').innerText = `TSh ${totalRevenue.toLocaleString()}/=`;
                 document.getElementById('adminApprovedCount').innerText = approvedCount;
                 document.getElementById('adminPendingCount').innerText = pendingCount;
@@ -910,7 +925,7 @@
             database.ref('payments/' + payKey).update({ status: 'APPROVED' }).then(() => {
                 if (userId && userId !== 'guest') {
                     database.ref('users/' + userId).update({ accountType: 'VIP_ACTIVE' }).then(() => {
-                        alert("VIP imewashwa kwa mafanikio! Mtumiaji ameongezwa kwenye Approved Users.");
+                        alert("VIP imewashwa kwa mafanikio! Mtumiaji ameongezwa kwenye Approved Users na Mapato yamesasishwa.");
                     });
                 } else {
                     alert("Malipo yameidhinishwa!");
