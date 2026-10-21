@@ -61,7 +61,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-black">
 
-    <!-- FIREBASE INITIALIZATION SCRIPT WITH YOUR ACTUAL API KEY -->
+    <!-- FIREBASE INITIALIZATION SCRIPT -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyC8kIR7RylUdtt9QHOdQe1xUn_PMuATs2s",
@@ -223,7 +223,7 @@
             </div>
         </section>
 
-        <!-- 2. REGISTER VIEW -->
+        <!-- 2. REGISTER VIEW (Na Kitufe cha Jicho / Password Toggle) -->
         <section id="register-view" class="view-section hidden py-12 px-4 max-w-md mx-auto">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
                 <div class="text-center mb-6">
@@ -246,7 +246,12 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
-                        <input type="password" id="regPassword" required minlength="6" placeholder="******" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                        <div class="relative">
+                            <input type="password" id="regPassword" required minlength="6" placeholder="******" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500 pr-10">
+                            <button type="button" onclick="togglePasswordVisibility('regPassword', 'regEyeIcon')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-200">
+                                <i id="regEyeIcon" class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Aina ya Sherehe (Event Type)</label>
@@ -273,7 +278,7 @@
             </div>
         </section>
 
-        <!-- 3. LOGIN VIEW -->
+        <!-- 3. LOGIN VIEW (Na Kitufe cha Jicho / Password Toggle) -->
         <section id="login-view" class="view-section hidden py-12 px-4 max-w-md mx-auto">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
                 <div class="text-center mb-6">
@@ -288,7 +293,12 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
-                        <input type="password" id="loginPassword" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
+                        <div class="relative">
+                            <input type="password" id="loginPassword" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500 pr-10">
+                            <button type="button" onclick="togglePasswordVisibility('loginPassword', 'loginEyeIcon')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-200">
+                                <i id="loginEyeIcon" class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-bold text-sm hover:brightness-110 transition mt-2">
@@ -460,7 +470,7 @@
             </div>
         </section>
 
-        <!-- 6. ADMIN DASHBOARD VIEW -->
+        <!-- 6. ADMIN DASHBOARD VIEW (Inaleta Real-time Pending Payments kutoka Firebase) -->
         <section id="admin-view" class="view-section hidden py-8 px-4 max-w-7xl mx-auto">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8 flex justify-between items-center">
                 <div>
@@ -484,16 +494,7 @@
                             </tr>
                         </thead>
                         <tbody id="adminPaymentsRows">
-                            <tr class="border-t border-slate-800">
-                                <td class="p-3">Juma Kapoya</td>
-                                <td class="p-3">0755123456</td>
-                                <td class="p-3 font-mono text-amber-400">REF990281</td>
-                                <td class="p-3">TSh 50,000</td>
-                                <td class="p-3 flex gap-2">
-                                    <button onclick="approvePayment(this)" class="px-3 py-1 bg-emerald-600 text-white rounded font-bold">APPROVE VIP</button>
-                                    <button onclick="rejectPayment(this)" class="px-3 py-1 bg-red-600 text-white rounded font-bold">REJECT</button>
-                                </td>
-                            </tr>
+                            <!-- Inajazwa moja kwa moja kutoka Firebase Realtime Database -->
                         </tbody>
                     </table>
                 </div>
@@ -536,6 +537,7 @@
     <!-- SCRIPT LOGIC -->
     <script>
         let currentUser = null;
+        let currentUserId = null;
 
         function showView(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
@@ -546,6 +548,21 @@
 
         function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // Kitufe cha Jicho (Password Visibility Toggle)
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
 
         function handleRegister(e) {
             e.preventDefault();
@@ -570,6 +587,7 @@
 
                     database.ref('users/' + uid).set(userData).then(() => {
                         currentUser = userData;
+                        currentUserId = uid;
                         updateUiState();
                         showView('dashboard-view');
                     });
@@ -587,6 +605,7 @@
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     const uid = userCredential.user.uid;
+                    currentUserId = uid;
                     database.ref('users/' + uid).once('value').then((snapshot) => {
                         currentUser = snapshot.val() || { name: email, accountType: 'TRIAL', eventType: 'Harusi' };
                         updateUiState();
@@ -601,6 +620,7 @@
         function logoutUser() {
             auth.signOut().then(() => {
                 currentUser = null;
+                currentUserId = null;
                 updateUiState();
                 showView('landing-view');
             });
@@ -613,6 +633,12 @@
                 document.getElementById('dashWelcome').innerText = `KARIBU ${currentUser.name.toUpperCase()}`;
                 document.getElementById('dashEventType').innerText = currentUser.eventType || 'Sherehe';
                 document.getElementById('accountBadge').innerText = currentUser.accountType;
+
+                if (currentUser.accountType === 'VIP_ACTIVE') {
+                    document.getElementById('vipUpgradeBanner').classList.add('hidden');
+                    document.getElementById('accountBadge').className = "px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-500 text-slate-950 border border-amber-300";
+                    document.getElementById('accountBadge').innerText = "VIP ACTIVE ⭐";
+                }
             } else {
                 document.getElementById('authNavButtons').classList.remove('hidden');
                 document.getElementById('userNavProfile').classList.add('hidden');
@@ -621,13 +647,19 @@
 
         function showPaymentPage() { showView('payment-view'); }
 
+        // Malipo: Akiclick anapata ujumbe wa kusubiri approval ya Admin na inatumwa Database
         function handlePaymentSubmit(e) {
             e.preventDefault();
+            if (!currentUserId && auth.currentUser) {
+                currentUserId = auth.currentUser.uid;
+            }
+
             const name = document.getElementById('payName').value;
             const phone = document.getElementById('payPhone').value;
             const ref = document.getElementById('payRef').value;
 
             const paymentData = {
+                userId: currentUserId || 'guest',
                 name: name,
                 phone: phone,
                 ref: ref,
@@ -637,8 +669,10 @@
             };
 
             database.ref('payments').push(paymentData).then(() => {
-                alert("Malipo yako yamepokelewa! Subiri uthibitisho wa Admin.");
+                alert("Malipo yako yamepokelewa! Tafadhali subiri uthibitisho wa Admin (Wait for Admin Approval).");
                 showView('dashboard-view');
+            }).catch((err) => {
+                alert("Imeshindikana kutuma malipo: " + err.message);
             });
         }
 
@@ -703,20 +737,66 @@
             const email = prompt("Ingiza Admin Email:");
             if (email === "eprazil@gmail.com") {
                 showView('admin-view');
+                loadAdminPayments();
             } else {
                 alert("Huna ruhusa ya Admin!");
             }
         }
 
-        function approvePayment(btn) {
-            const row = btn.closest('tr');
-            row.cells[4].innerHTML = `<span class="text-emerald-400 font-bold">APPROVED ✅</span>`;
-            alert("VIP Activated!");
+        // Kupakia malipo yanayosubiri idhini kwenye Admin Dashboard
+        function loadAdminPayments() {
+            const tbody = document.getElementById('adminPaymentsRows');
+            tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Inatafuta maombi ya malipo...</td></tr>`;
+
+            database.ref('payments').on('value', (snapshot) => {
+                tbody.innerHTML = "";
+                const data = snapshot.val();
+                if (!data) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Hakuna malipo yanayosubiri kwa sasa.</td></tr>`;
+                    return;
+                }
+
+                Object.keys(data).forEach((payKey) => {
+                    const pay = data[payKey];
+                    if (pay.status === 'PENDING') {
+                        tbody.innerHTML += `
+                            <tr class="border-t border-slate-800" id="row-${payKey}">
+                                <td class="p-3">${pay.name}</td>
+                                <td class="p-3">${pay.phone}</td>
+                                <td class="p-3 font-mono text-amber-400">${pay.ref}</td>
+                                <td class="p-3">TSh ${pay.amount}</td>
+                                <td class="p-3 flex gap-2">
+                                    <button onclick="approvePayment('${payKey}', '${pay.userId}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold">APPROVE VIP</button>
+                                    <button onclick="rejectPayment('${payKey}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold">REJECT</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+            });
         }
 
-        function rejectPayment(btn) {
-            const row = btn.closest('tr');
-            row.cells[4].innerHTML = `<span class="text-red-400 font-bold">REJECTED ❌</span>`;
+        // Admin aki-approve, anabadilisha status ya user kuwa VIP_ACTIVE kwenye database
+        function approvePayment(payKey, userId) {
+            database.ref('payments/' + payKey).update({ status: 'APPROVED' }).then(() => {
+                if (userId && userId !== 'guest') {
+                    database.ref('users/' + userId).update({ accountType: 'VIP_ACTIVE' }).then(() => {
+                        alert("VIP imewashwa kwa mafanikio kwa mtumiaji huyu! Sasa anaweza kuendelea na huduma za VIP.");
+                    });
+                } else {
+                    alert("Malipo yameidhinishwa!");
+                }
+            });
+        }
+
+        function rejectPayment(payKey) {
+            database.ref('payments/' + payKey).update({ status: 'REJECTED' }).then(() => {
+                alert("Malipo yamekataliwa (Rejected).");
+            });
+        }
+
+        function logoutAdmin() {
+            showView('landing-view');
         }
 
         function submitFeedback(e) {
