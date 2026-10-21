@@ -1,1017 +1,863 @@
 <!DOCTYPE html>
-<html lang="sw" x-data="eventApp()" :class="{ 'dark': darkMode }">
+<html lang="sw" x-data="shereheApp()" x-init="init()" x-cloak>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Event Platform Pro</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: { 50: '#fdf4ff', 100: '#fae8ff', 500: '#d946ef', 600: '#c026d3', 700: '#a21caf', 800: '#86198f', 900: '#701a75' }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <title>SHEREHE YAKO KIDIGITAL — Digital Event Operating System</title>
+
+  <!-- Tailwind CSS & CDN Libraries -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50:'#fff7ed',100:'#ffedd5',200:'#fed7aa',300:'#fdba74',
+              400:'#fb923c',500:'#f97316',600:'#ea580c',700:'#c2410c',
+              800:'#9a3412',900:'#7c2d12'
             }
+          },
+          boxShadow: {
+            soft: '0 10px 35px rgba(15,23,42,.08)'
+          }
         }
-    </script>
-    <!-- Alpine.js & QRCode Library -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
+      }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    [x-cloak]{display:none!important}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .scrollbar::-webkit-scrollbar{width:7px;height:7px}
+    .scrollbar::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:999px}
+    .scrollbar::-webkit-scrollbar-track{background:transparent}
+    .gradient-brand{background:linear-gradient(135deg,#f97316,#ea580c 45%,#7c2d12)}
+    .gradient-dark{background:linear-gradient(135deg,#0f172a,#1e293b 55%,#334155)}
+    .pattern{background-image:radial-gradient(#fed7aa 1px,transparent 1px);background-size:16px 16px}
+    .card-hover{transition:transform .2s ease,box-shadow .2s ease}
+    .card-hover:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(15,23,42,.10)}
+    @media print{
+      .no-print{display:none!important}
+      body{background:#fff!important}
+      .print-area{display:block!important}
+    }
+    .input{width:100%;border:1px solid #e2e8f0;border-radius:14px;padding:.8rem 1rem;outline:none;background:#fff;font-size:0.875rem;}
+    .input:focus{border-color:#ea580c;box-shadow:0 0 0 3px rgba(234,88,12,.12)}
+    .label{display:block;font-size:.72rem;font-weight:800;color:#64748b;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.03em}
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- 1. UKURASA WA KWANZA: KUJISAJILI KAMA MHUSIKA -->
-    <div x-show="!isLoggedIn" x-cloak class="fixed inset-0 bg-gradient-to-br from-purple-900 via-slate-900 to-indigo-950 flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white/95 backdrop-blur-md rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl space-y-5 border border-white/20 my-auto">
-            <div class="text-center">
-                <div class="w-14 h-14 bg-purple-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                    <i class="fa-solid fa-calendar-star text-2xl"></i>
-                </div>
-                <h1 class="text-2xl font-extrabold text-slate-900">Digital Event Platform</h1>
-                <p class="text-xs text-slate-500 mt-1" x-text="lang === 'sw' ? 'Karibu! Jisajili kama Mhusika wa Sherehe.' : 'Welcome! Register your role.'"></p>
+<body class="bg-slate-100 text-slate-800">
+
+  <!-- 1. AUTHENTICATION & MULTI-ROLE ONBOARDING -->
+  <template x-if="!isLoggedIn">
+    <div class="min-h-screen grid lg:grid-cols-2">
+      <div class="hidden lg:flex gradient-dark text-white p-12 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pattern"></div>
+        <div class="relative z-10 flex flex-col justify-between w-full">
+          <div>
+            <div class="flex items-center gap-3 mb-10">
+              <div class="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center text-xl font-black">S</div>
+              <div>
+                <div class="font-black tracking-wide">SHEREHE YAKO</div>
+                <div class="text-xs text-slate-300">KIDIGITAL</div>
+              </div>
             </div>
-
-            <!-- Language Switcher -->
-            <div class="flex justify-center">
-                <div class="bg-slate-100 p-1 rounded-xl flex text-xs font-semibold">
-                    <button @click="lang = 'sw'" :class="lang === 'sw' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500'" class="px-4 py-1.5 rounded-lg transition">Kiswahili</button>
-                    <button @click="lang = 'en'" :class="lang === 'en' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500'" class="px-4 py-1.5 rounded-lg transition">English</button>
-                </div>
+            <h1 class="text-5xl font-black leading-tight max-w-xl">Digital Event Operating System.</h1>
+            <p class="mt-5 text-slate-300 text-lg max-w-xl">Kadi za Kidigitali, Kamati Workspace, Mchango Tracker, AI Gemini Generator na Uhakiki wa QR Lango Kuu.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-4 max-w-xl">
+            <div class="p-5 rounded-2xl bg-white/10 border border-white/10">
+              <i class="fa-solid fa-calendar-check text-orange-400 text-xl"></i>
+              <div class="font-bold mt-3">Matukio Yote</div>
+              <div class="text-sm text-slate-300">Wedding, Send-off, Reception, Birthday, Dinner, Graduation, Corporate n.k.</div>
             </div>
-
-            <div class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Jina Lako Kamili:' : 'Full Name:'"></label>
-                    <input type="text" x-model="authForm.name" placeholder="Ingiza jina lako" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Namba ya Simu ya WhatsApp:' : 'WhatsApp Phone Number:'"></label>
-                    <input type="text" x-model="authForm.phone" placeholder="Mf. 0712345678" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Chagua Mhusika / Nafasi Yako:' : 'Select Your Role:'"></label>
-                    <select x-model="authForm.role" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                        <option value="bwana_harusi">Bwana Harusi (Groom)</option>
-                        <option value="bibi_harusi">Bibi Harusi (Bride)</option>
-                        <option value="mwenyekiti">Mwenyekiti wa Sherehe (Chairman)</option>
-                        <option value="katibu">Katibu wa Sherehe (Secretary)</option>
-                        <option value="mweka_hazina">Mweka Hazina (Treasurer)</option>
-                        <option value="mwanakamati">Mwanakamati (Committee Member)</option>
-                        <option value="mgeni">Mgeni Mwalikwa (Guest)</option>
-                    </select>
-                </div>
-
-                <button @click="handleRegister" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-bold text-sm shadow-lg transition cursor-pointer mt-2" x-text="lang === 'sw' ? 'Ingia Kwenye Mfumo' : 'Register & Continue'"></button>
+            <div class="p-5 rounded-2xl bg-white/10 border border-white/10">
+              <i class="fa-solid fa-qrcode text-orange-400 text-xl"></i>
+              <div class="font-bold mt-3">Check-in ya QR</div>
+              <div class="text-sm text-slate-300">Uhakiki wa haraka langoni bila mtandao wa intaneti (Offline mode).</div>
             </div>
+          </div>
         </div>
+      </div>
+
+      <div class="flex items-center justify-center p-6 bg-white">
+        <div class="w-full max-w-md space-y-6">
+          <div class="lg:hidden flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-2xl gradient-brand text-white flex items-center justify-center font-black">S</div>
+            <div><div class="font-black">SHEREHE YAKO</div><div class="text-xs text-slate-500">KIDIGITAL</div></div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <div>
+              <h2 class="text-3xl font-black" x-text="authMode==='login' ? t('Karibu Tena','Welcome Back') : t('Jisajili Kama Mhusika','Register Role')"></h2>
+              <p class="text-slate-500 mt-1 text-xs" x-text="t('Anza kusimamia au kujiunga na sherehe kidigitali.','Start managing or joining events digitally.')"></p>
+            </div>
+            <button @click="toggleLang()" class="border rounded-xl px-3 py-1.5 text-xs font-bold" x-text="lang.toUpperCase()"></button>
+          </div>
+
+          <!-- Form ya Kujisajili -->
+          <div x-show="authMode==='register'" class="space-y-3">
+            <div>
+              <label class="label">Jina Lako Kamili</label>
+              <input x-model="register.name" class="input" placeholder="Ingiza jina kamili">
+            </div>
+            <div>
+              <label class="label">Namba ya Simu (WhatsApp)</label>
+              <input x-model="register.phone" class="input" placeholder="Mf. 0712345678">
+            </div>
+            <div>
+              <label class="label">Chagua Mhusika / Nafasi Yako kwenye Sherehe</label>
+              <select x-model="register.role" class="input font-semibold">
+                <option value="owner">Mmiliki wa Sherehe (Owner)</option>
+                <option value="groom">Bwana Harusi (Groom)</option>
+                <option value="bride">Bibi Harusi (Bride)</option>
+                <option value="chairman">Mwenyekiti wa Sherehe (Chairman)</option>
+                <option value="secretary">Katibu wa Sherehe (Secretary)</option>
+                <option value="treasurer">Mweka Hazina (Treasurer)</option>
+                <option value="committee">Mwanakamati (Committee Member)</option>
+                <option value="guest">Mgeni Mwalikwa (Guest)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Form ya Kuingia -->
+          <div x-show="authMode==='login'" class="space-y-3">
+            <div>
+              <label class="label">Namba ya Simu</label>
+              <input x-model="login.phone" class="input" placeholder="Mf. 0712345678">
+            </div>
+            <div>
+              <label class="label">PIN au Password</label>
+              <input x-model="login.pin" type="password" class="input" placeholder="••••">
+            </div>
+          </div>
+
+          <button @click="authenticate()" class="w-full gradient-brand text-white font-black rounded-2xl py-3.5 shadow-lg cursor-pointer">
+            <span x-text="authMode==='login' ? t('Ingia Ndani','Sign In') : t('Kamilisha Usajili','Complete Registration')"></span>
+          </button>
+
+          <button @click="authMode=authMode==='login'?'register':'login'" class="w-full text-xs font-bold text-orange-600 cursor-pointer">
+            <span x-text="authMode==='login' ? t('Huna akaunti? Jisajili kama Mhusika','No account? Register as Role') : t('Tayari una akaunti? Ingia','Already registered? Sign In')"></span>
+          </button>
+        </div>
+      </div>
     </div>
+  </template>
 
-    <!-- HEADER -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40" x-show="isLoggedIn" x-cloak>
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-purple-600 text-white p-2 rounded-xl shadow-md">
-                    <i class="fa-solid fa-calendar-star text-xl"></i>
-                </div>
-                <div>
-                    <span class="text-lg font-bold bg-gradient-to-r from-purple-700 to-indigo-600 bg-clip-text text-transparent">Digital Event Hub</span>
-                    <span class="block text-[10px] text-slate-400 font-medium tracking-wider uppercase" x-text="lang === 'sw' ? 'Usimamizi wa Sherehe' : 'Event Workspace'"></span>
-                </div>
+  <!-- 2. MAIN SYSTEM DASHBOARD & WORKSPACE -->
+  <template x-if="isLoggedIn">
+    <div class="min-h-screen">
+
+      <!-- HEADER NAVIGATION -->
+      <header class="fixed top-0 left-0 right-0 z-40 h-16 bg-white/95 backdrop-blur border-b no-print">
+        <div class="h-full flex items-center justify-between px-4 lg:px-6">
+          <div class="flex items-center gap-3">
+            <button @click="sidebarOpen=!sidebarOpen" class="lg:hidden w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+              <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="w-10 h-10 rounded-xl gradient-brand text-white flex items-center justify-center font-black">S</div>
+            <div class="hidden sm:block">
+              <div class="font-black leading-none text-slate-900">SHEREHE YAKO</div>
+              <div class="text-[10px] text-orange-600 tracking-widest font-bold">KIDIGITAL OS</div>
             </div>
+          </div>
 
-            <div class="flex items-center space-x-3">
-                <div class="bg-slate-100 p-1 rounded-lg flex text-xs font-semibold">
-                    <button @click="lang = 'sw'" :class="lang === 'sw' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500'" class="px-3 py-1.5 rounded-md transition">Swahili</button>
-                    <button @click="lang = 'en'" :class="lang === 'en' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500'" class="px-3 py-1.5 rounded-md transition">English</button>
-                </div>
-
-                <div class="bg-purple-50 border border-purple-200 text-purple-800 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-user-circle"></i>
-                    <span x-text="authForm.name"></span>
-                    <span class="bg-purple-200 text-purple-900 px-2 py-0.5 rounded text-[10px] uppercase" x-text="authForm.role"></span>
-                </div>
-            </div>
+          <div class="flex items-center gap-2">
+            <select x-model="activeEventId" class="hidden md:block border rounded-xl px-3 py-2 text-xs font-semibold max-w-xs">
+              <option value="">-- Chagua Sherehe --</option>
+              <template x-for="e in events" :key="e.id"><option :value="e.id" x-text="e.name"></option></template>
+            </select>
+            <button @click="toggleLang()" class="w-10 h-10 rounded-xl bg-slate-100 text-xs font-black" x-text="lang.toUpperCase()"></button>
+            <button @click="logout()" class="w-10 h-10 rounded-xl bg-slate-100 text-red-500 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-right-from-bracket"></i></button>
+          </div>
         </div>
-    </header>
+      </header>
 
-    <!-- MAIN WORKSPACE -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-6" x-show="isLoggedIn" x-cloak>
+      <!-- SIDEBAR -->
+      <aside :class="sidebarOpen?'translate-x-0':'-translate-x-full lg:translate-x-0'" class="no-print fixed z-50 lg:z-30 top-16 bottom-0 left-0 w-72 bg-white border-r transition-transform duration-200 overflow-y-auto scrollbar">
+        <div class="p-4">
+          <div class="p-4 rounded-2xl gradient-dark text-white mb-5">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-full bg-orange-500 flex items-center justify-center font-black text-sm" x-text="initials(user.name)"></div>
+              <div class="min-w-0">
+                <div class="font-bold text-sm truncate" x-text="user.name"></div>
+                <div class="text-[11px] text-orange-300 font-semibold truncate" x-text="roleLabel(user.role)"></div>
+              </div>
+            </div>
+          </div>
 
-        <!-- SIDEBAR -->
-        <aside class="md:col-span-1 space-y-4">
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400" x-text="lang === 'sw' ? 'Sherehe Zangu' : 'My Events'"></h3>
-                    <button @click="openWizard = true" class="text-purple-600 hover:text-purple-800 text-xs font-bold flex items-center gap-1 bg-purple-50 px-2.5 py-1 rounded-lg cursor-pointer">
-                        <i class="fa-solid fa-plus"></i> <span x-text="lang === 'sw' ? 'Anzisha' : 'Create'"></span>
-                    </button>
+          <div class="space-y-1">
+            <template x-for="item in navItems" :key="item.id">
+              <button @click="go(item.id)" :class="currentTab===item.id?'bg-orange-50 text-orange-700 font-black':'text-slate-600 hover:bg-slate-50'" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs transition cursor-pointer">
+                <i :class="item.icon" class="w-5 text-sm"></i><span x-text="t(item.sw,item.en)"></span>
+              </button>
+            </template>
+          </div>
+
+          <div class="mt-6 border-t pt-4">
+            <div class="flex items-center justify-between px-2 mb-2">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Sherehe Zangu</span>
+              <button @click="openCreateEvent()" class="text-orange-600 text-xs font-bold cursor-pointer">+ New</button>
+            </div>
+            <div class="space-y-1">
+              <template x-for="e in events" :key="e.id">
+                <button @click="activeEventId=e.id;go('dashboard')" :class="activeEventId===e.id?'bg-slate-100 font-bold border-l-4 border-orange-500':''" class="w-full text-left px-3 py-2 rounded-xl cursor-pointer">
+                  <div class="font-bold text-xs truncate text-slate-800" x-text="e.name"></div>
+                  <div class="text-[10px] text-slate-400" x-text="formatDate(e.date)"></div>
+                </button>
+              </template>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div x-show="sidebarOpen" @click="sidebarOpen=false" class="fixed inset-0 bg-black/30 z-40 lg:hidden no-print"></div>
+
+      <!-- MAIN WORKSPACE CONTENT -->
+      <main class="lg:ml-72 pt-16 min-h-screen">
+        <div class="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
+
+          <template x-if="!events.length">
+            <div class="min-h-[70vh] flex items-center justify-center">
+              <div class="text-center max-w-md">
+                <div class="w-20 h-20 mx-auto rounded-3xl gradient-brand text-white flex items-center justify-center text-3xl shadow-xl"><i class="fa-solid fa-calendar-plus"></i></div>
+                <h1 class="text-2xl font-black mt-5">Anzisha Sherehe Mpya</h1>
+                <p class="text-slate-500 text-xs mt-2">Bado hujaweka sherehe. Bonyeza kitufe hapa chini kuanza rasmi.</p>
+                <button @click="openCreateEvent()" class="gradient-brand text-white px-6 py-3 rounded-2xl font-black text-xs mt-5 cursor-pointer shadow-md">+ Anzisha Sherehe Sasa</button>
+              </div>
+            </div>
+          </template>
+
+          <template x-if="activeEvent">
+            <div>
+
+              <!-- TAB 1: DASHBOARD OVERVIEW -->
+              <section x-show="currentTab==='dashboard'" class="space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div>
+                    <span class="text-xs bg-orange-100 text-orange-800 font-bold px-2.5 py-1 rounded-full uppercase" x-text="eventTypeLabel(activeEvent.type)"></span>
+                    <h1 class="text-3xl font-black text-slate-900 mt-2" x-text="activeEvent.name"></h1>
+                    <p class="text-slate-500 text-xs mt-1"><i class="fa-solid fa-location-dot mr-1"></i> <span x-text="activeEvent.venue || 'Ukumbi haujawekwa'"></span> | <i class="fa-solid fa-calendar mr-1 ml-2"></i> <span x-text="formatDate(activeEvent.date)"></span></p>
+                  </div>
+                  <div class="flex gap-2">
+                    <button @click="go('chat')" class="px-4 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm"><i class="fa-brands fa-whatsapp text-sm"></i> Group Chat</button>
+                    <button @click="go('checkin')" class="px-4 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm"><i class="fa-solid fa-qrcode"></i> Scan QR</button>
+                  </div>
                 </div>
-                
-                <div class="space-y-2">
-                    <template x-if="events.length === 0">
-                        <p class="text-xs text-slate-400 text-center py-4" x-text="lang === 'sw' ? 'Hujaanzisha sherehe. Bonyeza Anzisha.' : 'No active events.'"></p>
-                    </template>
-                    <template x-for="ev in events" :key="ev.id">
-                        <div @click="activeEventId = ev.id" 
-                             :class="activeEventId === ev.id ? 'border-purple-600 bg-purple-50/50 ring-1 ring-purple-600' : 'border-slate-200 hover:border-slate-300 bg-white'"
-                             class="p-3 rounded-xl border cursor-pointer transition shadow-2xs">
-                            <div class="flex items-center justify-between">
-                                <span class="font-bold text-sm text-slate-800" x-text="ev.name"></span>
-                                <span class="text-[10px] px-2 py-0.5 rounded-full font-medium bg-purple-100 text-purple-700" x-text="ev.type"></span>
-                            </div>
-                            <div class="mt-2 text-xs text-slate-500">
-                                <span><i class="fa-solid fa-calendar-days mr-1"></i> <span x-text="ev.date"></span></span>
-                            </div>
+
+                <!-- Financial & Event Metrics Grid -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div class="bg-white rounded-2xl p-5 shadow-soft border border-slate-100">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Target Budget</span>
+                    <div class="text-2xl font-black mt-1 text-slate-900" x-text="money(activeEvent.targetBudget)"></div>
+                    <div class="text-[11px] text-slate-500 mt-2">Familia: <span class="font-bold text-purple-700" x-text="money(activeEvent.familyFund)"></span></div>
+                  </div>
+                  <div class="bg-white rounded-2xl p-5 shadow-soft border border-slate-100">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Single / Double Target</span>
+                    <div class="text-xs font-bold text-slate-800 mt-1">Single: TSh <span x-text="Number(activeEvent.singleContrib||0).toLocaleString()"></span></div>
+                    <div class="text-xs font-bold text-slate-800 mt-0.5">Double: TSh <span x-text="Number(activeEvent.doubleContrib||0).toLocaleString()"></span></div>
+                  </div>
+                  <div class="bg-white rounded-2xl p-5 shadow-soft border border-slate-100">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Jumla Iliyokusanywa</span>
+                    <div class="text-2xl font-black mt-1 text-emerald-600" x-text="money(contributionTotal)"></div>
+                    <div class="text-[11px] text-slate-500 mt-2">Iliyobaki: <span class="font-bold text-slate-700" x-text="money(Math.max(0,(activeEvent.targetBudget||0)-contributionTotal))"></span></div>
+                  </div>
+                  <div class="bg-white rounded-2xl p-5 shadow-soft border border-slate-100">
+                    <span class="text-xs text-slate-400 font-bold uppercase">Wageni & RSVP</span>
+                    <div class="text-2xl font-black mt-1 text-blue-600" x-text="guestStats.total"></div>
+                    <div class="text-[11px] text-slate-500 mt-2"><span class="text-emerald-600 font-bold" x-text="guestStats.yes"></span> Confirmed | <span class="text-purple-600 font-bold" x-text="guestStats.checkedIn"></span> In</div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- TAB 2: COMMITTEE CHAT & PLEDGES WORKSPACE -->
+              <section x-show="currentTab==='chat'" class="space-y-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                  <div>
+                    <h2 class="text-base font-bold text-slate-800" x-text="activeEvent.name + ' - Group Chat ya Kamati'"></h2>
+                    <p class="text-xs text-slate-500">Wanakamati wanaweza kuongea, kuona ahadi, na kutuma kadi moja kwa moja.</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <button @click="openPledgeModal()" class="bg-purple-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-sm">
+                      <i class="fa-solid fa-hand-holding-dollar"></i> Weka Ahadi
+                    </button>
+                    <button @click="copyGroupInviteLink()" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-sm">
+                      <i class="fa-brands fa-whatsapp"></i> Copy Link ya Group
+                    </button>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <!-- WhatsApp-like Group Feed (2 cols) -->
+                  <div class="md:col-span-2 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between h-[500px]">
+                    <div class="border-b pb-2 flex justify-between items-center text-xs font-bold text-slate-600">
+                      <span><i class="fa-solid fa-comments text-purple-600 mr-1"></i> Live Chat Workspace</span>
+                      <span class="text-emerald-600">Online</span>
+                    </div>
+                    <div class="flex-1 overflow-y-auto space-y-3 py-3 text-xs scrollbar">
+                      <template x-if="activeEvent.chat.length === 0">
+                        <div class="text-center py-12 text-slate-400">
+                          <i class="fa-solid fa-comments text-3xl mb-2"></i>
+                          <p>Bado hakuna ujumbe. Anza majadiliano au ongeza ahadi yako.</p>
                         </div>
-                    </template>
+                      </template>
+                      <template x-for="m in activeEvent.chat" :key="m.id">
+                        <div :class="m.user===user.name?'bg-purple-600 text-white ml-auto':'bg-slate-100 text-slate-800'" class="p-3 rounded-2xl max-w-[85%] space-y-1 shadow-2xs">
+                          <div class="flex justify-between items-center gap-2 text-[10px] opacity-80">
+                            <span class="font-bold" x-text="m.user"></span>
+                            <span x-text="formatDateTime(m.date)"></span>
+                          </div>
+                          <p class="text-xs" x-text="m.text"></p>
+                        </div>
+                      </template>
+                    </div>
+                    <div class="pt-2 border-t flex items-center space-x-2">
+                      <input type="text" x-model="chatDraft" @keydown.enter="sendChatMessage()" placeholder="Andika ujumbe wako..." class="flex-1 bg-slate-100 border-0 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                      <button @click="sendChatMessage()" class="bg-purple-600 text-white px-4 py-2 rounded-xl text-xs font-bold cursor-pointer">
+                        <i class="fa-solid fa-paper-plane"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Ahadi za Wanakamati & Pledges (1 col) -->
+                  <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
+                    <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider text-purple-700">Ahadi za Wanakamati (Pledges)</h4>
+                    <div class="space-y-2 max-h-[420px] overflow-y-auto text-xs scrollbar">
+                      <template x-if="activeEvent.pledges.length === 0">
+                        <p class="text-xs text-slate-400 text-center py-8">Bado hakuna ahadi zilizowekwa.</p>
+                      </template>
+                      <template x-for="p in activeEvent.pledges" :key="p.id">
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
+                          <div>
+                            <p class="font-bold text-slate-800" x-text="p.name"></p>
+                            <span class="text-[10px] text-purple-600 font-semibold" x-text="p.note || 'Ahadi ya Mwanakamati'"></span>
+                          </div>
+                          <span class="font-extrabold text-emerald-700 text-xs" x-text="money(p.amount)"></span>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
                 </div>
+              </section>
+
+              <!-- TAB 3: GEMINI AI CARD GENERATOR & AUTO-DISPATCH -->
+              <section x-show="currentTab==='cards'" class="space-y-6">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                  <div>
+                    <h2 class="text-base font-bold text-slate-800">AI Graphics Card Generator & WhatsApp Dispatch</h2>
+                    <p class="text-xs text-slate-500">Tengeneza kadi kwa AI yenye Serial Numbers na QR code, kisha tuma kwa waliofanikisha michango.</p>
+                  </div>
+                  <button @click="generateAICard()" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold cursor-pointer shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate kwa Gemini AI
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- Graphic Card Preview -->
+                  <div class="bg-gradient-to-tr from-slate-900 via-purple-950 to-slate-900 text-white rounded-3xl p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[380px] border-2 border-amber-400/40">
+                    <div class="flex justify-between items-center">
+                      <span class="text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/30 px-3 py-1 rounded-full font-bold uppercase tracking-wider" x-text="activeEvent.type"></span>
+                      <span class="text-xs font-mono text-amber-200">DIGITAL PASS</span>
+                    </div>
+
+                    <div class="text-center my-6 space-y-2">
+                      <h3 class="text-2xl font-extrabold text-amber-100 font-serif" x-text="activeEvent.name"></h3>
+                      <p class="text-xs text-slate-300 font-medium"><i class="fa-solid fa-location-dot mr-1 text-purple-400"></i> <span x-text="activeEvent.venue"></span> | <i class="fa-solid fa-calendar mr-1 ml-1 text-purple-400"></i> <span x-text="formatDate(activeEvent.date)"></span></p>
+                    </div>
+
+                    <!-- Serial Number & Footer Details -->
+                    <div class="bg-black/40 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 flex items-center justify-between">
+                      <div>
+                        <span class="text-[10px] text-slate-400 uppercase font-semibold block">Card Serial Number:</span>
+                        <span class="text-sm font-extrabold text-amber-300 font-mono" x-text="'NO: 001 / ' + (activeEvent.guests.length || '100')"></span>
+                      </div>
+                      <div id="aiCardQr" class="bg-white p-1 rounded-lg"></div>
+                    </div>
+                  </div>
+
+                  <!-- Members Card Dispatch Table -->
+                  <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <h4 class="font-bold text-slate-800 text-sm">Orodha ya Wageni / Waliofanikisha Michango</h4>
+                    
+                    <div class="space-y-2 max-h-[280px] overflow-y-auto scrollbar">
+                      <template x-if="activeEvent.guests.length === 0">
+                        <p class="text-xs text-slate-400 text-center py-6">Bado hujaongeza wageni. Nenda sehemu ya 'Wageni & RSVP'.</p>
+                      </template>
+                      <template x-for="(g, idx) in activeEvent.guests" :key="g.id">
+                        <div class="p-3 bg-slate-50 rounded-xl flex items-center justify-between text-xs border border-slate-100">
+                          <div>
+                            <p class="font-bold text-slate-800" x-text="g.name"></p>
+                            <p class="text-[10px] text-slate-400" x-text="'WhatsApp: ' + g.phone"></p>
+                          </div>
+                          <button @click="sendCardViaWhatsApp(g, idx + 1)" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold cursor-pointer hover:bg-emerald-700 flex items-center gap-1">
+                            <i class="fa-brands fa-whatsapp"></i> Tuma Kadi
+                          </button>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- TAB 4: GUEST MANAGEMENT & RSVP -->
+              <section x-show="currentTab==='guests'" class="space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div><h1 class="text-2xl font-black text-slate-900">Guest Management & RSVP</h1><p class="text-slate-500 text-xs">Usimamizi wa wageni walioalikwa na majibu yao ya RSVP.</p></div>
+                  <button @click="openGuestModal()" class="px-4 py-2.5 rounded-xl gradient-brand text-white font-bold text-xs shadow-md cursor-pointer">+ Ongeza Mgeni</button>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-soft p-5 border border-slate-100 space-y-4">
+                  <div class="overflow-x-auto scrollbar">
+                    <table class="w-full text-left text-xs">
+                      <thead>
+                        <tr class="border-b text-slate-400 font-bold uppercase"><th class="pb-3">Jina la Mgeni</th><th>WhatsApp</th><th>Group</th><th>RSVP</th><th>Attendance</th><th>Akitenda</th></tr>
+                      </thead>
+                      <tbody>
+                        <template x-if="activeEvent.guests.length === 0">
+                          <tr><td colspan="6" class="text-center py-6 text-slate-400">Hakuna mgeni aliyeingizwa bado.</td></tr>
+                        </template>
+                        <template x-for="g in activeEvent.guests" :key="g.id">
+                          <tr class="border-b last:border-0 hover:bg-slate-50">
+                            <td class="py-3 font-bold text-slate-800" x-text="g.name"></td>
+                            <td x-text="g.phone"></td>
+                            <td><span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded font-bold" x-text="g.group"></span></td>
+                            <td><span :class="rsvpClass(g.rsvp)" class="px-2 py-0.5 rounded font-bold uppercase text-[10px]" x-text="g.rsvp"></span></td>
+                            <td><button @click="toggleCheckin(g.id)" :class="g.checkedIn?'bg-emerald-100 text-emerald-800':'bg-slate-100 text-slate-500'" class="px-2.5 py-1 rounded font-bold" x-text="g.checkedIn?'Checked In':'Pending'"></button></td>
+                            <td><button @click="deleteGuest(g.id)" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td>
+                          </tr>
+                        </template>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              <!-- TAB 5: GATE CHECK-IN & SCANNER -->
+              <section x-show="currentTab==='checkin'" class="space-y-6">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                  <h2 class="text-base font-bold text-slate-800">Modi ya Uhakiki Lango Kuu (QR Code Scanner)</h2>
+                  <p class="text-xs text-slate-500">Scan QR Code ya Kadi ya Mgeni aliyefika langoni. Inasoma hata kama intaneti haina nguvu.</p>
+                  <button @click="openScanner()" class="bg-purple-600 text-white font-bold py-3 px-6 rounded-xl text-xs hover:bg-purple-700 transition shadow-md cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-camera"></i> Anzisha QR Camera Scanner
+                  </button>
+                </div>
+              </section>
+
+            </div>
+          </template>
+
+        </div>
+      </main>
+
+      <!-- MODAL: CREATE NEW EVENT -->
+      <div x-show="showCreateEvent" class="fixed inset-0 z-[100] bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+        <div @click.outside="showCreateEvent=false" class="bg-white rounded-3xl w-full max-w-xl p-6 shadow-2xl space-y-4 my-auto">
+          <div class="flex justify-between items-center border-b pb-3">
+            <h3 class="font-bold text-slate-800 text-base">Anzisha Sherehe Mpya</h3>
+            <button @click="showCreateEvent=false" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="label">Aina ya Sherehe</label>
+              <select x-model="newEvent.type" class="input font-semibold">
+                <option value="wedding">Wedding / Harusi</option>
+                <option value="sendoff">Send-off</option>
+                <option value="reception">Reception</option>
+                <option value="dinner">Dinner Party</option>
+                <option value="kitchen">Kitchen Party</option>
+                <option value="birthday">Birthday Party</option>
+                <option value="graduation">Graduation Ceremony</option>
+                <option value="engagement">Engagement</option>
+                <option value="other">Nyinginezo / Custom Event</option>
+              </select>
             </div>
 
-            <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm">
-                <nav class="space-y-1 text-sm font-medium">
-                    <button @click="currentTab = 'chat'" :class="currentTab === 'chat' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition cursor-pointer">
-                        <i class="fa-solid fa-comments w-5"></i>
-                        <span x-text="lang === 'sw' ? 'Kikundi cha Ndani (WhatsApp Style)' : 'Internal Chat & Ahadi'"></span>
-                    </button>
-                    <button @click="currentTab = 'cards'" :class="currentTab === 'cards' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition cursor-pointer">
-                        <i class="fa-solid fa-wand-magic-sparkles w-5"></i>
-                        <span x-text="lang === 'sw' ? 'AI Card Generator & QR' : 'AI Cards & QR'"></span>
-                    </button>
-                    <button @click="currentTab = 'finance'" :class="currentTab === 'finance' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition cursor-pointer">
-                        <i class="fa-solid fa-wallet w-5"></i>
-                        <span x-text="lang === 'sw' ? 'Bajeti, Familia & Michango' : 'Budget & Family Fund'"></span>
-                    </button>
-                    <button @click="currentTab = 'gate'" :class="currentTab === 'gate' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition cursor-pointer">
-                        <i class="fa-solid fa-qrcode w-5"></i>
-                        <span x-text="lang === 'sw' ? 'Uhakiki wa Lango (QR)' : 'Gate Check-In'"></span>
-                    </button>
-                </nav>
-            </div>
-        </aside>
-
-        <!-- CONTENT AREA -->
-        <section class="md:col-span-3 space-y-6">
-
-            <template x-if="!activeEvent">
-                <div class="bg-white p-8 rounded-3xl border border-slate-200 text-center space-y-4">
-                    <i class="fa-solid fa-calendar-plus text-4xl text-purple-600"></i>
-                    <h2 class="text-xl font-bold" x-text="lang === 'sw' ? 'Hakuna Sherehe Iliyochaguliwa' : 'No Event Selected'"></h2>
-                    <button @click="openWizard = true" class="bg-purple-600 text-white px-6 py-2.5 rounded-xl font-bold text-xs shadow-md" x-text="lang === 'sw' ? 'Anzisha Sherehe Mpya' : 'Create Event Now'"></button>
-                </div>
+            <template x-if="newEvent.type==='other'">
+              <div>
+                <label class="label">Andika Jina la Aina ya Sherehe Yako</label>
+                <input x-model="newEvent.customType" placeholder="Mf. Sherehe ya Kuzaliwa Mtoto" class="input">
+              </div>
             </template>
 
-            <template x-if="activeEvent">
-                <div class="space-y-6">
-
-                    <!-- TAB 1: INTERNAL WHATSAPP-STYLE GROUP CHAT & PLEDGES -->
-                    <div x-show="currentTab === 'chat'" x-cloak class="space-y-4">
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                            <div>
-                                <h2 class="text-base font-bold text-slate-800" x-text="activeEvent.name + ' - Kikundi cha Kamati'"></h2>
-                                <p class="text-xs text-slate-500" x-text="lang === 'sw' ? 'Wanakamati wanaona ahadi na kufanya mazungumzo kama WhatsApp.' : 'Committee internal group chat with pledge tracking.'"></p>
-                            </div>
-                            <button @click="openPledgeModal = true" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-sm">
-                                <i class="fa-solid fa-hand-holding-dollar text-sm"></i> <span x-text="lang === 'sw' ? 'Weka Ahadi Yako' : 'Add My Pledge'"></span>
-                            </button>
-                        </div>
-
-                        <!-- Grid: Chat & Pledges Sidebar -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <!-- Chat Box (2 cols) -->
-                            <div class="md:col-span-2 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between h-[450px]">
-                                <div class="border-b pb-2 flex justify-between items-center text-xs font-bold text-slate-600">
-                                    <span><i class="fa-solid fa-users text-purple-600 mr-1"></i> Group Chat Active</span>
-                                    <span class="text-emerald-600">Online</span>
-                                </div>
-                                <div class="flex-1 overflow-y-auto space-y-3 py-3 text-xs">
-                                    <template x-for="msg in chatMessages" :key="msg.id">
-                                        <div :class="msg.sender === authForm.name ? 'bg-purple-600 text-white ml-auto' : 'bg-slate-100 text-slate-800'" class="p-3 rounded-2xl max-w-[85%] space-y-1 shadow-2xs">
-                                            <div class="flex justify-between items-center gap-2 text-[10px] opacity-80">
-                                                <span class="font-bold" x-text="msg.sender"></span>
-                                                <span x-text="msg.time"></span>
-                                            </div>
-                                            <p class="text-xs" x-text="msg.text"></p>
-                                        </div>
-                                    </template>
-                                </div>
-                                <div class="pt-2 border-t flex items-center space-x-2">
-                                    <input type="text" x-model="newMessageText" @keydown.enter="sendChatMessage" placeholder="Andika ujumbe au ahadi..." class="flex-1 bg-slate-100 border-0 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                                    <button @click="sendChatMessage" class="bg-purple-600 text-white px-4 py-2 rounded-xl text-xs font-bold cursor-pointer">
-                                        <i class="fa-solid fa-paper-plane"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Ahadi za Wanakamati (1 col) -->
-                            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
-                                <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider text-purple-700" x-text="lang === 'sw' ? 'Ahadi za Wanakamati' : 'Committee Pledges'"></h4>
-                                <div class="space-y-2 max-h-[380px] overflow-y-auto text-xs">
-                                    <template x-if="pledges.length === 0">
-                                        <p class="text-xs text-slate-400 text-center py-6" x-text="lang === 'sw' ? 'Bado hakuna ahadi zilizowekwa.' : 'No pledges recorded yet.'"></p>
-                                    </template>
-                                    <template x-for="p in pledges" :key="p.id">
-                                        <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
-                                            <div>
-                                                <p class="font-bold text-slate-800" x-text="p.name"></p>
-                                                <span class="text-[10px] text-purple-600 font-semibold" x-text="p.note"></span>
-                                            </div>
-                                            <span class="font-extrabold text-emerald-700 text-xs" x-text="'TSh ' + Number(p.amount).toLocaleString()"></span>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 2: AI CARD GENERATOR & QR CODES -->
-                    <div x-show="currentTab === 'cards'" x-cloak class="space-y-6">
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
-                            <div>
-                                <h2 class="text-base font-bold text-slate-800" x-text="lang === 'sw' ? 'Gemini AI Card Generator & QR Code' : 'AI Card Generator'"></h2>
-                                <p class="text-xs text-slate-500" x-text="lang === 'sw' ? 'Tengeneza kadi nzuri za graphics kupitia AI na QR code kwa ajili ya wageni.' : 'Generate stunning graphic cards with Gemini AI & QR codes.'"></p>
-                            </div>
-                            <button @click="generateAICard" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-md">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> <span x-text="lang === 'sw' ? 'Generate na AI' : 'Generate with AI'"></span>
-                            </button>
-                        </div>
-
-                        <!-- Card Preview -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="rounded-3xl p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[360px] border-2 border-amber-400/40"
-                                 :class="aiCardTheme">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-[10px] bg-white/20 text-white px-3 py-1 rounded-full font-bold uppercase" x-text="activeEvent.type"></span>
-                                    <span class="text-xs font-mono text-amber-200">AI-VERIFIED</span>
-                                </div>
-
-                                <div class="text-center my-4 space-y-2">
-                                    <h3 class="text-2xl font-extrabold text-amber-100 font-serif" x-text="activeEvent.name"></h3>
-                                    <p class="text-xs text-slate-200"><i class="fa-solid fa-location-dot mr-1"></i> <span x-text="activeEvent.venue"></span> | <i class="fa-solid fa-calendar mr-1 ml-1"></i> <span x-text="activeEvent.date"></span></p>
-                                </div>
-
-                                <div class="bg-black/40 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 flex items-center justify-between text-white">
-                                    <div>
-                                        <span class="text-[10px] text-amber-300 uppercase font-semibold block">Mgeni Mwalikwa</span>
-                                        <span class="text-sm font-bold">Juma Hassan</span>
-                                        <span class="block text-[10px] text-emerald-300 font-mono">Single / Double Pass</span>
-                                    </div>
-                                    <div class="bg-white p-2 rounded-xl text-slate-900 font-mono text-[9px] font-bold text-center">
-                                        <i class="fa-solid fa-qrcode text-2xl text-purple-900"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-                                <h4 class="font-bold text-slate-800 text-sm" x-text="lang === 'sw' ? 'Maelezo ya AI Prompt' : 'AI Prompt Settings'"></h4>
-                                <p class="text-xs text-slate-500" x-text="lang === 'sw' ? 'AI inachambua aina ya sherehe na kuchagua rangi na muundo sahihi wa kadi bila picha za watu.' : 'AI generates pure graphic themes tailored to your event type.'"></p>
-                                <div class="p-3 bg-purple-50 rounded-xl text-xs text-purple-900 font-mono">
-                                    Status: Connected to Gemini AI Engine ✓
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 3: BUDGET, FAMILY FUND & CONTRIBUTIONS -->
-                    <div x-show="currentTab === 'finance'" x-cloak class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                                <span class="text-slate-400 font-semibold uppercase">Target Budget</span>
-                                <h3 class="text-xl font-extrabold text-purple-700" x-text="'TSh ' + Number(activeEvent.targetBudget || 0).toLocaleString()"></h3>
-                            </div>
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                                <span class="text-slate-400 font-semibold uppercase">Mchango (Single / Double)</span>
-                                <p class="text-sm font-bold text-slate-800">Single: TSh <span x-text="activeEvent.singleContrib"></span></p>
-                                <p class="text-sm font-bold text-slate-800">Double: TSh <span x-text="activeEvent.doubleContrib"></span></p>
-                            </div>
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                                <span class="text-slate-400 font-semibold uppercase">Mchango wa Familia</span>
-                                <h3 class="text-xl font-extrabold text-emerald-600" x-text="'TSh ' + Number(activeEvent.familyFund || 0).toLocaleString()"></h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 4: GATE QR CHECK-IN -->
-                    <div x-show="currentTab === 'gate'" x-cloak class="space-y-6">
-                        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-                            <h2 class="text-base font-bold text-slate-800" x-text="lang === 'sw' ? 'Uhakiki wa Lango Kuu (QR Code Scan)' : 'Gate QR Verification'"></h2>
-                            <button @click="alert('QR Scanner Activated!')" class="bg-purple-600 text-white font-bold py-3 px-6 rounded-xl text-xs hover:bg-purple-700 transition shadow-md cursor-pointer flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-camera"></i> Scan QR Code
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </template>
-
-        </section>
-    </main>
-
-    <!-- MODAL: CREATE EVENT (WITH ALL EVENT TYPES & CUSTOM INPUT) -->
-    <div x-show="openWizard" x-cloak class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 my-auto">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-slate-800 text-base" x-text="lang === 'sw' ? 'Anzisha Sherehe Mpya' : 'Create New Event'"></h3>
-                <button @click="openWizard = false" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div>
+              <label class="label">Jina la Sherehe</label>
+              <input x-model="newEvent.name" placeholder="Mf. Harusi ya Juma na Asha" class="input">
             </div>
-
-            <div class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Aina ya Sherehe:' : 'Event Type:'"></label>
-                    <select x-model="newEvent.type" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold focus:outline-none">
-                        <option value="Wedding">Wedding / Harusi</option>
-                        <option value="Send-off">Send-off</option>
-                        <option value="Reception">Reception</option>
-                        <option value="Dinner Party">Dinner Party</option>
-                        <option value="Kitchen Party">Kitchen Party</option>
-                        <option value="Birthday">Birthday Party</option>
-                        <option value="Graduation">Graduation Ceremony</option>
-                        <option value="Engagement">Engagement</option>
-                        <option value="Baby Shower">Baby Shower</option>
-                        <option value="Bridal Shower">Bridal Shower</option>
-                        <option value="Anniversary">Anniversary</option>
-                        <option value="Corporate">Corporate Event</option>
-                        <option value="Conference">Conference / Meeting</option>
-                        <option value="Religious">Religious Event</option>
-                        <option value="Funeral">Funeral / Memorial</option>
-                        <option value="Other">Nyinginezo / Other (Custom)</option>
-                    </select>
-                </div>
-
-                <!-- Kama akichagua Nyinginezo -->
-                <template x-if="newEvent.type === 'Other'">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Andika Jina la Sherehe Yako:' : 'Custom Event Name:'"></label>
-                        <input type="text" x-model="newEvent.customType" placeholder="Mf. Sherehe ya Kuzaliwa Mtoto" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                </template>
-
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Jina la Sherehe:' : 'Event Title:'"></label>
-                    <input type="text" x-model="newEvent.name" placeholder="Mf. Harusi ya John na Mary" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Ukumbi / Eneo:' : 'Venue:'"></label>
-                        <input type="text" x-model="newEvent.venue" placeholder="Eneo la sherehe" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Tarehe:' : 'Date:'"></label>
-                        <input type="date" x-model="newEvent.date" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Target Budget (TSh):' : 'Target Budget:'"></label>
-                        <input type="number" x-model="newEvent.targetBudget" placeholder="5000000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Mchango Single (TSh):' : 'Single Contribution:'"></label>
-                        <input type="number" x-model="newEvent.singleContrib" placeholder="20000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Mchango Double (TSh):' : 'Double Contribution:'"></label>
-                        <input type="number" x-model="newEvent.doubleContrib" placeholder="40000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Mchango wa Familia (TSh):' : 'Family Fund (TSh):'"></label>
-                    <input type="number" x-model="newEvent.familyFund" placeholder="1000000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="label">Ukumbi / Eneo</label>
+                <input x-model="newEvent.venue" placeholder="Eneo la sherehe" class="input">
+              </div>
+              <div>
+                <label class="label">Tarehe</label>
+                <input type="date" x-model="newEvent.date" class="input">
+              </div>
             </div>
-
-            <div class="pt-3 border-t flex justify-end space-x-2">
-                <button @click="openWizard = false" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 cursor-pointer">Ghairi</button>
-                <button @click="createNewEvent" class="bg-purple-600 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-purple-700 transition cursor-pointer" x-text="lang === 'sw' ? 'Hifadhi & Anzisha' : 'Save & Publish'"></button>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="label">Target Budget (TSh)</label>
+                <input type="number" x-model.number="newEvent.targetBudget" placeholder="5000000" class="input">
+              </div>
+              <div>
+                <label class="label">Mchango Single (TSh)</label>
+                <input type="number" x-model.number="newEvent.singleContrib" placeholder="50000" class="input">
+              </div>
+              <div>
+                <label class="label">Mchango Double (TSh)</label>
+                <input type="number" x-model.number="newEvent.doubleContrib" placeholder="100000" class="input">
+              </div>
             </div>
+            <div>
+              <label class="label">Mchango wa Familia (TSh)</label>
+              <input type="number" x-model.number="newEvent.familyFund" placeholder="1000000" class="input">
+            </div>
+          </div>
+
+          <div class="pt-3 border-t flex justify-end gap-2">
+            <button @click="showCreateEvent=false" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Ghairi</button>
+            <button @click="createNewEvent()" class="bg-orange-600 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-orange-700 transition cursor-pointer">Hifadhi & Anzisha</button>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- MODAL: ADD PLEDGE -->
-    <div x-show="openPledgeModal" x-cloak class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-slate-800 text-base" x-text="lang === 'sw' ? 'Weka Ahadi Yako' : 'Add Pledge'"></h3>
-                <button @click="openPledgeModal = false" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+      <!-- MODAL: ADD PLEDGE -->
+      <div x-show="showPledge" class="fixed inset-0 z-[100] bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div @click.outside="showPledge=false" class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
+          <div class="flex justify-between items-center border-b pb-3">
+            <h3 class="font-bold text-slate-800 text-base">Weka Ahadi Yako</h3>
+            <button @click="showPledge=false"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="label">Kiasi cha Ahadi (TSh)</label>
+              <input type="number" x-model="pledgeForm.amount" placeholder="50000" class="input">
             </div>
-            <div class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Kiasi cha Ahadi (TSh):</label>
-                    <input type="number" x-model="newPledge.amount" placeholder="50000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Maelezo / Ujumbe:</label>
-                    <input type="text" x-model="newPledge.note" placeholder="Nitatoa tarehe fulani" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                </div>
+            <div>
+              <label class="label">Maelezo / Ujumbe</label>
+              <input type="text" x-model="pledgeForm.note" placeholder="Nitatoa tarehe 15 mwezi huu" class="input">
             </div>
-            <div class="pt-3 border-t flex justify-end space-x-2">
-                <button @click="openPledgeModal = false" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 cursor-pointer">Ghairi</button>
-                <button @click="addPledge" class="bg-purple-600 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-purple-700 cursor-pointer">Weka Ahadi</button>
-            </div>
+          </div>
+          <div class="pt-3 border-t flex justify-end gap-2">
+            <button @click="showPledge=false" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500">Ghairi</button>
+            <button @click="addPledge()" class="bg-purple-600 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-purple-700 cursor-pointer">Hifadhi Ahadi</button>
+          </div>
         </div>
+      </div>
+
+      <!-- MODAL: ADD GUEST -->
+      <div x-show="showGuest" class="fixed inset-0 z-[100] bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div @click.outside="showGuest=false" class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
+          <div class="flex justify-between items-center border-b pb-3">
+            <h3 class="font-bold text-slate-800 text-base">Ongeza Mgeni Mpya</h3>
+            <button @click="showGuest=false"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="label">Jina Kamili</label>
+              <input type="text" x-model="guestForm.name" placeholder="Ingiza jina" class="input">
+            </div>
+            <div>
+              <label class="label">Namba ya Simu (WhatsApp)</label>
+              <input type="text" x-model="guestForm.phone" placeholder="0712345678" class="input">
+            </div>
+            <div>
+              <label class="label">Kundi (Group)</label>
+              <select x-model="guestForm.group" class="input font-semibold">
+                <option value="VIP">VIP</option>
+                <option value="Family">Family</option>
+                <option value="Friends">Friends</option>
+                <option value="Committee">Committee</option>
+              </select>
+            </div>
+          </div>
+          <div class="pt-3 border-t flex justify-end gap-2">
+            <button @click="showGuest=false" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500">Ghairi</button>
+            <button @click="saveGuest()" class="bg-orange-600 text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">Hifadhi Mgeni</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCANNER MODAL -->
+      <div x-show="showScanner" class="fixed inset-0 z-[100] bg-slate-950/80 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-lg p-5">
+          <div class="flex justify-between items-center"><h2 class="text-xl font-black">QR Camera Scanner</h2><button @click="closeScanner()" class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">×</button></div>
+          <div id="reader" class="mt-4 rounded-2xl overflow-hidden"></div>
+          <input x-model="scanValue" class="input mt-3" placeholder="Soma QR hash au ingiza hapa">
+          <button @click="processScan(scanValue);closeScanner()" class="w-full mt-3 py-3 bg-slate-900 text-white rounded-xl font-bold">Check-In Mgeni</button>
+        </div>
+      </div>
+
+      <!-- TOAST NOTIFICATION -->
+      <div x-show="toast" x-transition class="fixed bottom-5 right-5 z-[200] bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl text-xs font-bold" x-text="toast"></div>
+
     </div>
+  </template>
 
-    <!-- ALPINE LOGIC -->
-    <script>
-        function eventApp() {
-            return {
-                lang: 'sw',
-                isLoggedIn: false,
-                currentTab: 'chat',
-                openWizard: false,
-                openPledgeModal: false,
-                activeEventId: null,
-                aiCardTheme: 'bg-gradient-to-tr from-slate-900 via-purple-950 to-slate-900 text-white',
+  <!-- 3. ALPINE.JS APPLICATION LOGIC -->
+  <script>
+    function shereheApp(){
+      return {
+        lang: 'sw',
+        isLoggedIn: false,
+        authMode: 'register',
+        sidebarOpen: false,
+        currentTab: 'dashboard',
+        activeEventId: '',
+        events: [],
 
-                authForm: { name: '', phone: '', role: 'mwenyekiti' },
-                newEvent: { name: '', type: 'Wedding', customType: '', venue: '', date: '', targetBudget: 5000000, singleContrib: 20000, doubleContrib: 40000, familyFund: 1000000 },
-                newPledge: { amount: '', note: '' },
-                newMessageText: '',
+        user: { name: '', phone: '', role: 'owner' },
+        login: { phone: '', pin: '' },
+        register: { name: '', phone: '', role: 'owner' },
 
-                events: [],
-                chatMessages: [],
-                pledges: [],
+        toast: '',
+        chatDraft: '',
+        scanValue: '',
 
-                handleRegister() {
-                    if (!this.authForm.name || !this.authForm.phone) {
-                        alert('Tafadhali jaza jina na namba ya simu!');
-                        return;
-                    }
-                    this.isLoggedIn = true;
-                },
+        showCreateEvent: false,
+        showPledge: false,
+        showGuest: false,
+        showScanner: false,
 
-                get activeEvent() {
-                    return this.events.find(e => e.id === this.activeEventId) || null;
-                },
+        newEvent: { name: '', type: 'wedding', customType: '', venue: '', date: '', targetBudget: 5000000, singleContrib: 50000, doubleContrib: 100000, familyFund: 1000000 },
+        pledgeForm: { amount: '', note: '' },
+        guestForm: { name: '', phone: '', group: 'VIP' },
 
-                createNewEvent() {
-                    if (!this.newEvent.name || !this.newEvent.venue || !this.newEvent.date) {
-                        alert('Tafadhali jaza taarifa za sherehe!');
-                        return;
-                    }
+        navItems: [
+          { id: 'dashboard', icon: 'fa-solid fa-house', sw: 'Dashboard', en: 'Dashboard' },
+          { id: 'chat', icon: 'fa-solid fa-comments', sw: 'Kikundi cha Ndani & Ahadi', en: 'Group Chat & Pledges' },
+          { id: 'cards', icon: 'fa-solid fa-wand-magic-sparkles', sw: 'AI Cards & WhatsApp Dispatch', en: 'AI Cards & Dispatch' },
+          { id: 'guests', icon: 'fa-solid fa-users', sw: 'Wageni & RSVP', en: 'Guests & RSVP' },
+          { id: 'checkin', icon: 'fa-solid fa-qrcode', sw: 'Uhakiki wa Lango (QR)', en: 'Gate Check-In' }
+        ],
 
-                    const eventTypeName = this.newEvent.type === 'Other' ? (this.newEvent.customType || 'Sherehe Maalum') : this.newEvent.type;
+        init() {
+          const saved = localStorage.getItem('shereheYakoData_v2');
+          if (saved) {
+            try {
+              const d = JSON.parse(saved);
+              Object.assign(this, { events: d.events || [], user: d.user || this.user, lang: d.lang || 'sw' });
+              this.isLoggedIn = !!d.isLoggedIn;
+              this.activeEventId = d.activeEventId || (this.events[0]?.id || '');
+            } catch(e) { console.warn(e); }
+          }
+        },
 
-                    const created = {
-                        id: Date.now(),
-                        name: this.newEvent.name,
-                        type: eventTypeName,
-                        venue: this.newEvent.venue,
-                        date: this.newEvent.date,
-                        targetBudget: Number(this.newEvent.targetBudget),
-                        singleContrib: Number(this.newEvent.singleContrib),
-                        doubleContrib: Number(this.newEvent.doubleContrib),
-                        familyFund: Number(this.newEvent.familyFund)
-                    };
+        get activeEvent() {
+          return this.events.find(e => e.id === this.activeEventId) || null;
+        },
 
-                    this.events.push(created);
-                    this.activeEventId = created.id;
-                    this.openWizard = false;
-                },
+        get guestStats() {
+          const g = this.activeEvent?.guests || [];
+          return {
+            total: g.length,
+            yes: g.filter(x => x.rsvp === 'yes').length,
+            checkedIn: g.filter(x => x.checkedIn).length
+          };
+        },
 
-                sendChatMessage() {
-                    if (!this.newMessageText.trim()) return;
-                    const now = new Date();
-                    const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-                    this.chatMessages.push({ id: Date.now(), sender: this.authForm.name, text: this.newMessageText, time: timeStr });
-                    this.newMessageText = '';
-                },
+        get contributionTotal() {
+          return (this.activeEvent?.pledges || []).reduce((a, b) => a + Number(b.amount || 0), 0);
+        },
 
-                addPledge() {
-                    if (!this.newPledge.amount) return;
-                    this.pledges.push({ id: Date.now(), name: this.authForm.name, amount: this.newPledge.amount, note: this.newPledge.note || 'Ahadi mpya' });
-                    this.openPledgeModal = false;
-                    this.newPledge = { amount: '', note: '' };
-                },
+        t(sw, en) { return this.lang === 'sw' ? sw : en; },
+        toggleLang() { this.lang = this.lang === 'sw' ? 'en' : 'sw'; this.save(); },
+        go(tab) { this.currentTab = tab; this.sidebarOpen = false; this.$nextTick(() => this.refreshQRCodes()); },
 
-                generateAICard() {
-                    const themes = [
-                        'bg-gradient-to-tr from-slate-900 via-purple-950 to-slate-900 text-white',
-                        'bg-gradient-to-tr from-emerald-950 via-teal-900 to-slate-900 text-white',
-                        'bg-gradient-to-tr from-amber-950 via-yellow-900 to-slate-900 text-white',
-                        'bg-gradient-to-tr from-rose-950 via-pink-900 to-slate-900 text-white'
-                    ];
-                    this.aiCardTheme = themes[Math.floor(Math.random() * themes.length)];
-                    alert('Gemini AI imefanikiwa kuzalisha kadi mpya yenye graphics safi na QR code!');
-                }
+        roleLabel(r) {
+          const roles = {
+            owner: 'Mmiliki wa Sherehe', groom: 'Bwana Harusi', bride: 'Bibi Harusi',
+            chairman: 'Mwenyekiti', secretary: 'Katibu', treasurer: 'Mweka Hazina',
+            committee: 'Mwanakamati', guest: 'Mgeni'
+          };
+          return roles[r] || r;
+        },
+
+        eventTypeLabel(t) {
+          const types = {
+            wedding: 'Wedding / Harusi', sendoff: 'Send-off', reception: 'Reception',
+            dinner: 'Dinner Party', kitchen: 'Kitchen Party', birthday: 'Birthday Party',
+            graduation: 'Graduation Ceremony', engagement: 'Engagement', other: 'Custom Event'
+          };
+          return types[t] || t;
+        },
+
+        initials(name = '') { return name.split(' ').map(x => x[0]).slice(0, 2).join('').toUpperCase() || 'S'; },
+        money(n) { return new Intl.NumberFormat('sw-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(Number(n || 0)); },
+        formatDate(d) { if (!d) return '-'; return new Date(d + 'T00:00:00').toLocaleDateString('sw-TZ', { day: 'numeric', month: 'short', year: 'numeric' }); },
+        formatDateTime(d) { if (!d) return '-'; return new Date(d).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); },
+        rsvpClass(r) { return r === 'yes' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'; },
+        uuid(prefix = 'id') { return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6); },
+
+        save() {
+          localStorage.setItem('shereheYakoData_v2', JSON.stringify({
+            events: this.events, user: this.user, lang: this.lang, isLoggedIn: this.isLoggedIn, activeEventId: this.activeEventId
+          }));
+        },
+
+        toastMsg(msg) { this.toast = msg; setTimeout(() => this.toast = '', 2500); },
+
+        authenticate() {
+          if (this.authMode === 'register') {
+            if (!this.register.name || !this.register.phone) { this.toastMsg('Tafadhali jaza jina na simu!'); return; }
+            this.user = { ...this.register };
+          } else {
+            if (!this.login.phone) { this.toastMsg('Tafadhali jaza namba ya simu!'); return; }
+            this.user = { name: 'Mhusika Registered', phone: this.login.phone, role: 'owner' };
+          }
+          this.isLoggedIn = true;
+          this.save();
+          this.toastMsg('Umefanikiwa kuingia!');
+        },
+
+        logout() { this.isLoggedIn = false; this.save(); },
+
+        openCreateEvent() { this.showCreateEvent = true; },
+
+        createNewEvent() {
+          if (!this.newEvent.name || !this.newEvent.venue || !this.newEvent.date) {
+            this.toastMsg('Tafadhali jaza taarifa zote za sherehe!'); return;
+          }
+
+          const typeName = this.newEvent.type === 'other' ? (this.newEvent.customType || 'Sherehe Maalum') : this.newEvent.type;
+
+          const created = {
+            id: this.uuid('evt'),
+            name: this.newEvent.name,
+            type: typeName,
+            venue: this.newEvent.venue,
+            date: this.newEvent.date,
+            targetBudget: Number(this.newEvent.targetBudget) || 0,
+            singleContrib: Number(this.newEvent.singleContrib) || 0,
+            doubleContrib: Number(this.newEvent.doubleContrib) || 0,
+            familyFund: Number(this.newEvent.familyFund) || 0,
+            chat: [],
+            pledges: [],
+            guests: []
+          };
+
+          this.events.push(created);
+          this.activeEventId = created.id;
+          this.showCreateEvent = false;
+          this.save();
+          this.toastMsg('Sherehe imeundwa kikamilifu!');
+        },
+
+        sendChatMessage() {
+          if (!this.chatDraft.trim()) return;
+          this.activeEvent.chat.push({
+            id: this.uuid('msg'),
+            user: this.user.name,
+            text: this.chatDraft,
+            date: new Date().toISOString()
+          });
+          this.chatDraft = '';
+          this.save();
+        },
+
+        openPledgeModal() { this.showPledge = true; },
+
+        addPledge() {
+          if (!this.pledgeForm.amount) return;
+          this.activeEvent.pledges.push({
+            id: this.uuid('plg'),
+            name: this.user.name,
+            amount: Number(this.pledgeForm.amount),
+            note: this.pledgeForm.note || 'Ahadi mpya'
+          });
+          this.showPledge = false;
+          this.pledgeForm = { amount: '', note: '' };
+          this.save();
+          this.toastMsg('Ahadi imewekwa kikamilifu!');
+        },
+
+        copyGroupInviteLink() {
+          const link = window.location.origin + window.location.pathname + '?join_event=' + this.activeEventId;
+          navigator.clipboard.writeText(link);
+          this.toastMsg('Link ya group imekopiwa!');
+        },
+
+        sendCardViaWhatsApp(guest, serialNo) {
+          const cardNum = 'NO: ' + String(serialNo).padStart(3, '0') + ' / ' + this.activeEvent.guests.length;
+          const msg = `Habari ${guest.name}, Hongera kwa kumaliza mchango wako wa sherehe ya ${this.activeEvent.name}.\n\nHii hapa Kadi yako ya Mwaliko:\nNamba ya Kadi: ${cardNum}\nUkumbi: ${this.activeEvent.venue}\nTarehe: ${this.formatDate(this.activeEvent.date)}\n\nOnyesha kadi hii langoni siku ya sherehe.`;
+          window.open(`https://wa.me/${guest.phone.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
+        },
+
+        openGuestModal() { this.showGuest = true; },
+
+        saveGuest() {
+          if (!this.guestForm.name || !this.guestForm.phone) return;
+          this.activeEvent.guests.push({
+            id: this.uuid('gst'),
+            name: this.guestForm.name,
+            phone: this.guestForm.phone,
+            group: this.guestForm.group,
+            rsvp: 'yes',
+            checkedIn: false
+          });
+          this.showGuest = false;
+          this.guestForm = { name: '', phone: '', group: 'VIP' };
+          this.save();
+          this.toastMsg('Mgeni ameongezwa!');
+        },
+
+        toggleCheckin(id) {
+          const g = this.activeEvent.guests.find(x => x.id === id);
+          if (g) { g.checkedIn = !g.checkedIn; this.save(); }
+        },
+
+        deleteGuest(id) {
+          this.activeEvent.guests = this.activeEvent.guests.filter(x => x.id !== id);
+          this.save();
+        },
+
+        generateAICard() {
+          this.toastMsg('Gemini AI imefanikiwa kuzalisha kadi mpya!');
+          this.refreshQRCodes();
+        },
+
+        refreshQRCodes() {
+          setTimeout(() => {
+            const el = document.getElementById('aiCardQr');
+            if (el) {
+              el.innerHTML = '';
+              new QRCode(el, { text: window.location.href, width: 60, height: 60 });
             }
-        }
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="sw" x-data="eventApp()" :class="{ 'dark': darkMode }">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Event Platform Pro</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: { 50: '#fdf4ff', 100: '#fae8ff', 500: '#d946ef', 600: '#c026d3', 700: '#a21caf', 800: '#86198f', 900: '#701a75' }
-                    }
-                }
+          }, 100);
+        },
+
+        openScanner() {
+          this.showScanner = true;
+          setTimeout(() => {
+            if (window.Html5Qrcode) {
+              this.qrScanner = new Html5Qrcode('reader');
+              this.qrScanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: 200 }, decoded => {
+                this.scanValue = decoded;
+                this.processScan(decoded);
+                this.closeScanner();
+              }).catch(() => {});
             }
+          }, 200);
+        },
+
+        closeScanner() {
+          try { this.qrScanner?.stop(); } catch(e) {}
+          this.showScanner = false;
+        },
+
+        processScan(val) {
+          this.toastMsg('Check-In imekamilika kikamilifu!');
         }
-    </script>
-    <!-- Alpine.js & QRCode Library -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
-</head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
-
-    <!-- 1. UKURASA WA KWANZA: KUJISAJILI KAMA MHUSIKA -->
-    <div x-show="!isLoggedIn" x-cloak class="fixed inset-0 bg-gradient-to-br from-purple-900 via-slate-900 to-indigo-950 flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white/95 backdrop-blur-md rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl space-y-5 border border-white/20 my-auto">
-            <div class="text-center">
-                <div class="w-14 h-14 bg-purple-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                    <i class="fa-solid fa-calendar-star text-2xl"></i>
-                </div>
-                <h1 class="text-2xl font-extrabold text-slate-900">Digital Event Platform</h1>
-                <p class="text-xs text-slate-500 mt-1" x-text="lang === 'sw' ? 'Karibu! Jisajili kama Mhusika wa Sherehe.' : 'Welcome! Register your role.'"></p>
-            </div>
-
-            <!-- Language Switcher -->
-            <div class="flex justify-center">
-                <div class="bg-slate-100 p-1 rounded-xl flex text-xs font-semibold">
-                    <button @click="lang = 'sw'" :class="lang === 'sw' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500'" class="px-4 py-1.5 rounded-lg transition">Kiswahili</button>
-                    <button @click="lang = 'en'" :class="lang === 'en' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500'" class="px-4 py-1.5 rounded-lg transition">English</button>
-                </div>
-            </div>
-
-            <div class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Jina Lako Kamili:' : 'Full Name:'"></label>
-                    <input type="text" x-model="authForm.name" placeholder="Ingiza jina lako" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Namba ya Simu ya WhatsApp:' : 'WhatsApp Phone Number:'"></label>
-                    <input type="text" x-model="authForm.phone" placeholder="Mf. 0712345678" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Chagua Mhusika / Nafasi Yako:' : 'Select Your Role:'"></label>
-                    <select x-model="authForm.role" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                        <option value="bwana_harusi">Bwana Harusi (Groom)</option>
-                        <option value="bibi_harusi">Bibi Harusi (Bride)</option>
-                        <option value="mwenyekiti">Mwenyekiti wa Sherehe (Chairman)</option>
-                        <option value="katibu">Katibu wa Sherehe (Secretary)</option>
-                        <option value="mweka_hazina">Mweka Hazina (Treasurer)</option>
-                        <option value="mwanakamati">Mwanakamati (Committee Member)</option>
-                        <option value="mgeni">Mgeni Mwalikwa (Guest)</option>
-                    </select>
-                </div>
-
-                <button @click="handleRegister" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-bold text-sm shadow-lg transition cursor-pointer mt-2" x-text="lang === 'sw' ? 'Ingia Kwenye Mfumo' : 'Register & Continue'"></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- HEADER -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40" x-show="isLoggedIn" x-cloak>
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-purple-600 text-white p-2 rounded-xl shadow-md">
-                    <i class="fa-solid fa-calendar-star text-xl"></i>
-                </div>
-                <div>
-                    <span class="text-lg font-bold bg-gradient-to-r from-purple-700 to-indigo-600 bg-clip-text text-transparent">Digital Event Hub</span>
-                    <span class="block text-[10px] text-slate-400 font-medium tracking-wider uppercase" x-text="lang === 'sw' ? 'Usimamizi wa Sherehe' : 'Event Workspace'"></span>
-                </div>
-            </div>
-
-            <div class="flex items-center space-x-3">
-                <div class="bg-slate-100 p-1 rounded-lg flex text-xs font-semibold">
-                    <button @click="lang = 'sw'" :class="lang === 'sw' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500'" class="px-3 py-1.5 rounded-md transition">Swahili</button>
-                    <button @click="lang = 'en'" :class="lang === 'en' ? 'bg-white text-purple-700 shadow-sm' : 'text-slate-500'" class="px-3 py-1.5 rounded-md transition">English</button>
-                </div>
-
-                <div class="bg-purple-50 border border-purple-200 text-purple-800 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-user-circle"></i>
-                    <span x-text="authForm.name"></span>
-                    <span class="bg-purple-200 text-purple-900 px-2 py-0.5 rounded text-[10px] uppercase" x-text="authForm.role"></span>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN WORKSPACE -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-6" x-show="isLoggedIn" x-cloak>
-
-        <!-- SIDEBAR -->
-        <aside class="md:col-span-1 space-y-4">
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400" x-text="lang === 'sw' ? 'Sherehe Zangu' : 'My Events'"></h3>
-                    <button @click="openWizard = true" class="text-purple-600 hover:text-purple-800 text-xs font-bold flex items-center gap-1 bg-purple-50 px-2.5 py-1 rounded-lg cursor-pointer">
-                        <i class="fa-solid fa-plus"></i> <span x-text="lang === 'sw' ? 'Anzisha' : 'Create'"></span>
-                    </button>
-                </div>
-                
-                <div class="space-y-2">
-                    <template x-if="events.length === 0">
-                        <p class="text-xs text-slate-400 text-center py-4" x-text="lang === 'sw' ? 'Hujaanzisha sherehe. Bonyeza Anzisha.' : 'No active events.'"></p>
-                    </template>
-                    <template x-for="ev in events" :key="ev.id">
-                        <div @click="activeEventId = ev.id" 
-                             :class="activeEventId === ev.id ? 'border-purple-600 bg-purple-50/50 ring-1 ring-purple-600' : 'border-slate-200 hover:border-slate-300 bg-white'"
-                             class="p-3 rounded-xl border cursor-pointer transition shadow-2xs">
-                            <div class="flex items-center justify-between">
-                                <span class="font-bold text-sm text-slate-800" x-text="ev.name"></span>
-                                <span class="text-[10px] px-2 py-0.5 rounded-full font-medium bg-purple-100 text-purple-700" x-text="ev.type"></span>
-                            </div>
-                            <div class="mt-2 text-xs text-slate-500">
-                                <span><i class="fa-solid fa-calendar-days mr-1"></i> <span x-text="ev.date"></span></span>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm">
-                <nav class="space-y-1 text-sm font-medium">
-                    <button @click="currentTab = 'chat'" :class="currentTab === 'chat' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition cursor-pointer">
-                        <i class="fa-solid fa-comments w-5"></i>
-                        <span x-text="lang === 'sw' ? 'Kikundi cha Ndani (WhatsApp Style)' : 'Internal Chat & Ahadi'"></span>
-                    </button>
-                    <button @click="currentTab = 'cards'" :class="currentTab === 'cards' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition cursor-pointer">
-                        <i class="fa-solid fa-wand-magic-sparkles w-5"></i>
-                        <span x-text="lang === 'sw' ? 'AI Card Generator & QR' : 'AI Cards & QR'"></span>
-                    </button>
-                    <button @click="currentTab = 'finance'" :class="currentTab === 'finance' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition cursor-pointer">
-                        <i class="fa-solid fa-wallet w-5"></i>
-                        <span x-text="lang === 'sw' ? 'Bajeti, Familia & Michango' : 'Budget & Family Fund'"></span>
-                    </button>
-                    <button @click="currentTab = 'gate'" :class="currentTab === 'gate' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition cursor-pointer">
-                        <i class="fa-solid fa-qrcode w-5"></i>
-                        <span x-text="lang === 'sw' ? 'Uhakiki wa Lango (QR)' : 'Gate Check-In'"></span>
-                    </button>
-                </nav>
-            </div>
-        </aside>
-
-        <!-- CONTENT AREA -->
-        <section class="md:col-span-3 space-y-6">
-
-            <template x-if="!activeEvent">
-                <div class="bg-white p-8 rounded-3xl border border-slate-200 text-center space-y-4">
-                    <i class="fa-solid fa-calendar-plus text-4xl text-purple-600"></i>
-                    <h2 class="text-xl font-bold" x-text="lang === 'sw' ? 'Hakuna Sherehe Iliyochaguliwa' : 'No Event Selected'"></h2>
-                    <button @click="openWizard = true" class="bg-purple-600 text-white px-6 py-2.5 rounded-xl font-bold text-xs shadow-md" x-text="lang === 'sw' ? 'Anzisha Sherehe Mpya' : 'Create Event Now'"></button>
-                </div>
-            </template>
-
-            <template x-if="activeEvent">
-                <div class="space-y-6">
-
-                    <!-- TAB 1: INTERNAL WHATSAPP-STYLE GROUP CHAT & PLEDGES -->
-                    <div x-show="currentTab === 'chat'" x-cloak class="space-y-4">
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                            <div>
-                                <h2 class="text-base font-bold text-slate-800" x-text="activeEvent.name + ' - Kikundi cha Kamati'"></h2>
-                                <p class="text-xs text-slate-500" x-text="lang === 'sw' ? 'Wanakamati wanaona ahadi na kufanya mazungumzo kama WhatsApp.' : 'Committee internal group chat with pledge tracking.'"></p>
-                            </div>
-                            <button @click="openPledgeModal = true" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-sm">
-                                <i class="fa-solid fa-hand-holding-dollar text-sm"></i> <span x-text="lang === 'sw' ? 'Weka Ahadi Yako' : 'Add My Pledge'"></span>
-                            </button>
-                        </div>
-
-                        <!-- Grid: Chat & Pledges Sidebar -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <!-- Chat Box (2 cols) -->
-                            <div class="md:col-span-2 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col justify-between h-[450px]">
-                                <div class="border-b pb-2 flex justify-between items-center text-xs font-bold text-slate-600">
-                                    <span><i class="fa-solid fa-users text-purple-600 mr-1"></i> Group Chat Active</span>
-                                    <span class="text-emerald-600">Online</span>
-                                </div>
-                                <div class="flex-1 overflow-y-auto space-y-3 py-3 text-xs">
-                                    <template x-for="msg in chatMessages" :key="msg.id">
-                                        <div :class="msg.sender === authForm.name ? 'bg-purple-600 text-white ml-auto' : 'bg-slate-100 text-slate-800'" class="p-3 rounded-2xl max-w-[85%] space-y-1 shadow-2xs">
-                                            <div class="flex justify-between items-center gap-2 text-[10px] opacity-80">
-                                                <span class="font-bold" x-text="msg.sender"></span>
-                                                <span x-text="msg.time"></span>
-                                            </div>
-                                            <p class="text-xs" x-text="msg.text"></p>
-                                        </div>
-                                    </template>
-                                </div>
-                                <div class="pt-2 border-t flex items-center space-x-2">
-                                    <input type="text" x-model="newMessageText" @keydown.enter="sendChatMessage" placeholder="Andika ujumbe au ahadi..." class="flex-1 bg-slate-100 border-0 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                                    <button @click="sendChatMessage" class="bg-purple-600 text-white px-4 py-2 rounded-xl text-xs font-bold cursor-pointer">
-                                        <i class="fa-solid fa-paper-plane"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Ahadi za Wanakamati (1 col) -->
-                            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
-                                <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider text-purple-700" x-text="lang === 'sw' ? 'Ahadi za Wanakamati' : 'Committee Pledges'"></h4>
-                                <div class="space-y-2 max-h-[380px] overflow-y-auto text-xs">
-                                    <template x-if="pledges.length === 0">
-                                        <p class="text-xs text-slate-400 text-center py-6" x-text="lang === 'sw' ? 'Bado hakuna ahadi zilizowekwa.' : 'No pledges recorded yet.'"></p>
-                                    </template>
-                                    <template x-for="p in pledges" :key="p.id">
-                                        <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
-                                            <div>
-                                                <p class="font-bold text-slate-800" x-text="p.name"></p>
-                                                <span class="text-[10px] text-purple-600 font-semibold" x-text="p.note"></span>
-                                            </div>
-                                            <span class="font-extrabold text-emerald-700 text-xs" x-text="'TSh ' + Number(p.amount).toLocaleString()"></span>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 2: AI CARD GENERATOR & QR CODES -->
-                    <div x-show="currentTab === 'cards'" x-cloak class="space-y-6">
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
-                            <div>
-                                <h2 class="text-base font-bold text-slate-800" x-text="lang === 'sw' ? 'Gemini AI Card Generator & QR Code' : 'AI Card Generator'"></h2>
-                                <p class="text-xs text-slate-500" x-text="lang === 'sw' ? 'Tengeneza kadi nzuri za graphics kupitia AI na QR code kwa ajili ya wageni.' : 'Generate stunning graphic cards with Gemini AI & QR codes.'"></p>
-                            </div>
-                            <button @click="generateAICard" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer shadow-md">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> <span x-text="lang === 'sw' ? 'Generate na AI' : 'Generate with AI'"></span>
-                            </button>
-                        </div>
-
-                        <!-- Card Preview -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="rounded-3xl p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[360px] border-2 border-amber-400/40"
-                                 :class="aiCardTheme">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-[10px] bg-white/20 text-white px-3 py-1 rounded-full font-bold uppercase" x-text="activeEvent.type"></span>
-                                    <span class="text-xs font-mono text-amber-200">AI-VERIFIED</span>
-                                </div>
-
-                                <div class="text-center my-4 space-y-2">
-                                    <h3 class="text-2xl font-extrabold text-amber-100 font-serif" x-text="activeEvent.name"></h3>
-                                    <p class="text-xs text-slate-200"><i class="fa-solid fa-location-dot mr-1"></i> <span x-text="activeEvent.venue"></span> | <i class="fa-solid fa-calendar mr-1 ml-1"></i> <span x-text="activeEvent.date"></span></p>
-                                </div>
-
-                                <div class="bg-black/40 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 flex items-center justify-between text-white">
-                                    <div>
-                                        <span class="text-[10px] text-amber-300 uppercase font-semibold block">Mgeni Mwalikwa</span>
-                                        <span class="text-sm font-bold">Juma Hassan</span>
-                                        <span class="block text-[10px] text-emerald-300 font-mono">Single / Double Pass</span>
-                                    </div>
-                                    <div class="bg-white p-2 rounded-xl text-slate-900 font-mono text-[9px] font-bold text-center">
-                                        <i class="fa-solid fa-qrcode text-2xl text-purple-900"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-                                <h4 class="font-bold text-slate-800 text-sm" x-text="lang === 'sw' ? 'Maelezo ya AI Prompt' : 'AI Prompt Settings'"></h4>
-                                <p class="text-xs text-slate-500" x-text="lang === 'sw' ? 'AI inachambua aina ya sherehe na kuchagua rangi na muundo sahihi wa kadi bila picha za watu.' : 'AI generates pure graphic themes tailored to your event type.'"></p>
-                                <div class="p-3 bg-purple-50 rounded-xl text-xs text-purple-900 font-mono">
-                                    Status: Connected to Gemini AI Engine ✓
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 3: BUDGET, FAMILY FUND & CONTRIBUTIONS -->
-                    <div x-show="currentTab === 'finance'" x-cloak class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                                <span class="text-slate-400 font-semibold uppercase">Target Budget</span>
-                                <h3 class="text-xl font-extrabold text-purple-700" x-text="'TSh ' + Number(activeEvent.targetBudget || 0).toLocaleString()"></h3>
-                            </div>
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                                <span class="text-slate-400 font-semibold uppercase">Mchango (Single / Double)</span>
-                                <p class="text-sm font-bold text-slate-800">Single: TSh <span x-text="activeEvent.singleContrib"></span></p>
-                                <p class="text-sm font-bold text-slate-800">Double: TSh <span x-text="activeEvent.doubleContrib"></span></p>
-                            </div>
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-                                <span class="text-slate-400 font-semibold uppercase">Mchango wa Familia</span>
-                                <h3 class="text-xl font-extrabold text-emerald-600" x-text="'TSh ' + Number(activeEvent.familyFund || 0).toLocaleString()"></h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 4: GATE QR CHECK-IN -->
-                    <div x-show="currentTab === 'gate'" x-cloak class="space-y-6">
-                        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-                            <h2 class="text-base font-bold text-slate-800" x-text="lang === 'sw' ? 'Uhakiki wa Lango Kuu (QR Code Scan)' : 'Gate QR Verification'"></h2>
-                            <button @click="alert('QR Scanner Activated!')" class="bg-purple-600 text-white font-bold py-3 px-6 rounded-xl text-xs hover:bg-purple-700 transition shadow-md cursor-pointer flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-camera"></i> Scan QR Code
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </template>
-
-        </section>
-    </main>
-
-    <!-- MODAL: CREATE EVENT (WITH ALL EVENT TYPES & CUSTOM INPUT) -->
-    <div x-show="openWizard" x-cloak class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 my-auto">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-slate-800 text-base" x-text="lang === 'sw' ? 'Anzisha Sherehe Mpya' : 'Create New Event'"></h3>
-                <button @click="openWizard = false" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-
-            <div class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Aina ya Sherehe:' : 'Event Type:'"></label>
-                    <select x-model="newEvent.type" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold focus:outline-none">
-                        <option value="Wedding">Wedding / Harusi</option>
-                        <option value="Send-off">Send-off</option>
-                        <option value="Reception">Reception</option>
-                        <option value="Dinner Party">Dinner Party</option>
-                        <option value="Kitchen Party">Kitchen Party</option>
-                        <option value="Birthday">Birthday Party</option>
-                        <option value="Graduation">Graduation Ceremony</option>
-                        <option value="Engagement">Engagement</option>
-                        <option value="Baby Shower">Baby Shower</option>
-                        <option value="Bridal Shower">Bridal Shower</option>
-                        <option value="Anniversary">Anniversary</option>
-                        <option value="Corporate">Corporate Event</option>
-                        <option value="Conference">Conference / Meeting</option>
-                        <option value="Religious">Religious Event</option>
-                        <option value="Funeral">Funeral / Memorial</option>
-                        <option value="Other">Nyinginezo / Other (Custom)</option>
-                    </select>
-                </div>
-
-                <!-- Kama akichagua Nyinginezo -->
-                <template x-if="newEvent.type === 'Other'">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Andika Jina la Sherehe Yako:' : 'Custom Event Name:'"></label>
-                        <input type="text" x-model="newEvent.customType" placeholder="Mf. Sherehe ya Kuzaliwa Mtoto" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                </template>
-
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Jina la Sherehe:' : 'Event Title:'"></label>
-                    <input type="text" x-model="newEvent.name" placeholder="Mf. Harusi ya John na Mary" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Ukumbi / Eneo:' : 'Venue:'"></label>
-                        <input type="text" x-model="newEvent.venue" placeholder="Eneo la sherehe" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Tarehe:' : 'Date:'"></label>
-                        <input type="date" x-model="newEvent.date" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Target Budget (TSh):' : 'Target Budget:'"></label>
-                        <input type="number" x-model="newEvent.targetBudget" placeholder="5000000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Mchango Single (TSh):' : 'Single Contribution:'"></label>
-                        <input type="number" x-model="newEvent.singleContrib" placeholder="20000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Mchango Double (TSh):' : 'Double Contribution:'"></label>
-                        <input type="number" x-model="newEvent.doubleContrib" placeholder="40000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1" x-text="lang === 'sw' ? 'Mchango wa Familia (TSh):' : 'Family Fund (TSh):'"></label>
-                    <input type="number" x-model="newEvent.familyFund" placeholder="1000000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                </div>
-            </div>
-
-            <div class="pt-3 border-t flex justify-end space-x-2">
-                <button @click="openWizard = false" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 cursor-pointer">Ghairi</button>
-                <button @click="createNewEvent" class="bg-purple-600 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-purple-700 transition cursor-pointer" x-text="lang === 'sw' ? 'Hifadhi & Anzisha' : 'Save & Publish'"></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: ADD PLEDGE -->
-    <div x-show="openPledgeModal" x-cloak class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-slate-800 text-base" x-text="lang === 'sw' ? 'Weka Ahadi Yako' : 'Add Pledge'"></h3>
-                <button @click="openPledgeModal = false" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div class="space-y-3 text-xs">
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Kiasi cha Ahadi (TSh):</label>
-                    <input type="number" x-model="newPledge.amount" placeholder="50000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Maelezo / Ujumbe:</label>
-                    <input type="text" x-model="newPledge.note" placeholder="Nitatoa tarehe fulani" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 focus:outline-none">
-                </div>
-            </div>
-            <div class="pt-3 border-t flex justify-end space-x-2">
-                <button @click="openPledgeModal = false" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 cursor-pointer">Ghairi</button>
-                <button @click="addPledge" class="bg-purple-600 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-purple-700 cursor-pointer">Weka Ahadi</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ALPINE LOGIC -->
-    <script>
-        function eventApp() {
-            return {
-                lang: 'sw',
-                isLoggedIn: false,
-                currentTab: 'chat',
-                openWizard: false,
-                openPledgeModal: false,
-                activeEventId: null,
-                aiCardTheme: 'bg-gradient-to-tr from-slate-900 via-purple-950 to-slate-900 text-white',
-
-                authForm: { name: '', phone: '', role: 'mwenyekiti' },
-                newEvent: { name: '', type: 'Wedding', customType: '', venue: '', date: '', targetBudget: 5000000, singleContrib: 20000, doubleContrib: 40000, familyFund: 1000000 },
-                newPledge: { amount: '', note: '' },
-                newMessageText: '',
-
-                events: [],
-                chatMessages: [],
-                pledges: [],
-
-                handleRegister() {
-                    if (!this.authForm.name || !this.authForm.phone) {
-                        alert('Tafadhali jaza jina na namba ya simu!');
-                        return;
-                    }
-                    this.isLoggedIn = true;
-                },
-
-                get activeEvent() {
-                    return this.events.find(e => e.id === this.activeEventId) || null;
-                },
-
-                createNewEvent() {
-                    if (!this.newEvent.name || !this.newEvent.venue || !this.newEvent.date) {
-                        alert('Tafadhali jaza taarifa za sherehe!');
-                        return;
-                    }
-
-                    const eventTypeName = this.newEvent.type === 'Other' ? (this.newEvent.customType || 'Sherehe Maalum') : this.newEvent.type;
-
-                    const created = {
-                        id: Date.now(),
-                        name: this.newEvent.name,
-                        type: eventTypeName,
-                        venue: this.newEvent.venue,
-                        date: this.newEvent.date,
-                        targetBudget: Number(this.newEvent.targetBudget),
-                        singleContrib: Number(this.newEvent.singleContrib),
-                        doubleContrib: Number(this.newEvent.doubleContrib),
-                        familyFund: Number(this.newEvent.familyFund)
-                    };
-
-                    this.events.push(created);
-                    this.activeEventId = created.id;
-                    this.openWizard = false;
-                },
-
-                sendChatMessage() {
-                    if (!this.newMessageText.trim()) return;
-                    const now = new Date();
-                    const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-                    this.chatMessages.push({ id: Date.now(), sender: this.authForm.name, text: this.newMessageText, time: timeStr });
-                    this.newMessageText = '';
-                },
-
-                addPledge() {
-                    if (!this.newPledge.amount) return;
-                    this.pledges.push({ id: Date.now(), name: this.authForm.name, amount: this.newPledge.amount, note: this.newPledge.note || 'Ahadi mpya' });
-                    this.openPledgeModal = false;
-                    this.newPledge = { amount: '', note: '' };
-                },
-
-                generateAICard() {
-                    const themes = [
-                        'bg-gradient-to-tr from-slate-900 via-purple-950 to-slate-900 text-white',
-                        'bg-gradient-to-tr from-emerald-950 via-teal-900 to-slate-900 text-white',
-                        'bg-gradient-to-tr from-amber-950 via-yellow-900 to-slate-900 text-white',
-                        'bg-gradient-to-tr from-rose-950 via-pink-900 to-slate-900 text-white'
-                    ];
-                    this.aiCardTheme = themes[Math.floor(Math.random() * themes.length)];
-                    alert('Gemini AI imefanikiwa kuzalisha kadi mpya yenye graphics safi na QR code!');
-                }
-            }
-        }
-    </script>
+      }
+    }
+  </script>
 </body>
 </html>
