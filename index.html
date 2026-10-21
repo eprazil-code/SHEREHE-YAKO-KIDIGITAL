@@ -14,7 +14,7 @@
     <!-- QR Code Generator -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <!-- FIREBASE SDK (v8 Compatible for Easy Realtime DB Integration) -->
+    <!-- FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -61,20 +61,18 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-black">
 
-    <!-- FIREBASE INITIALIZATION SCRIPT -->
+    <!-- FIREBASE INITIALIZATION SCRIPT WITH YOUR ACTUAL API KEY -->
     <script>
-        // Realtime Database Configuration for Sherehe Yako Kidigitari
         const firebaseConfig = {
-            apiKey: "AIzaSyDummyKeyForShereheYako2026Db",
+            apiKey: "AIzaSyC8kIR7RylUdtt9QHOdQe1xUn_PMuATs2s",
             authDomain: "sherehe-yako-kidigitari.firebaseapp.com",
             databaseURL: "https://sherehe-yako-kidigitari-default-rtdb.firebaseio.com",
             projectId: "sherehe-yako-kidigitari",
             storageBucket: "sherehe-yako-kidigitari.appspot.com",
-            messagingSenderId: "987654321012",
-            appId: "1:987654321012:web:shereheyakokidigitali"
+            messagingSenderId: "177014031706",
+            appId: "1:177014031706:web:shereheyakokidigitali"
         };
 
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -94,11 +92,6 @@
                 <a href="https://wa.me/255755154363" target="_blank" class="text-emerald-400 hover:underline flex items-center gap-1">
                     <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Support
                 </a>
-                <span class="text-slate-600">|</span>
-                <select id="langSelect" onchange="toggleLanguage(this.value)" class="bg-slate-800 text-xs text-slate-200 rounded px-2 py-0.5 border border-slate-700 outline-none">
-                    <option value="sw">🇹🇿 Swahili</option>
-                    <option value="en">🇬🇧 English</option>
-                </select>
             </div>
         </div>
     </div>
@@ -121,9 +114,7 @@
                 <!-- DESKTOP MENU -->
                 <div class="hidden md:flex items-center gap-6 text-sm font-medium">
                     <button onclick="showView('landing-view')" class="hover:text-amber-400 transition">Nyumbani</button>
-                    <button onclick="scrollToSection('features')" class="hover:text-amber-400 transition">Huduma</button>
                     <button onclick="scrollToSection('pricing')" class="hover:text-amber-400 transition">Gharama</button>
-                    <button onclick="showView('vendors-view')" class="hover:text-amber-400 transition">Vendors</button>
                     <button onclick="showModal('feedback-modal')" class="hover:text-amber-400 transition">Maoni</button>
                 </div>
 
@@ -155,7 +146,6 @@
 
         <!-- 1. LANDING PAGE VIEW -->
         <section id="landing-view" class="view-section">
-            <!-- HERO SECTION -->
             <div class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 border-b border-slate-800">
                 <div class="absolute inset-0 bg-pattern"></div>
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
@@ -169,49 +159,16 @@
                         “Sherehe yako. Kila kitu sehemu moja.”
                     </p>
                     <p class="max-w-3xl mx-auto text-slate-300 text-base sm:text-lg mb-8 leading-relaxed">
-                        Tengeneza kadi yako ya kidigital, waalike wageni, simamia RSVP, michango, QR check-in, budget, seating, vendors na kila kitu kinachohitajika kwa sherehe yako.
+                        Tengeneza kadi yako ya kidigital, waalike wageni, simamia RSVP, michango, QR check-in, budget, seating na kila kitu kinachohitajika kwa sherehe yako.
                     </p>
 
-                    <!-- HERO BUTTONS -->
                     <div class="flex flex-wrap justify-center items-center gap-4 mb-12">
                         <button onclick="showView('register-view')" class="px-8 py-4 rounded-xl gold-gradient text-slate-950 font-extrabold text-lg shadow-xl shadow-amber-500/10 hover:scale-105 transition">
                             ANZA TRIAL BURE
                         </button>
-                        <button onclick="scrollToSection('demo')" class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 text-lg transition">
-                            TAZAMA DEMO
-                        </button>
                         <button onclick="showPaymentPage()" class="px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-lg shadow-lg shadow-indigo-600/30 transition flex items-center gap-2">
                             <i class="fa-solid fa-crown text-amber-300"></i> VIP — TSh 50,000
                         </button>
-                    </div>
-
-                    <!-- FEATURES BADGES GRID -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 max-w-5xl mx-auto text-xs text-slate-300">
-                        <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800"><i class="fa-solid fa-envelope-open-text text-amber-400 text-base mb-1 block"></i> Digital Invitations</div>
-                        <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800"><i class="fa-brands fa-whatsapp text-emerald-400 text-base mb-1 block"></i> WhatsApp Sharing</div>
-                        <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800"><i class="fa-solid fa-clipboard-check text-blue-400 text-base mb-1 block"></i> Live RSVP</div>
-                        <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800"><i class="fa-solid fa-[#10b981] fa-qrcode text-purple-400 text-base mb-1 block"></i> QR Check-in</div>
-                        <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800"><i class="fa-solid fa-hand-holding-dollar text-emerald-400 text-base mb-1 block"></i> Contributions</div>
-                        <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800"><i class="fa-solid fa-calculator text-amber-400 text-base mb-1 block"></i> Budget & Seating</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- EVENT TYPES CAROUSEL -->
-            <div class="py-12 bg-slate-900/50 border-b border-slate-800">
-                <div class="max-w-7xl mx-auto px-4 text-center">
-                    <p class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-4">Mifumo Inayobadilika Kulingana na Aina ya Sherehe</p>
-                    <div class="flex flex-wrap justify-center gap-2 max-w-5xl mx-auto">
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">💍 Harusi</span>
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">👰 Send-off</span>
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">🍳 Kitchen Party</span>
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">🎂 Birthday</span>
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">🎓 Graduation</span>
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">🌙 Nikkah</span>
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">👶 Baby Shower</span>
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">🏢 Corporate Event</span>
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">✝️ Church Event</span>
-                        <span class="px-3 py-1.5 bg-slate-800 text-slate-200 rounded-full text-xs font-semibold border border-slate-700">🕊️ Funeral / Memorial</span>
                     </div>
                 </div>
             </div>
@@ -234,8 +191,6 @@
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Kutengeneza kadi ya Jaribio</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Kuongeza mpaka wageni 10</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Kuona mfumo wa RSVP</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Preview ya QR Code Check-in</li>
-                                <li class="flex items-center gap-2 text-slate-500"><i class="fa-solid fa-lock text-slate-600"></i> Advanced Management (Locked)</li>
                             </ul>
                         </div>
                         <button onclick="showView('register-view')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition">
@@ -253,16 +208,11 @@
                             <h3 class="text-2xl font-bold text-white mt-2 mb-4">VIP PACKAGE</h3>
                             <div class="text-4xl font-extrabold gold-text mb-2">TSh 50,000/=</div>
                             <p class="text-xs text-amber-300/80 mb-6">ONE EVENT / FULL EVENT OPERATION</p>
-                            
-                            <p class="text-sm text-slate-300 italic mb-4">“Lipa TSh 50,000 na tumia mfumo kwa operation nzima ya sherehe yako.”</p>
-                            
                             <ul class="space-y-2.5 text-xs text-slate-200 mb-8">
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Full Digital Invitation Cards</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Unlimited Guest Management & Personalized Links</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Live QR Code Scanner & Gate Management</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Full Contributions & Budget Tracker</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Visual Seating Planner & Committee Roles</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> AI Event Assistant & Reminders</li>
                             </ul>
                         </div>
                         <button onclick="showPaymentPage()" class="w-full py-3.5 rounded-xl gold-gradient text-slate-950 font-extrabold text-base hover:brightness-110 shadow-lg transition">
@@ -283,7 +233,7 @@
                 
                 <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Jina Buono (Full Name)</label>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Jina Lako (Full Name)</label>
                         <input type="text" id="regName" required placeholder="Mf. Amina Hassan" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
                     </div>
                     <div>
@@ -303,25 +253,11 @@
                         <select id="regEventType" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
                             <option value="">-- Chagua Aina ya Event --</option>
                             <option value="Harusi">Harusi</option>
-                            <option value="Ndoa">Ndoa</option>
-                            <option value="Nikkah">Nikkah</option>
                             <option value="Send-off">Send-off</option>
                             <option value="Kitchen Party">Kitchen Party</option>
                             <option value="Birthday">Birthday</option>
                             <option value="Graduation">Graduation</option>
-                            <option value="Baby Shower">Baby Shower</option>
-                            <option value="Bridal Shower">Bridal Shower</option>
-                            <option value="Anniversary">Anniversary</option>
-                            <option value="Maulid">Maulid</option>
-                            <option value="Religious Event">Religious Event</option>
-                            <option value="Church Event">Church Event</option>
-                            <option value="Memorial">Memorial</option>
-                            <option value="Funeral">Funeral</option>
                             <option value="Corporate Event">Corporate Event</option>
-                            <option value="Conference">Conference</option>
-                            <option value="Concert">Concert</option>
-                            <option value="Awards">Awards</option>
-                            <option value="Family Reunion">Family Reunion</option>
                             <option value="Other">Aina Nyingine</option>
                         </select>
                     </div>
@@ -379,13 +315,11 @@
                     <p class="text-amber-400 text-lg font-bold mt-1">Kiasi: TSh 50,000/=</p>
                 </div>
 
-                <!-- PAYMENT INSTRUCTIONS -->
                 <div class="bg-slate-800/80 rounded-xl p-4 border border-slate-700 mb-6 text-sm">
                     <p class="font-bold text-slate-200 mb-2">Maelekezo ya Malipo:</p>
                     <ol class="list-decimal list-inside space-y-1.5 text-xs text-slate-300">
                         <li>Tuma <strong>TSh 50,000/=</strong> kwenda namba: <strong class="text-amber-400 text-sm">0755154363</strong> (M-Pesa / Tigo Pesa).</li>
-                        <li>Baada ya kutuma, jaza taarifa za muamala hapa chini.</li>
-                        <li>Bonyeza kitufe cha kutuma ili kupata idhini (Approval) ya Admin.</li>
+                        <li>Jaza taarifa za muamala hapa chini baada ya kutuma.</li>
                     </ol>
                 </div>
 
@@ -399,7 +333,7 @@
                         <input type="tel" id="payPhone" required placeholder="07XXXXXXXX" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Transaction / Reference Number (Kumbukumbu ya Muamala)</label>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Reference Number (Kumbukumbu ya Muamala)</label>
                         <input type="text" id="payRef" required placeholder="Mf. 9AC87X990" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-amber-500 uppercase">
                     </div>
 
@@ -412,7 +346,6 @@
 
         <!-- 5. USER DASHBOARD VIEW -->
         <section id="dashboard-view" class="view-section hidden py-8 px-4 max-w-7xl mx-auto">
-            <!-- DASHBOARD HEADER -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <div class="flex items-center gap-3">
@@ -435,14 +368,11 @@
                 </div>
             </div>
 
-            <!-- DASHBOARD TABS -->
             <div class="flex border-b border-slate-800 mb-6 overflow-x-auto gap-2">
                 <button onclick="switchDashTab('tab-overview')" class="dash-tab active px-4 py-2.5 text-xs font-bold border-b-2 border-amber-400 text-amber-400 whitespace-nowrap">Overview</button>
                 <button onclick="switchDashTab('tab-card')" class="dash-tab px-4 py-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">Digital Card Designer</button>
                 <button onclick="switchDashTab('tab-guests')" class="dash-tab px-4 py-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">Guests & RSVP</button>
                 <button onclick="switchDashTab('tab-qr')" class="dash-tab px-4 py-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">QR Check-in Scanner</button>
-                <button onclick="switchDashTab('tab-budget')" class="dash-tab px-4 py-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">Budget & Contributions</button>
-                <button onclick="switchDashTab('tab-ai')" class="dash-tab px-4 py-2.5 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap"><i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> AI Assistant</button>
             </div>
 
             <!-- TAB: OVERVIEW -->
@@ -469,17 +399,8 @@
 
             <!-- TAB: DIGITAL CARD DESIGNER -->
             <div id="tab-card" class="dash-tab-content hidden grid lg:grid-cols-2 gap-8">
-                <!-- DESIGN CONTROLS -->
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
                     <h3 class="text-lg font-bold text-white">Tengeneza Mwaliko Wako</h3>
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">Mandhari (Theme)</label>
-                        <select id="cardTheme" onchange="updateCardPreview()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
-                            <option value="luxury">Luxury Gold & Dark</option>
-                            <option value="floral">Floral Elegance</option>
-                            <option value="royal">Royal Blue</option>
-                        </select>
-                    </div>
                     <div>
                         <label class="block text-xs text-slate-400 mb-1">Majina ya Maharusi / Wahusika</label>
                         <input type="text" id="cardTitle" value="Amina & Juma" oninput="updateCardPreview()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm">
@@ -494,7 +415,6 @@
                     </div>
                 </div>
 
-                <!-- LIVE CARD PREVIEW -->
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 flex flex-col items-center justify-center">
                     <div id="cardPreviewBox" class="w-full max-w-sm p-8 rounded-2xl border border-amber-500/40 text-center space-y-4 bg-slate-950 shadow-2xl relative">
                         <span class="text-[10px] uppercase tracking-widest text-amber-400 block font-bold">MWALIKO WA SHEREHE</span>
@@ -502,7 +422,6 @@
                         <p id="previewDate" class="text-xs text-slate-300">Jumamosi, 15 Disemba 2026 - Saa 12:00 Jioni</p>
                         <p id="previewVenue" class="text-xs text-amber-400 font-semibold">Mlimani City Hall, Dar es Salaam</p>
                         <div id="cardQrCode" class="flex justify-center my-4 p-2 bg-white rounded-lg inline-block mx-auto"></div>
-                        <span class="text-[10px] text-slate-500 block">Unique QR Access Code</span>
                     </div>
                 </div>
             </div>
@@ -539,29 +458,6 @@
                     <div id="scanResult" class="mt-4 hidden p-3 rounded-lg text-xs font-bold"></div>
                 </div>
             </div>
-
-            <!-- TAB: BUDGET -->
-            <div id="tab-budget" class="dash-tab-content hidden space-y-6">
-                <h3 class="text-lg font-bold text-white">Bajeti na Michango</h3>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-slate-900 p-6 rounded-xl border border-slate-800">
-                        <h4 class="text-sm font-bold text-amber-400 mb-2">Lengo la Michango (Target)</h4>
-                        <div class="text-3xl font-extrabold text-white">TSh 15,000,000</div>
-                        <p class="text-xs text-slate-400 mt-1">Zilizokusanywa: TSh 4,500,000</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: AI ASSISTANT -->
-            <div id="tab-ai" class="dash-tab-content hidden max-w-xl mx-auto space-y-4">
-                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-                    <h3 class="text-lg font-bold text-white mb-2"><i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> SHEREHE YAKO AI ASSISTANT</h3>
-                    <p class="text-xs text-slate-400 mb-4">Uliza chochote kuhusu bajeti, ratiba, au jumbe za mwaliko kwa sherehe yako.</p>
-                    <textarea id="aiPrompt" rows="3" placeholder="Mfano: Ninapanga bajeti ya harusi ya Mlimani City kwa watu 200, nisaidie mchanganuo." class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-xs text-slate-100 mb-3"></textarea>
-                    <button onclick="askAiAssistant()" class="w-full py-2.5 gold-gradient text-slate-950 font-bold rounded-lg text-xs">ULIZA AI</button>
-                    <div id="aiResponse" class="mt-4 p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-300 hidden leading-relaxed"></div>
-                </div>
-            </div>
         </section>
 
         <!-- 6. ADMIN DASHBOARD VIEW -->
@@ -569,32 +465,11 @@
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8 flex justify-between items-center">
                 <div>
                     <h1 class="text-2xl font-bold text-amber-400">ADMIN CONTROL PANEL</h1>
-                    <p class="text-xs text-slate-400">Logii kama: eprazil@gmail.com</p>
+                    <p class="text-xs text-slate-400">Login kama: eprazil@gmail.com</p>
                 </div>
                 <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-500/20 text-red-400 text-xs rounded-lg border border-red-500/30">Logout Admin</button>
             </div>
 
-            <!-- ADMIN STATS -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
-                    <span class="text-xs text-slate-400 block">Total Users</span>
-                    <span class="text-2xl font-bold text-white" id="admTotalUsers">1,250</span>
-                </div>
-                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
-                    <span class="text-xs text-slate-400 block">VIP Users</span>
-                    <span class="text-2xl font-bold text-amber-400" id="admVipUsers">320</span>
-                </div>
-                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
-                    <span class="text-xs text-slate-400 block">Pending Payments</span>
-                    <span class="text-2xl font-bold text-indigo-400" id="admPendingPay">18</span>
-                </div>
-                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
-                    <span class="text-xs text-slate-400 block">Total Revenue</span>
-                    <span class="text-2xl font-bold text-emerald-400" id="admRevenue">TSh 16,000,000</span>
-                </div>
-            </div>
-
-            <!-- PENDING PAYMENTS APPROVAL TABLE -->
             <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6">
                 <h3 class="text-base font-bold text-white mb-4">Maombi ya VIP Yanayosubiri Idhini (Pending Approval)</h3>
                 <div class="overflow-x-auto">
@@ -641,7 +516,7 @@
         </div>
     </div>
 
-    <!-- MAIN FOOTER WITH CUSTOMER CARE -->
+    <!-- FOOTER -->
     <footer class="bg-slate-900 border-t border-slate-800 py-8 px-4 text-slate-400 text-xs">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
@@ -651,7 +526,6 @@
             <div>
                 <span class="font-bold text-slate-200 block mb-2">CUSTOMER CARE HOTLINE</span>
                 <p class="text-amber-400 font-bold text-sm mb-1"><i class="fa-solid fa-phone"></i> 0657576696 / 0755154363</p>
-                <p>Huduma kwa Wateja Masaa 24/7 Tanzania</p>
             </div>
             <div class="text-right flex flex-col justify-end">
                 <p>&copy; 2026 SHEREHE YAKO KIDIGITAL. All Rights Reserved.</p>
@@ -659,12 +533,10 @@
         </div>
     </footer>
 
-    <!-- MAIN APPLICATION SCRIPT LOGIC -->
+    <!-- SCRIPT LOGIC -->
     <script>
         let currentUser = null;
-        let qrCodeObj = null;
 
-        // View Navigation
         function showView(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById(viewId);
@@ -672,18 +544,9 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function scrollToSection(id) {
-            showView('landing-view');
-            setTimeout(() => {
-                const el = document.getElementById(id);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        }
-
         function showModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        // Auth Logic with Firebase Auth & Realtime Database
         function handleRegister(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value;
@@ -705,7 +568,6 @@
                         createdAt: new Date().toISOString()
                     };
 
-                    // Save user to Realtime Database
                     database.ref('users/' + uid).set(userData).then(() => {
                         currentUser = userData;
                         updateUiState();
@@ -751,20 +613,13 @@
                 document.getElementById('dashWelcome').innerText = `KARIBU ${currentUser.name.toUpperCase()}`;
                 document.getElementById('dashEventType').innerText = currentUser.eventType || 'Sherehe';
                 document.getElementById('accountBadge').innerText = currentUser.accountType;
-
-                if (currentUser.accountType === 'VIP_ACTIVE') {
-                    document.getElementById('vipUpgradeBanner').classList.add('hidden');
-                }
             } else {
                 document.getElementById('authNavButtons').classList.remove('hidden');
                 document.getElementById('userNavProfile').classList.add('hidden');
             }
         }
 
-        // Payment Submission
-        function showPaymentPage() {
-            showView('payment-view');
-        }
+        function showPaymentPage() { showView('payment-view'); }
 
         function handlePaymentSubmit(e) {
             e.preventDefault();
@@ -787,7 +642,6 @@
             });
         }
 
-        // Dashboard Tabs
         function switchDashTab(tabId) {
             document.querySelectorAll('.dash-tab').forEach(b => {
                 b.classList.remove('border-amber-400', 'text-amber-400');
@@ -801,7 +655,6 @@
             if (tabId === 'tab-card') updateCardPreview();
         }
 
-        // Digital Card Preview Generator
         function updateCardPreview() {
             const title = document.getElementById('cardTitle').value;
             const date = document.getElementById('cardDate').value;
@@ -820,7 +673,6 @@
             });
         }
 
-        // Add Guest & Scan Simulation
         function addGuestPrompt() {
             const name = prompt("Ingiza Jina la Mgeni:");
             if (name) {
@@ -830,7 +682,7 @@
         }
 
         function shareWhatsApp(guestName) {
-            const msg = `Habari ${guestName} ❤️ Tunayo furaha kukualika kwenye sherehe yetu. Fungua mwaliko wako hapa: https://shereheyako.co.tz/invitation`;
+            const msg = `Habari ${guestName} ❤️ Tunayo furaha kukualika kwenye sherehe yetu.`;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -843,23 +695,10 @@
                 res.innerText = "ENTRY APPROVED ✅ - Karibu Kwenye Sherehe!";
             } else {
                 res.className = "mt-4 p-3 rounded-lg text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/40";
-                res.innerText = "INVALID OR ALREADY SCAN ⚠️";
+                res.innerText = "INVALID OR ALREADY SCANNED ⚠️";
             }
         }
 
-        // AI Assistant Integration
-        function askAiAssistant() {
-            const promptText = document.getElementById('aiPrompt').value;
-            const resBox = document.getElementById('aiResponse');
-            resBox.classList.remove('hidden');
-            resBox.innerText = "Inafikiri na kuandaa majibu kwa ajili yako...";
-
-            setTimeout(() => {
-                resBox.innerText = `💡 SHREHE YAKO AI PENDKEZO:\n\nKwa ${promptText || 'Sherehe Yako'}:\n1. Bajeti ya Ukumbi & Chakula: 60%\n2. Mapambo na Taa: 20%\n3. Picha na Video: 10%\n4. Akiba ya dharura: 10%\n\nUshauri: Hakikisha unathibitisha RSVP za wageni wako siku 7 kabla ya event.`;
-            }, 1000);
-        }
-
-        // Admin Workflows
         function showAdminLogin() {
             const email = prompt("Ingiza Admin Email:");
             if (email === "eprazil@gmail.com") {
@@ -872,7 +711,7 @@
         function approvePayment(btn) {
             const row = btn.closest('tr');
             row.cells[4].innerHTML = `<span class="text-emerald-400 font-bold">APPROVED ✅</span>`;
-            alert("VIP Activated for user!");
+            alert("VIP Activated!");
         }
 
         function rejectPayment(btn) {
