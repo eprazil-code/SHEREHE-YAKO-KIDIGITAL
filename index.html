@@ -278,7 +278,7 @@
             </div>
         </section>
 
-        <!-- 3. LOGIN VIEW -->
+        <!-- 3. LOGIN VIEW (Yenye Forgot Password Link) -->
         <section id="login-view" class="view-section hidden py-12 px-4 max-w-md mx-auto">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
                 <div class="text-center mb-6">
@@ -299,6 +299,10 @@
                                 <i id="loginEyeIcon" class="fa-solid fa-eye"></i>
                             </button>
                         </div>
+                    </div>
+
+                    <div class="text-right">
+                        <button type="button" onclick="showModal('reset-password-modal')" class="text-xs text-amber-400 hover:underline">Umesahau Password?</button>
                     </div>
 
                     <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-bold text-sm hover:brightness-110 transition mt-2">
@@ -407,7 +411,7 @@
                 </div>
             </div>
 
-            <!-- TAB: DIGITAL CARD DESIGNER (MOBILE SCREEN PERFECT SIZE) -->
+            <!-- TAB: DIGITAL CARD DESIGNER (MOBILE FULL VIEW CARDS) -->
             <div id="tab-card" class="dash-tab-content hidden grid lg:grid-cols-2 gap-8 items-start">
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
                     <h3 class="text-lg font-bold text-white">Tengeneza Mwaliko Wako</h3>
@@ -425,7 +429,6 @@
                     </div>
                 </div>
 
-                <!-- CARD PREVIEW PERFECTED FOR MOBILE SCREEN FULL VIEW -->
                 <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 flex justify-center items-center">
                     <div id="cardPreviewBox" class="w-full max-w-[340px] aspect-[9/16] p-6 sm:p-8 rounded-3xl border-2 border-amber-500/50 text-center flex flex-col justify-between items-center bg-slate-950 shadow-2xl relative overflow-hidden">
                         <div class="w-full">
@@ -439,7 +442,6 @@
                             <p id="previewVenue" class="text-xs text-amber-300 font-semibold bg-amber-500/10 py-1 px-3 rounded-full border border-amber-500/20 inline-block">Mlimani City Hall, Dar es Salaam</p>
                         </div>
 
-                        <!-- MODERATE NADIFU QR CODE -->
                         <div class="my-3 p-2 bg-white rounded-xl shadow-lg inline-block">
                             <div id="cardQrCode" class="w-[80px] h-[80px] flex items-center justify-center"></div>
                         </div>
@@ -485,7 +487,7 @@
             </div>
         </section>
 
-        <!-- 6. ADMIN DASHBOARD VIEW (Mapato & Approved Users Active Table) -->
+        <!-- 6. ADMIN DASHBOARD VIEW (Na Orodha ya Watumiaji, Password, Location, na VIP Manual Approval) -->
         <section id="admin-view" class="view-section hidden py-8 px-4 max-w-7xl mx-auto space-y-8">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex justify-between items-center">
                 <div>
@@ -510,13 +512,38 @@
                     <p class="text-[11px] text-slate-500 mt-2">Watumiaji waliothibitishwa rasmi</p>
                 </div>
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-                    <span class="text-xs text-slate-400 block mb-1">PENDING APPROVALS</span>
-                    <span id="adminPendingCount" class="text-3xl font-extrabold text-amber-400">0</span>
-                    <p class="text-[11px] text-slate-500 mt-2">Malipo yanayosubiri uthibitisho</p>
+                    <span class="text-xs text-slate-400 block mb-1">JUMLA YA USERS WOTE</span>
+                    <span id="adminTotalUsersCount" class="text-3xl font-extrabold text-indigo-400">0</span>
+                    <p class="text-[11px] text-slate-500 mt-2">Waliopo kwenye mfumo</p>
                 </div>
             </div>
 
-            <!-- TABLE 1: PENDING PAYMENTS -->
+            <!-- TABLE: ALL REGISTERED USERS (WITH EMAIL, PASSWORD, LOCATION & MANUAL VIP ACTION) -->
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
+                <h3 class="text-base font-bold text-amber-400 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-users"></i> Orodha ya Watumiaji Wote (Users, Email, Password, Location & VIP Control)
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-800 text-slate-400 uppercase">
+                            <tr>
+                                <th class="p-3">Jina</th>
+                                <th class="p-3">Simu</th>
+                                <th class="p-3">Email</th>
+                                <th class="p-3">Password</th>
+                                <th class="p-3">Location (GPS/IP)</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUsersRows">
+                            <!-- Realtime DB Users Data -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TABLE: PENDING PAYMENTS APPROVAL -->
             <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
                 <h3 class="text-base font-bold text-amber-400 mb-4 flex items-center gap-2">
                     <i class="fa-solid fa-clock"></i> Maombi ya VIP Yanayosubiri Idhini (Pending Approval)
@@ -538,33 +565,36 @@
                     </table>
                 </div>
             </div>
-
-            <!-- TABLE 2: APPROVED USERS LIST -->
-            <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
-                <h3 class="text-base font-bold text-emerald-400 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-circle-check"></i> Orodha ya Watumiaji Waliothibitishwa (Approved Users)
-                </h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs text-slate-300">
-                        <thead class="bg-slate-800 text-slate-400 uppercase">
-                            <tr>
-                                <th class="p-3">Jina</th>
-                                <th class="p-3">Simu</th>
-                                <th class="p-3">Ref Number</th>
-                                <th class="p-3">Kiasi Kilicholipwa</th>
-                                <th class="p-3">Tarehe</th>
-                                <th class="p-3">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminApprovedRows">
-                            <!-- Approved users data -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </section>
 
     </main>
+
+    <!-- RESET PASSWORD MODAL (FORGOT PASSWORD BY PHONE NUMBER) -->
+    <div id="reset-password-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full relative shadow-2xl">
+            <button onclick="closeModal('reset-password-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center mb-4">
+                <span class="inline-block p-3 rounded-full bg-amber-500/10 text-amber-400 mb-2">
+                    <i class="fa-solid fa-key text-2xl"></i>
+                </span>
+                <h3 class="text-lg font-bold text-white">Reset Password</h3>
+                <p class="text-xs text-slate-400">Ingiza namba ya simu uliyojisajilia</p>
+            </div>
+            <form onsubmit="handleResetPasswordSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Namba ya Simu</label>
+                    <input type="tel" id="resetPhoneInput" required placeholder="07XXXXXXXX" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Password Mpya</label>
+                    <input type="password" id="resetNewPassInput" required placeholder="******" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-500">
+                </div>
+                <button type="submit" class="w-full py-2.5 gold-gradient text-slate-950 font-bold rounded-lg text-xs hover:brightness-110 transition mt-2">
+                    BADILISHA PASSWORD
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- ADMIN LOGIN MODAL -->
     <div id="admin-login-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -633,6 +663,19 @@
     <script>
         let currentUser = null;
         let currentUserId = null;
+        let userLocation = "Inatafuta Location...";
+
+        // KUPATA LOCATION YA MTUMIAJI AUTOMATICALLY
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    userLocation = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)} (GPS)`;
+                },
+                () => { userLocation = "Dar es Salaam, TZ (Default)"; }
+            );
+        } else {
+            userLocation = "Tanzania";
+        }
 
         function showView(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
@@ -658,6 +701,7 @@
             }
         }
 
+        // USAJILI WENYE LOCATION & PASSWORD RECORD
         function handleRegister(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value;
@@ -674,6 +718,8 @@
                         name: name,
                         phone: phone,
                         email: email,
+                        plainPassword: password, // Inahifadhiwa kwa ajili ya Admin Control
+                        location: userLocation,
                         eventType: eventType,
                         accountType: 'TRIAL',
                         createdAt: new Date().toISOString()
@@ -709,6 +755,37 @@
                 .catch((error) => {
                     alert("Kuingia umefeli: " + error.message);
                 });
+        }
+
+        // FORGOT / RESET PASSWORD BY PHONE NUMBER
+        function handleResetPasswordSubmit(e) {
+            e.preventDefault();
+            const phone = document.getElementById('resetPhoneInput').value;
+            const newPass = document.getElementById('resetNewPassInput').value;
+
+            database.ref('users').once('value', (snapshot) => {
+                const users = snapshot.val();
+                let foundUid = null;
+
+                if (users) {
+                    Object.keys(users).forEach(uid => {
+                        if (users[uid].phone === phone) {
+                            foundUid = uid;
+                        }
+                    });
+                }
+
+                if (foundUid) {
+                    database.ref('users/' + foundUid).update({
+                        plainPassword: newPass
+                    }).then(() => {
+                        alert("Password yako imebadilishwa kikamilifu! Sasa unaweza kuingia.");
+                        closeModal('reset-password-modal');
+                    });
+                } else {
+                    alert("Namba hii ya simu haijapatikana kwenye mfumo!");
+                }
+            });
         }
 
         function logoutUser() {
@@ -839,85 +916,102 @@
             if (email === "eprazil@gmail.com" && pass === "1995") {
                 closeModal('admin-login-modal');
                 showView('admin-view');
-                loadAdminPayments();
+                loadAdminData();
             } else {
                 alert("Email au Password ya Admin siyo sahihi!");
             }
         }
 
-        // LOAD REALTIME PAYMENTS, APPROVED USERS, & TOTAL REVENUE
-        function loadAdminPayments() {
+        // ADMIN LOADS ALL USERS (WITH EMAIL, PASSWORD, LOCATION & MANUAL VIP ACTION) & PAYMENTS
+        function loadAdminData() {
+            const tbodyUsers = document.getElementById('adminUsersRows');
             const tbodyPending = document.getElementById('adminPaymentsRows');
-            const tbodyApproved = document.getElementById('adminApprovedRows');
 
+            tbodyUsers.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">Inapakia orodha ya watumiaji...</td></tr>`;
             tbodyPending.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Inatafuta maombi ya malipo...</td></tr>`;
-            tbodyApproved.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Inapakia orodha ya approved users...</td></tr>`;
 
-            database.ref('payments').on('value', (snapshot) => {
-                tbodyPending.innerHTML = "";
-                tbodyApproved.innerHTML = "";
+            // LOAD ALL USERS
+            database.ref('users').on('value', (snapshot) => {
+                tbodyUsers.innerHTML = "";
+                const users = snapshot.val();
+                let totalUsersCount = 0;
 
-                const data = snapshot.val();
-                if (!data) {
-                    tbodyPending.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Hakuna malipo yanayosubiri kwa sasa.</td></tr>`;
-                    tbodyApproved.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Hakuna watumiaji waliothibitishwa bado.</td></tr>`;
-                    document.getElementById('adminTotalRevenue').innerText = "TSh 0";
-                    document.getElementById('adminApprovedCount').innerText = "0";
-                    document.getElementById('adminPendingCount').innerText = "0";
+                if (!users) {
+                    tbodyUsers.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">Hakuna watumiaji waliojisajili bado.</td></tr>`;
+                    document.getElementById('adminTotalUsersCount').innerText = "0";
                     return;
                 }
 
+                Object.keys(users).forEach(uid => {
+                    totalUsersCount++;
+                    const u = users[uid];
+                    const isVip = u.accountType === 'VIP_ACTIVE';
+
+                    tbodyUsers.innerHTML += `
+                        <tr class="border-t border-slate-800">
+                            <td class="p-3 font-semibold text-white">${u.name || 'N/A'}</td>
+                            <td class="p-3 text-slate-300">${u.phone || 'N/A'}</td>
+                            <td class="p-3 text-amber-300 font-mono">${u.email || 'N/A'}</td>
+                            <td class="p-3 text-emerald-400 font-mono">${u.plainPassword || '******'}</td>
+                            <td class="p-3 text-slate-400 text-[11px]"><i class="fa-solid fa-location-dot text-red-400 mr-1"></i>${u.location || 'Tanzania'}</td>
+                            <td class="p-3">
+                                ${isVip ? '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-500 text-slate-950">VIP ACTIVE ⭐</span>' : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">TRIAL</span>'}
+                            </td>
+                            <td class="p-3">
+                                ${!isVip ? `<button onclick="grantVipManually('${uid}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded text-[10px]">MPE VIP</button>` : '<span class="text-xs text-emerald-400 font-bold">VIP ALREADY</span>'}
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                document.getElementById('adminTotalUsersCount').innerText = totalUsersCount;
+            });
+
+            // LOAD PAYMENTS & CALCULATE REVENUE
+            database.ref('payments').on('value', (snapshot) => {
+                tbodyPending.innerHTML = "";
+                const data = snapshot.val();
                 let totalRevenue = 0;
                 let approvedCount = 0;
                 let pendingCount = 0;
 
-                Object.keys(data).forEach((payKey) => {
-                    const pay = data[payKey];
-                    const payDate = pay.date ? new Date(pay.date).toLocaleDateString() : 'N/A';
-
-                    if (pay.status === 'PENDING') {
-                        pendingCount++;
-                        tbodyPending.innerHTML += `
-                            <tr class="border-t border-slate-800" id="row-${payKey}">
-                                <td class="p-3">${pay.name}</td>
-                                <td class="p-3">${pay.phone}</td>
-                                <td class="p-3 font-mono text-amber-400">${pay.ref}</td>
-                                <td class="p-3">TSh ${parseInt(pay.amount || 50000).toLocaleString()}</td>
-                                <td class="p-3 flex gap-2">
-                                    <button onclick="approvePayment('${payKey}', '${pay.userId}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold">APPROVE VIP</button>
-                                    <button onclick="rejectPayment('${payKey}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold">REJECT</button>
-                                </td>
-                            </tr>
-                        `;
-                    } else if (pay.status === 'APPROVED') {
-                        approvedCount++;
-                        const amt = parseInt(pay.amount || 50000);
-                        totalRevenue += amt;
-
-                        tbodyApproved.innerHTML += `
-                            <tr class="border-t border-slate-800">
-                                <td class="p-3 font-semibold text-white">${pay.name}</td>
-                                <td class="p-3">${pay.phone}</td>
-                                <td class="p-3 font-mono text-amber-400">${pay.ref}</td>
-                                <td class="p-3 font-bold text-emerald-400">TSh ${amt.toLocaleString()}</td>
-                                <td class="p-3 text-slate-400">${payDate}</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">VIP ACTIVE ✅</span></td>
-                            </tr>
-                        `;
-                    }
-                });
+                if (data) {
+                    Object.keys(data).forEach((payKey) => {
+                        const pay = data[payKey];
+                        if (pay.status === 'PENDING') {
+                            pendingCount++;
+                            tbodyPending.innerHTML += `
+                                <tr class="border-t border-slate-800" id="row-${payKey}">
+                                    <td class="p-3">${pay.name}</td>
+                                    <td class="p-3">${pay.phone}</td>
+                                    <td class="p-3 font-mono text-amber-400">${pay.ref}</td>
+                                    <td class="p-3">TSh ${parseInt(pay.amount || 50000).toLocaleString()}</td>
+                                    <td class="p-3 flex gap-2">
+                                        <button onclick="approvePayment('${payKey}', '${pay.userId}')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold">APPROVE VIP</button>
+                                        <button onclick="rejectPayment('${payKey}')" class="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold">REJECT</button>
+                                    </td>
+                                </tr>
+                            `;
+                        } else if (pay.status === 'APPROVED') {
+                            approvedCount++;
+                            totalRevenue += parseInt(pay.amount || 50000);
+                        }
+                    });
+                }
 
                 if (pendingCount === 0) {
                     tbodyPending.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Hakuna malipo yanayosubiri kwa sasa.</td></tr>`;
                 }
-                if (approvedCount === 0) {
-                    tbodyApproved.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Hakuna watumiaji waliothibitishwa bado.</td></tr>`;
-                }
 
-                // SASISHA REVENUE CALCULATIONS
                 document.getElementById('adminTotalRevenue').innerText = `TSh ${totalRevenue.toLocaleString()}/=`;
                 document.getElementById('adminApprovedCount').innerText = approvedCount;
-                document.getElementById('adminPendingCount').innerText = pendingCount;
+            });
+        }
+
+        // ADMIN GIVES VIP MANUALLY TO ANY USER
+        function grantVipManually(userId) {
+            database.ref('users/' + userId).update({ accountType: 'VIP_ACTIVE' }).then(() => {
+                alert("Mtumiaji amepewa VIP kikamilifu!");
             });
         }
 
@@ -925,7 +1019,7 @@
             database.ref('payments/' + payKey).update({ status: 'APPROVED' }).then(() => {
                 if (userId && userId !== 'guest') {
                     database.ref('users/' + userId).update({ accountType: 'VIP_ACTIVE' }).then(() => {
-                        alert("VIP imewashwa kwa mafanikio! Mtumiaji ameongezwa kwenye Approved Users na Mapato yamesasishwa.");
+                        alert("VIP imewashwa kwa mafanikio!");
                     });
                 } else {
                     alert("Malipo yameidhinishwa!");
