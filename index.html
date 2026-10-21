@@ -278,7 +278,7 @@
             </div>
         </section>
 
-        <!-- 3. LOGIN VIEW (Yenye Forgot Password Link) -->
+        <!-- 3. LOGIN VIEW -->
         <section id="login-view" class="view-section hidden py-12 px-4 max-w-md mx-auto">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
                 <div class="text-center mb-6">
@@ -411,7 +411,7 @@
                 </div>
             </div>
 
-            <!-- TAB: DIGITAL CARD DESIGNER (MOBILE FULL VIEW CARDS) -->
+            <!-- TAB: DIGITAL CARD DESIGNER (MOBILE PERFECT FULL SCREEN VIEW) -->
             <div id="tab-card" class="dash-tab-content hidden grid lg:grid-cols-2 gap-8 items-start">
                 <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
                     <h3 class="text-lg font-bold text-white">Tengeneza Mwaliko Wako</h3>
@@ -487,7 +487,7 @@
             </div>
         </section>
 
-        <!-- 6. ADMIN DASHBOARD VIEW (Na Orodha ya Watumiaji, Password, Location, na VIP Manual Approval) -->
+        <!-- 6. ADMIN DASHBOARD VIEW (Njia 3 za VIP: Approval ya Malipo, Kumuweka VIP Manually & Kumuondoa VIP Manually) -->
         <section id="admin-view" class="view-section hidden py-8 px-4 max-w-7xl mx-auto space-y-8">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex justify-between items-center">
                 <div>
@@ -518,10 +518,10 @@
                 </div>
             </div>
 
-            <!-- TABLE: ALL REGISTERED USERS (WITH EMAIL, PASSWORD, LOCATION & MANUAL VIP ACTION) -->
+            <!-- TABLE 1: ORODHA YA USERS WOTE (KUMUWEKA NA KUMTOA VIP MANUALLY) -->
             <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
                 <h3 class="text-base font-bold text-amber-400 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-users"></i> Orodha ya Watumiaji Wote (Users, Email, Password, Location & VIP Control)
+                    <i class="fa-solid fa-users"></i> Orodha ya Watumiaji Wote (Kumuweka na Kumuondoa VIP Manually)
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs text-slate-300">
@@ -531,9 +531,9 @@
                                 <th class="p-3">Simu</th>
                                 <th class="p-3">Email</th>
                                 <th class="p-3">Password</th>
-                                <th class="p-3">Location (GPS/IP)</th>
+                                <th class="p-3">Location (GPS)</th>
                                 <th class="p-3">Status</th>
-                                <th class="p-3">Action</th>
+                                <th class="p-3">VIP Action</th>
                             </tr>
                         </thead>
                         <tbody id="adminUsersRows">
@@ -543,10 +543,10 @@
                 </div>
             </div>
 
-            <!-- TABLE: PENDING PAYMENTS APPROVAL -->
+            <!-- TABLE 2: MAOMBI YA MALIPO YANAYOSUBIRI UTHIBITISHO (APPROVAL YA MALIPO) -->
             <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl">
-                <h3 class="text-base font-bold text-amber-400 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-clock"></i> Maombi ya VIP Yanayosubiri Idhini (Pending Approval)
+                <h3 class="text-base font-bold text-emerald-400 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-clock"></i> Uthibitisho wa Malipo ya VIP (Approval ya Malipo)
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs text-slate-300">
@@ -701,7 +701,6 @@
             }
         }
 
-        // USAJILI WENYE LOCATION & PASSWORD RECORD
         function handleRegister(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value;
@@ -718,7 +717,7 @@
                         name: name,
                         phone: phone,
                         email: email,
-                        plainPassword: password, // Inahifadhiwa kwa ajili ya Admin Control
+                        plainPassword: password,
                         location: userLocation,
                         eventType: eventType,
                         accountType: 'TRIAL',
@@ -757,7 +756,6 @@
                 });
         }
 
-        // FORGOT / RESET PASSWORD BY PHONE NUMBER
         function handleResetPasswordSubmit(e) {
             e.preventDefault();
             const phone = document.getElementById('resetPhoneInput').value;
@@ -922,7 +920,7 @@
             }
         }
 
-        // ADMIN LOADS ALL USERS (WITH EMAIL, PASSWORD, LOCATION & MANUAL VIP ACTION) & PAYMENTS
+        // LOAD REALTIME DATA FOR ADMIN
         function loadAdminData() {
             const tbodyUsers = document.getElementById('adminUsersRows');
             const tbodyPending = document.getElementById('adminPaymentsRows');
@@ -930,15 +928,17 @@
             tbodyUsers.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">Inapakia orodha ya watumiaji...</td></tr>`;
             tbodyPending.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Inatafuta maombi ya malipo...</td></tr>`;
 
-            // LOAD ALL USERS
+            // LOAD USERS WITH "MPE VIP" & "MTOE VIP" BUTTONS
             database.ref('users').on('value', (snapshot) => {
                 tbodyUsers.innerHTML = "";
                 const users = snapshot.val();
                 let totalUsersCount = 0;
+                let approvedCount = 0;
 
                 if (!users) {
                     tbodyUsers.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">Hakuna watumiaji waliojisajili bado.</td></tr>`;
                     document.getElementById('adminTotalUsersCount').innerText = "0";
+                    document.getElementById('adminApprovedCount').innerText = "0";
                     return;
                 }
 
@@ -946,6 +946,7 @@
                     totalUsersCount++;
                     const u = users[uid];
                     const isVip = u.accountType === 'VIP_ACTIVE';
+                    if (isVip) approvedCount++;
 
                     tbodyUsers.innerHTML += `
                         <tr class="border-t border-slate-800">
@@ -958,21 +959,24 @@
                                 ${isVip ? '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-500 text-slate-950">VIP ACTIVE ⭐</span>' : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">TRIAL</span>'}
                             </td>
                             <td class="p-3">
-                                ${!isVip ? `<button onclick="grantVipManually('${uid}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded text-[10px]">MPE VIP</button>` : '<span class="text-xs text-emerald-400 font-bold">VIP ALREADY</span>'}
+                                ${!isVip 
+                                    ? `<button onclick="grantVipManually('${uid}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded text-[10px]">MPE VIP</button>` 
+                                    : `<button onclick="removeVipManually('${uid}')" class="px-2.5 py-1 bg-red-600 hover:bg-red-500 text-white font-bold rounded text-[10px]">MTOE VIP</button>`
+                                }
                             </td>
                         </tr>
                     `;
                 });
 
                 document.getElementById('adminTotalUsersCount').innerText = totalUsersCount;
+                document.getElementById('adminApprovedCount').innerText = approvedCount;
             });
 
-            // LOAD PAYMENTS & CALCULATE REVENUE
+            // LOAD PENDING PAYMENTS (APPROVAL YA MALIPO)
             database.ref('payments').on('value', (snapshot) => {
                 tbodyPending.innerHTML = "";
                 const data = snapshot.val();
                 let totalRevenue = 0;
-                let approvedCount = 0;
                 let pendingCount = 0;
 
                 if (data) {
@@ -993,7 +997,6 @@
                                 </tr>
                             `;
                         } else if (pay.status === 'APPROVED') {
-                            approvedCount++;
                             totalRevenue += parseInt(pay.amount || 50000);
                         }
                     });
@@ -1004,22 +1007,29 @@
                 }
 
                 document.getElementById('adminTotalRevenue').innerText = `TSh ${totalRevenue.toLocaleString()}/=`;
-                document.getElementById('adminApprovedCount').innerText = approvedCount;
             });
         }
 
-        // ADMIN GIVES VIP MANUALLY TO ANY USER
+        // 1. SEHEMU YA KUMUWEKA VIP MANUALLY
         function grantVipManually(userId) {
             database.ref('users/' + userId).update({ accountType: 'VIP_ACTIVE' }).then(() => {
                 alert("Mtumiaji amepewa VIP kikamilifu!");
             });
         }
 
+        // 2. SEHEMU YA KUMTOA VIP MANUALLY
+        function removeVipManually(userId) {
+            database.ref('users/' + userId).update({ accountType: 'TRIAL' }).then(() => {
+                alert("Mtumiaji ameondolewa VIP na kurudishwa kuwa TRIAL!");
+            });
+        }
+
+        // 3. SEHEMU YA APPROVAL YA MALIPO
         function approvePayment(payKey, userId) {
             database.ref('payments/' + payKey).update({ status: 'APPROVED' }).then(() => {
                 if (userId && userId !== 'guest') {
                     database.ref('users/' + userId).update({ accountType: 'VIP_ACTIVE' }).then(() => {
-                        alert("VIP imewashwa kwa mafanikio!");
+                        alert("Malipo yameidhinishwa na mtumiaji amepewa VIP!");
                     });
                 } else {
                     alert("Malipo yameidhinishwa!");
