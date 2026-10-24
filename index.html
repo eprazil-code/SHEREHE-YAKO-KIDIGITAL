@@ -619,7 +619,7 @@
                 </div>
             </div>
 
-            <!-- TAB 7: SCANNER WITH LIVE AUTO-SUGGESTION & CONFIRMATION LIMIT -->
+            <!-- TAB 7: SCANNER WITH LIVE AUTO-SUGGESTION & RESET FUNCTION -->
             <div id="pane-scanner" class="dash-pane hidden space-y-6">
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-6">
                     <div class="text-center max-w-md mx-auto space-y-2">
@@ -656,7 +656,7 @@
                                 </div>
                             </div>
 
-                            <div id="scan-live-feedback" class="hidden p-3 rounded-2xl text-xs font-bold text-center"></div>
+                            <div id="scan-live-feedback" class="hidden p-3 rounded-2xl text-xs font-bold text-center space-y-2"></div>
                         </div>
 
                         <!-- LIVE REALTIME SCANNED / CONFIRMED GUESTS LIST -->
@@ -949,6 +949,7 @@
         let contributionsList = [];
         let cardsList = [];
         let chatMessagesList = [];
+        let globalScansList = [];
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1379,19 +1380,21 @@
                 const badge = document.getElementById('scanned-count-badge');
                 if(!tbody) return;
 
-                let scanItems = [];
+                globalScansList = [];
                 if(snapshot.exists()) {
-                    snapshot.forEach(child => scanItems.push(child.val()));
+                    snapshot.forEach(child => {
+                        globalScansList.push({ key: child.key, ...child.val() });
+                    });
                 }
 
-                if(badge) badge.innerText = `${scanItems.length} WALIOINGIA`;
+                if(badge) badge.innerText = `${globalScansList.length} WALIOINGIA`;
 
-                if(scanItems.length === 0) {
+                if(globalScansList.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Bado hakuna mgeni aliyethibitishwa.</td></tr>';
                     return;
                 }
 
-                tbody.innerHTML = scanItems.reverse().map(s => `
+                tbody.innerHTML = [...globalScansList].reverse().map(s => `
                     <tr class="hover:bg-slate-900">
                         <td class="p-2 font-bold text-white">${s.guestName} <span class="text-[10px] text-gold-400 font-mono">(${s.attemptNumber || 1}/${s.maxAllowed || 1})</span></td>
                         <td class="p-2 font-mono text-gold-400 text-[10px]">${s.cardId}</td>
@@ -1435,26 +1438,42 @@
             manualCheckInGuest();
         }
 
-        // CONFIRMATION & LIMIT LOGIC (SINGLE = 1, DOUBLE = 2)
+        // EMERGENCY CLEAR/RESET SPECIFIC CARD SCANS IF LOCKED KIMAKOSA
+        async function clearScansForCard(cardId) {
+            if(!confirm(`Je, unauhakika unataka kusafisha historia na kuifungua Kadi (${cardId}) ili iweze kuthibitishwa tena?`)) return;
+            
+            const snapshot = await rdb.ref('scans').once('value');
+            if(snapshot.exists()) {
+                snapshot.forEach(child => {
+                    if(child.val().cardId === cardId) {
+                        rdb.ref('scans/' + child.key).remove();
+                    }
+                });
+            }
+            const feedback = document.getElementById('scan-live-feedback');
+            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+            feedback.innerText = `🔄 KADI ${cardId} IMESAFISHWA NA KUFUNGUWA KIKAMILIFU! Sasa unaweza kuithibitisha mara moja!`;
+        }
+
+        // CONFIRMATION & LIMIT LOGIC (SINGLE = 1, DOUBLE = 2) WITH REALTIME LIST SYNC
         async function processGuestCheckIn(matchedCard, gateName) {
             const feedback = document.getElementById('scan-live-feedback');
             feedback.classList.remove('hidden');
 
-            const snapshot = await rdb.ref('scans').once('value');
-            let existingCount = 0;
-            if(snapshot.exists()) {
-                snapshot.forEach(child => {
-                    if(child.val().cardId === matchedCard.id) {
-                        existingCount++;
-                    }
-                });
-            }
+            // Count existing verified entries directly from globalScansList (Realtime DB State)
+            const cardScans = globalScansList.filter(s => s.cardId === matchedCard.id);
+            const existingCount = cardScans.length;
 
             const maxAllowed = (matchedCard.type && matchedCard.type.toUpperCase() === 'DOUBLE') ? 2 : 1;
 
             if(existingCount >= maxAllowed) {
-                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
-                feedback.innerText = `⚠️ Kadi ya ${matchedCard.name} (${matchedCard.id} - ${matchedCard.type} CARD) imeshakamilisha uthibitisho wote (${existingCount}/${maxAllowed})! Hakuna confirmation tena.`;
+                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30 space-y-2";
+                feedback.innerHTML = `
+                    <div>⚠️ Kadi ya ${matchedCard.name} (${matchedCard.id} - ${matchedCard.type} CARD) imeshakamilisha uthibitisho wote (${existingCount}/${maxAllowed})!</div>
+                    <button type="button" onclick="clearScansForCard('${matchedCard.id}')" class="px-3 py-1.5 rounded-xl bg-gold-500 text-slate-950 font-black text-[11px] uppercase shadow">
+                        🔄 SAFISHA NA UNLOCK KADI HII (RESET)
+                    </button>
+                `;
                 return;
             }
 
