@@ -275,7 +275,7 @@
                                 <input type="text" id="card-edit-title" oninput="updateLiveCard()" value="HARUSI YA WAPENDANAO" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Majina ya Wahusika</label>
+                                <label class="block text-slate-300 font-semibold mb-1">Majina ya Wahusika (Maharusi)</label>
                                 <input type="text" id="card-edit-names" oninput="updateLiveCard()" value="Juma & Amina" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
@@ -432,7 +432,7 @@
                 </div>
             </div>
 
-            <!-- TAB 4: MICHANGO -->
+            <!-- TAB 4: MICHANGO NA AHADI -->
             <div id="pane-contributions" class="dash-pane hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
@@ -463,15 +463,15 @@
                     </div>
 
                     <div class="lg:col-span-7 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
-                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Orodha ya Michango na Aina ya Kadi (Automatic)</h4>
+                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Orodha ya Michango na Ahadi Za Watu</h4>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
                                 <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
                                     <tr>
-                                        <th class="p-2.5">Jina</th>
-                                        <th class="p-2.5">Aina (Automatic)</th>
+                                        <th class="p-2.5">Jina & Namba</th>
+                                        <th class="p-2.5">Kundi (Automatic)</th>
                                         <th class="p-2.5">Kiasi (TSh)</th>
-                                        <th class="p-2.5">Hali</th>
+                                        <th class="p-2.5">Hali ya Mchango</th>
                                     </tr>
                                 </thead>
                                 <tbody id="contrib-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -481,7 +481,7 @@
                 </div>
             </div>
 
-            <!-- TAB 5: KADI -->
+            <!-- TAB 5: KADI ZA DIGITAL -->
             <div id="pane-cards" class="dash-pane hidden space-y-6">
                 <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-800 pb-2">
@@ -497,7 +497,7 @@
                                     <th class="p-2.5">Mwaalikwa</th>
                                     <th class="p-2.5">Namba</th>
                                     <th class="p-2.5">Aina</th>
-                                    <th class="p-2.5 text-right">Tuma Kadi</th>
+                                    <th class="p-2.5 text-right">Tuma Template Card</th>
                                 </tr>
                             </thead>
                             <tbody id="cards-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -638,6 +638,45 @@
             </div>
         </section>
 
+        <!-- VIEW 5: PUBLIC CARD TEMPLATE DISPLAY (Mwaalikwa akibofya Link ya Kadi) -->
+        <section id="view-public-card" class="hidden flex flex-col items-center justify-center min-h-[80vh] p-4">
+            <div id="guest-card-full-display" class="card-preview w-full rounded-3xl p-6 bg-slate-950 border-4 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden my-auto">
+                <div class="space-y-4 relative z-10">
+                    <div class="w-14 h-14 rounded-full mx-auto border-2 border-gold-500 flex items-center justify-center bg-slate-900 shadow-lg">
+                        <i class="fa-solid fa-crown text-gold-400 text-2xl"></i>
+                    </div>
+                    <div>
+                        <span id="gcard-event-title" class="text-xs font-black uppercase text-gold-400 tracking-widest block">HARUSI YA WAPENDANAO</span>
+                        <h2 id="gcard-couple-names" class="text-3xl font-serif font-bold text-white mt-1">Juma & Amina</h2>
+                    </div>
+
+                    <!-- Jina la Mwaalikwa Mwenyewe na Aina ya Kadi -->
+                    <div class="p-3 rounded-2xl bg-slate-900/90 border border-gold-500/40 text-center space-y-1">
+                        <span class="text-[10px] text-slate-400 uppercase font-bold block">KADI HII NI MAALUM KWA AJILI YA:</span>
+                        <h3 id="gcard-guest-name" class="text-lg font-black text-white gold-text">Ndugu Mwaalikwa</h3>
+                        <span id="gcard-card-type" class="inline-block px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-gold-500 text-slate-950">DOUBLE CARD</span>
+                    </div>
+
+                    <p id="gcard-custom-msg" class="text-xs text-slate-300 italic px-2">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
+                </div>
+
+                <div class="space-y-3 bg-slate-900/90 p-4 rounded-2xl border border-gold-500/30 text-xs text-center relative z-10">
+                    <div>
+                        <p class="text-gold-400 font-bold text-sm" id="gcard-event-date">12 Desemba 2026 - Mlimani City</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe</p>
+                    </div>
+                    <div class="bg-white p-2 rounded-xl inline-block mx-auto shadow-md">
+                        <div id="gcard-main-qr"></div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-[10px] text-slate-500 font-bold uppercase tracking-widest relative z-10 border-t border-slate-800 pt-3 mt-2">
+                    <span id="gcard-id-tag" class="text-gold-400">ID #001</span>
+                    <span>Sherehe Yako Kidigital</span>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- VIP UPGRADE MODAL -->
@@ -768,7 +807,11 @@
             bankAcc: 'CRDB Bank - 015012345678',
             bankName: 'JUMA MKWAWA',
             phoneAcc: '0755123456 (M-PESA)',
-            phoneName: 'JUMA MKWAWA'
+            phoneName: 'JUMA MKWAWA',
+            cardTitle: 'HARUSI YA WAPENDANAO',
+            coupleNames: 'Juma & Amina',
+            eventDate: '12 Desemba 2026 - Mlimani City',
+            cardMsg: 'Tunayo furaha kubwa kukualika katika sherehe yetu...'
         };
         let contributionsList = [];
         let cardsList = [];
@@ -777,7 +820,15 @@
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const eventIdParam = urlParams.get('event_id');
+            const cardIdParam = urlParams.get('card_id');
 
+            // Ikiwa mtu amebofya link ya Kadi ya Mwaliko
+            if(cardIdParam) {
+                renderPublicCardView(cardIdParam);
+                return;
+            }
+
+            // Ikiwa mtu amebofya link ya Mwenyekiti ya Kuchangia
             if(eventIdParam) {
                 setupPublicGuestView(eventIdParam);
                 return;
@@ -794,8 +845,35 @@
                 }
             });
             initPreviewMiniQR();
-            selectThanksTemplate(1); // Default thank you text
+            selectThanksTemplate(1);
         };
+
+        async function renderPublicCardView(cardKey) {
+            switchView('public-card');
+            rdb.ref('cards/' + cardKey).on('value', async snapshot => {
+                if(snapshot.exists()) {
+                    const card = snapshot.val();
+                    document.getElementById('gcard-guest-name').innerText = card.name;
+                    document.getElementById('gcard-card-type').innerText = `${card.type} CARD`;
+                    document.getElementById('gcard-id-tag').innerText = card.id;
+
+                    // Fetch Event Configs
+                    const cfgSnap = await rdb.ref('config').once('value');
+                    if(cfgSnap.exists()) {
+                        const cfg = cfgSnap.val();
+                        if(cfg.cardTitle) document.getElementById('gcard-event-title').innerText = cfg.cardTitle;
+                        if(cfg.coupleNames) document.getElementById('gcard-couple-names').innerText = cfg.coupleNames;
+                        if(cfg.eventDate) document.getElementById('gcard-event-date').innerText = cfg.eventDate;
+                        if(cfg.cardMsg) document.getElementById('gcard-custom-msg').innerText = cfg.cardMsg;
+                    }
+
+                    // Generate QR Code
+                    const qrBox = document.getElementById('gcard-main-qr');
+                    qrBox.innerHTML = '';
+                    new QRCode(qrBox, { text: `${card.id}-${card.name}`, width: 110, height: 110 });
+                }
+            });
+        }
 
         async function setupPublicGuestView(eventId) {
             switchView('public-guest');
@@ -899,11 +977,13 @@
             document.getElementById('view-auth').classList.add('hidden');
             document.getElementById('view-dashboard').classList.add('hidden');
             document.getElementById('view-public-guest').classList.add('hidden');
+            document.getElementById('view-public-card').classList.add('hidden');
 
             if(v === 'splash') document.getElementById('view-splash').classList.remove('hidden');
             if(v === 'auth') document.getElementById('view-auth').classList.remove('hidden');
             if(v === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
             if(v === 'public-guest') document.getElementById('view-public-guest').classList.remove('hidden');
+            if(v === 'public-card') document.getElementById('view-public-card').classList.remove('hidden');
         }
 
         function goToAuth(mode) {
@@ -982,6 +1062,14 @@
             document.getElementById('prev-names').innerText = document.getElementById('card-edit-names').value;
             document.getElementById('prev-date').innerText = document.getElementById('card-edit-date').value;
             document.getElementById('prev-msg').innerText = document.getElementById('card-edit-msg').value;
+
+            // Save card design settings in Realtime DB
+            rdb.ref('config').update({
+                cardTitle: document.getElementById('card-edit-title').value,
+                coupleNames: document.getElementById('card-edit-names').value,
+                eventDate: document.getElementById('card-edit-date').value,
+                cardMsg: document.getElementById('card-edit-msg').value
+            });
         }
 
         function initPreviewMiniQR() {
@@ -1014,9 +1102,14 @@
                 renderGroupChat();
             });
 
+            // REALTIME LISTENER YA MICHANGO NA AHADI (Sasa hivi inasoma mara moja kila baada ya ongezeko)
             rdb.ref('contributions').on('value', snapshot => {
                 contributionsList = [];
-                snapshot.forEach(child => contributionsList.push({ key: child.key, ...child.val() }));
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        contributionsList.push({ key: child.key, ...child.val() });
+                    });
+                }
                 renderContributions();
                 renderBudgetSummary();
                 renderThanksTable();
@@ -1024,7 +1117,11 @@
 
             rdb.ref('cards').on('value', snapshot => {
                 cardsList = [];
-                snapshot.forEach(child => cardsList.push({ key: child.key, ...child.val() }));
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        cardsList.push({ key: child.key, ...child.val() });
+                    });
+                }
                 renderCardsList();
                 populateScanCardSelect();
             });
@@ -1040,7 +1137,7 @@
             const pAcc = document.getElementById('cfg-phone-acc').value || eventData.phoneAcc;
             const pName = document.getElementById('cfg-phone-name').value || eventData.phoneName;
 
-            await rdb.ref('config').set({ 
+            await rdb.ref('config').update({ 
                 budget: b, single: s, double: d, committee: c,
                 bankAcc: bAcc, bankName: bName, phoneAcc: pAcc, phoneName: pName,
                 title: eventData.title
@@ -1055,10 +1152,10 @@
             document.getElementById('rate-committee-display').innerText = `TSh ${eventData.rateCommittee.toLocaleString()}`;
 
             const paidList = contributionsList.filter(c => c.status === 'PAID');
-            const totalCollected = paidList.reduce((acc, curr) => acc + Number(curr.amount), 0);
+            const totalCollected = paidList.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
             
             const pledgeList = contributionsList.filter(c => c.status === 'PLEDGE');
-            const totalPledges = pledgeList.reduce((acc, curr) => acc + Number(curr.amount), 0);
+            const totalPledges = pledgeList.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
 
             document.getElementById('chat-summary-budget').innerText = `TSh ${eventData.budget.toLocaleString()}`;
             document.getElementById('chat-summary-collected').innerText = `TSh ${totalCollected.toLocaleString()}`;
@@ -1114,7 +1211,7 @@
             document.getElementById('c-name').value = '';
             document.getElementById('c-phone').value = '';
             document.getElementById('c-amount').value = '';
-            alert(`Mchango umehifadhiwa! Mfumo umemweka Kundi la: ${categoryType} (${cardTypeAssigned} Card)`);
+            alert(`Mchango umehifadhiwa kikamilifu! Mfumo umemweka Kundi la: ${categoryType} (${cardTypeAssigned} Card)`);
         }
 
         async function handlePublicGuestSubmit(e) {
@@ -1162,18 +1259,32 @@
 
         function renderContributions() {
             const tbody = document.getElementById('contrib-table-body');
+            if(!tbody) return;
+
+            if(contributionsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Hakuna mchango au ahadi iliyorekodiwa bado.</td></tr>';
+                return;
+            }
+
             tbody.innerHTML = contributionsList.map(c => `
                 <tr class="hover:bg-slate-800/40">
-                    <td class="p-2.5 font-bold text-white">${c.name} (${c.phone})</td>
+                    <td class="p-2.5 font-bold text-white">${c.name} <br><span class="text-[10px] text-slate-400 font-mono">${c.phone}</span></td>
                     <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 font-bold text-[10px]">${c.categoryType || 'SINGLE'} (${c.cardTypeAssigned || 'SINGLE'})</span></td>
-                    <td class="p-2.5 font-bold text-emerald-400">TSh ${Number(c.amount).toLocaleString()}</td>
-                    <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] ${c.status === 'PAID' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${c.status === 'PAID' ? '✅ Imelipwa' : '⏳ Ahadi'}</span></td>
+                    <td class="p-2.5 font-bold text-emerald-400">TSh ${Number(c.amount || 0).toLocaleString()}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.status === 'PAID' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${c.status === 'PAID' ? '✅ Imelipwa (Mchango)' : '⏳ Ahadi Bado'}</span></td>
                 </tr>
-            `).join('') || '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Hakuna mchango uliorekodiwa.</td></tr>';
+            `).join('');
         }
 
         function renderCardsList() {
             const tbody = document.getElementById('cards-table-body');
+            if(!tbody) return;
+
+            if(cardsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Hakuna kadi.</td></tr>';
+                return;
+            }
+
             tbody.innerHTML = cardsList.map(c => `
                 <tr class="hover:bg-slate-800/40">
                     <td class="p-2.5 font-mono text-gold-400 font-bold text-[10px]">${c.id}</td>
@@ -1181,14 +1292,39 @@
                     <td class="p-2.5 font-mono text-slate-400">${c.phone}</td>
                     <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 text-[10px] font-bold">${c.type} CARD</span></td>
                     <td class="p-2.5 text-right flex justify-end gap-1">
-                        <button type="button" onclick="sendWhatsappCard('${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2 py-1 rounded bg-emerald-600 text-white font-bold text-[10px]" title="Tuma WhatsApp Card"><i class="fa-brands fa-whatsapp"></i> WhatsApp Card</button>
-                        <button type="button" onclick="sendSmsCard('${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2 py-1 rounded bg-indigo-600 text-white font-bold text-[10px]" title="Tuma SMS za Kawaida"><i class="fa-solid fa-comment-sms"></i> SMS</button>
+                        <button type="button" onclick="sendWhatsappTemplateCard('${c.key}', '${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] shadow" title="Tuma Kadi Yenye Template Link"><i class="fa-brands fa-whatsapp"></i> WhatsApp Template Card</button>
+                        <button type="button" onclick="sendSmsTemplateCard('${c.key}', '${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[10px] shadow" title="Tuma SMS Yenye Link"><i class="fa-solid fa-comment-sms"></i> SMS Link</button>
                     </td>
                 </tr>
-            `).join('') || '<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Hakuna kadi.</td></tr>';
+            `).join('');
         }
 
-        /* LOGIC MPYA ZA UJUMBE WA SHUKRANI */
+        // TUMA KADI YENYE LINK YA TEMPLATE YENYE MAJINA YA MAHARUSI NA MWAALIKWA
+        function sendWhatsappTemplateCard(cardKey, id, name, phone, type) {
+            const cardLink = `${window.location.origin}${window.location.pathname}?card_id=${cardKey}`;
+            const coupleNames = document.getElementById('card-edit-names').value || 'Juma & Amina';
+            const cardTitle = document.getElementById('card-edit-title').value || 'HARUSI YA WAPENDANAO';
+
+            const cardMessage = `👑 *KADI YA MWALIKO MAALUM DIGITAL (${type} CARD)* 👑\n\n` +
+                                `Ndugu: *${name}*\n` +
+                                `Unakaribishwa Kwenye: *${cardTitle}*\n` +
+                                `Maharusi/Wahusika: *${coupleNames}*\n` +
+                                `Namba ya Kadi: *${id}*\n\n` +
+                                `👇 *BOFYA LINK HII CHINI KUONA NA KUDOWNLOAD KADI YAKO MAALUM:* 👇\n` +
+                                `${cardLink}\n\n` +
+                                `_Tafadhali onyesha kadi hii yenye QR Code Mlangoni Siku ya Sherehe!_`;
+
+            const encoded = encodeURIComponent(cardMessage);
+            window.open(`https://wa.me/255${phone.replace(/^0/,'')}?text=${encoded}`, '_blank');
+        }
+
+        function sendSmsTemplateCard(cardKey, id, name, phone, type) {
+            const cardLink = `${window.location.origin}${window.location.pathname}?card_id=${cardKey}`;
+            const coupleNames = document.getElementById('card-edit-names').value || 'Juma & Amina';
+            const smsText = `Habari ${name}, umepokea KADI YA MWALIKO (${type} - ${id}) ya ${coupleNames}. Fungua Link hii kuona kadi yako: ${cardLink}`;
+            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(smsText)}`, '_blank');
+        }
+
         function selectThanksTemplate(num) {
             const txt = document.getElementById(`tpl-text-${num}`).innerText.replace(/^"|"$/g, '');
             document.getElementById('thanks-custom-input').value = txt;
@@ -1197,6 +1333,12 @@
         function renderThanksTable() {
             const tbody = document.getElementById('thanks-table-body');
             if(!tbody) return;
+
+            if(contributionsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-500 italic">Hakuna mwaalikwa kwenye orodha.</td></tr>';
+                return;
+            }
+
             tbody.innerHTML = contributionsList.map(c => `
                 <tr class="hover:bg-slate-800/40">
                     <td class="p-2.5 font-bold text-white">${c.name}</td>
@@ -1206,7 +1348,7 @@
                         <button type="button" onclick="sendSmsThanks('${c.name}', '${c.phone}')" class="px-2 py-1 rounded bg-indigo-600 text-white font-bold text-[10px]"><i class="fa-solid fa-comment-sms"></i> SMS</button>
                     </td>
                 </tr>
-            `).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-500 italic">Hakuna mwaalikwa kwenye orodha.</td></tr>';
+            `).join('');
         }
 
         function sendWhatsappThanks(name, phone) {
@@ -1218,23 +1360,6 @@
         function sendSmsThanks(name, phone) {
             const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana kwa ushirikiano na kujumuika nasi!';
             const fullMsg = `Habari ${name}, ${customMsg} (Sherehe: ${eventData.title})`;
-            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(fullMsg)}`, '_blank');
-        }
-
-        function sendWhatsappCard(id, name, phone, type) {
-            const cardMessage = `🎉 *KADI YA MWALIKO MAALUM (${type} CARD)* 🎉\n\n` +
-                                `Ndugu: *${name}*\n` +
-                                `Unakaribishwa Kwenye: *${eventData.title}*\n` +
-                                `Kadi Namba: *${id}*\n` +
-                                `Aina ya Kadi: *${type} CARD*\n\n` +
-                                `Tafadhali onyesha ujumbe huu au Kadi yako Mlangoni siku ya Sherehe!\n` +
-                                `Powered by Sherehe Yako Kidigital Platform.`;
-            const encoded = encodeURIComponent(cardMessage);
-            window.open(`https://wa.me/255${phone.replace(/^0/,'')}?text=${encoded}`, '_blank');
-        }
-
-        function sendSmsCard(id, name, phone, type) {
-            const smsText = `Habari ${name}, umefanikiwa kupokea KADI YA MWALIKO (${type} - ${id}) ya ${eventData.title}. Onyesha SMS hii mlangoni siku ya sherehe.`;
             window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(smsText)}`, '_blank');
         }
 
