@@ -10,8 +10,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
-    <!-- QR Code Library CDN -->
+    
+    <!-- QR Code Generator CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- HTML5 QR Code Camera Scanner CDN -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <!-- html2canvas Library (Kwa Ajili Ya Ku-download Kadi Kama JPG) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <!-- FIREBASE SDK CDN (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -244,11 +249,11 @@
                     <i class="fa-solid fa-heart text-rose-400"></i> Ujumbe Wa Shukrani
                 </button>
                 <button type="button" onclick="switchDashTab('scanner')" id="tab-btn-scanner" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap flex items-center gap-1">
-                    <i class="fa-solid fa-qrcode text-gold-400"></i> Scan Mlangoni
+                    <i class="fa-solid fa-qrcode text-gold-400"></i> Live Scan Mlangoni
                 </button>
             </div>
 
-            <!-- TAB 1: CARD TEMPLATES & EDITOR -->
+            <!-- TAB 1: CARD TEMPLATES & EDITOR WITH CARD PURPOSE SELECTOR -->
             <div id="pane-templates" class="dash-pane space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
@@ -257,6 +262,19 @@
                             <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Inaonekana Kwenye Trial</span>
                         </div>
                         
+                        <!-- CHAGUO LA AINA YA KADI (WANAKAMATI / MCHANGO) -->
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-gold-500/40 space-y-2">
+                            <label class="block text-xs font-bold text-gold-400">Chagua Aina Ya Kadi Unayotengeneza:</label>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <button type="button" onclick="selectCardPurpose('COMMITTEE')" id="btn-card-committee" class="p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700">
+                                    👑 Kadi Ya Wanakamati
+                                </button>
+                                <button type="button" onclick="selectCardPurpose('CONTRIBUTION')" id="btn-card-contribution" class="p-2 rounded-xl gold-gradient text-slate-950 font-black">
+                                    💳 Kadi Ya Mchango / Ahadi
+                                </button>
+                            </div>
+                        </div>
+
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-2">Chagua Theme Ya Rangi Za Kadi:</label>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -498,7 +516,6 @@
                             <span id="demo-limit-badge" class="text-[10px] bg-slate-800 text-gold-400 border border-gold-500/30 px-2.5 py-0.5 rounded-full font-bold">VIP: Unlimited Cards</span>
                         </div>
                         
-                        <!-- BUTTON YA KUTUMA KADI KWA WOTE WALIOCHANGA -->
                         <button type="button" onclick="sendCardsToAllPaidGuests()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition shadow-lg">
                             🚀 TUMA KADI KWA WOTE WALIOCHANGA (PAID)
                         </button>
@@ -529,7 +546,6 @@
                         <p class="text-xs text-slate-400">Chagua ujumbe uliotayarishwa tayari au andika maneno yako mwenyewe kuwatumia waalikwa waliofanikisha sherehe</p>
                     </div>
 
-                    <!-- Options za Text zilizosetiwa -->
                     <div class="space-y-3">
                         <label class="block text-xs font-bold text-gold-400">Chagua Au Bonyeza Template Ya Ujumbe:</label>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -548,13 +564,11 @@
                         </div>
                     </div>
 
-                    <!-- Form ya Kujaza Maneno Yake Mwenyewe au Kuedit -->
                     <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
                         <label class="block text-xs font-bold text-slate-200">Andika Au Hariri Ujumbe Wako Wa Shukrani Hapa:</label>
                         <textarea id="thanks-custom-input" rows="3" placeholder="Andika au badilisha maneno yako binafsi ya shukrani..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white outline-none"></textarea>
                     </div>
 
-                    <!-- Orodha ya Watu Kwenye Sherehe Ya Kutumiwa Shukrani -->
                     <div class="space-y-3 pt-2">
                         <h4 class="text-xs font-bold text-white border-b border-slate-800 pb-2">Tuma Ujumbe Wa Shukrani Kwa Waalikwa Na Waliochangia:</h4>
                         <div class="overflow-x-auto">
@@ -573,30 +587,55 @@
                 </div>
             </div>
 
-            <!-- TAB 7: SCANNER -->
+            <!-- TAB 7: LIVE SCANNER WITH CAMERA LENS & REALTIME SCANNED LIST -->
             <div id="pane-scanner" class="dash-pane hidden space-y-6">
-                <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 text-center">
-                    <div class="max-w-md mx-auto space-y-2">
-                        <i class="fa-solid fa-qrcode text-gold-400 text-4xl mb-2"></i>
-                        <h3 class="text-lg font-bold text-white">Gate Scan Check-in</h3>
-                        <p class="text-xs text-slate-400">Scan kadi ya mgeni mlangoni</p>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-6">
+                    <div class="text-center max-w-md mx-auto space-y-2">
+                        <i class="fa-solid fa-camera text-gold-400 text-4xl mb-1"></i>
+                        <h3 class="text-xl font-extrabold text-white">Live Gate Camera Scanner</h3>
+                        <p class="text-xs text-slate-400">Scan QR Code ya Kadi ya Mgeni Mlangoni Kwa Kutumia Kamera Ya Simu/Laptop</p>
                     </div>
 
-                    <div class="max-w-sm mx-auto p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 text-xs">
-                        <select id="scan-card-select" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none"></select>
-                        <button type="button" onclick="executeScanCardAction()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs">SCAN KADI SASA</button>
-                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- CAMERA LENS SCANNER BOX -->
+                        <div class="lg:col-span-6 bg-slate-950 border-2 border-gold-500/50 p-4 rounded-3xl space-y-3 text-center">
+                            <div id="qr-reader" class="w-full rounded-2xl overflow-hidden bg-black min-h-[260px]"></div>
+                            
+                            <div class="flex justify-center gap-2 pt-2">
+                                <button type="button" onclick="startCameraScanner()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-bold text-xs uppercase"><i class="fa-solid fa-video mr-1"></i> WASHA KAMERA</button>
+                                <button type="button" onclick="stopCameraScanner()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase"><i class="fa-solid fa-video-slash mr-1"></i> ZIMA</button>
+                            </div>
 
-                    <div id="scan-result-box" class="hidden max-w-sm mx-auto p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-center">
-                        <div id="scan-icon-area" class="text-3xl"></div>
-                        <h4 id="scan-title-text" class="text-base font-bold text-white"></h4>
-                        <p id="scan-desc-text" class="text-xs text-slate-400"></p>
+                            <div id="scan-live-feedback" class="hidden p-3 rounded-2xl text-xs font-bold text-center"></div>
+                        </div>
+
+                        <!-- LIVE REALTIME SCANNED GUESTS LIST (HATA KAMA WAMELOGIN SEHEMU TOFAUTI) -->
+                        <div class="lg:col-span-6 bg-slate-950 border border-slate-800 p-4 rounded-3xl space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                                <h4 class="text-xs font-bold text-white"><i class="fa-solid fa-users-viewfinder text-gold-400 mr-1"></i> Waalikwa Walioscaniwa Mlangoni</h4>
+                                <span id="scanned-count-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">0 WALIOINGIA</span>
+                            </div>
+
+                            <div class="overflow-y-auto max-h-72">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-slate-900 text-slate-400 uppercase text-[9px]">
+                                        <tr>
+                                            <th class="p-2">Mgeni</th>
+                                            <th class="p-2">Kadi ID</th>
+                                            <th class="p-2">Geti / Muda</th>
+                                            <th class="p-2 text-right">Hali</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="scanned-guests-tbody" class="divide-y divide-slate-800 text-slate-200"></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- VIEW 4: PUBLIC GUEST CONTRIBUTION PAGE (Onboarding Mgeni Kuingia Shereheni) -->
+        <!-- VIEW 4: PUBLIC GUEST CONTRIBUTION PAGE -->
         <section id="view-public-guest" class="hidden max-w-lg mx-auto space-y-6 pt-4">
             <div class="bg-slate-900 border-2 border-gold-500/60 p-6 rounded-3xl space-y-4 shadow-2xl">
                 <div class="text-center space-y-2 border-b border-slate-800 pb-4">
@@ -653,9 +692,9 @@
             </div>
         </section>
 
-        <!-- VIEW 5: PUBLIC CARD TEMPLATE DISPLAY (Mwaalikwa akibofya Link ya Kadi) -->
-        <section id="view-public-card" class="hidden flex flex-col items-center justify-center min-h-[80vh] p-4">
-            <div id="guest-card-full-display" class="card-preview w-full rounded-3xl p-6 bg-slate-950 border-4 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden my-auto">
+        <!-- VIEW 5: PUBLIC CARD TEMPLATE DISPLAY WITH JPG DOWNLOAD OPTION -->
+        <section id="view-public-card" class="hidden flex flex-col items-center justify-center min-h-[80vh] p-4 space-y-4">
+            <div id="guest-card-download-wrapper" class="card-preview w-full rounded-3xl p-6 bg-slate-950 border-4 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden my-auto">
                 <div class="space-y-4 relative z-10">
                     <div class="w-14 h-14 rounded-full mx-auto border-2 border-gold-500 flex items-center justify-center bg-slate-900 shadow-lg">
                         <i class="fa-solid fa-crown text-gold-400 text-2xl"></i>
@@ -689,6 +728,11 @@
                     <span>Sherehe Yako Kidigital</span>
                 </div>
             </div>
+
+            <!-- BUTTON YA KU-DOWNLOAD KADI KAMA PICHA (JPG/PNG) -->
+            <button type="button" onclick="downloadCardAsJpg()" class="w-full max-w-xs py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs uppercase shadow-xl hover:brightness-110 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-download text-base"></i> DOWNLOAD KADI (JPG / IMAGE)
+            </button>
         </section>
 
     </main>
@@ -830,19 +874,18 @@
         let contributionsList = [];
         let cardsList = [];
         let chatMessagesList = [];
+        let html5QrCodeScanner = null;
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const eventIdParam = urlParams.get('event_id');
             const cardIdParam = urlParams.get('card_id');
 
-            // Ikiwa mtu amebofya link ya Kadi ya Mwaliko
             if(cardIdParam) {
                 renderPublicCardView(cardIdParam);
                 return;
             }
 
-            // Ikiwa mtu amebofya link ya Mwenyekiti ya Kuchangia
             if(eventIdParam) {
                 setupPublicGuestView(eventIdParam);
                 return;
@@ -871,7 +914,6 @@
                     document.getElementById('gcard-card-type').innerText = `${card.type} CARD`;
                     document.getElementById('gcard-id-tag').innerText = card.id;
 
-                    // Fetch Event Configs
                     const cfgSnap = await rdb.ref('config').once('value');
                     if(cfgSnap.exists()) {
                         const cfg = cfgSnap.val();
@@ -881,11 +923,23 @@
                         if(cfg.cardMsg) document.getElementById('gcard-custom-msg').innerText = cfg.cardMsg;
                     }
 
-                    // Generate QR Code
                     const qrBox = document.getElementById('gcard-main-qr');
                     qrBox.innerHTML = '';
                     new QRCode(qrBox, { text: `${card.id}-${card.name}`, width: 110, height: 110 });
                 }
+            });
+        }
+
+        // DOWNLOAD CARD AS JPG IMAGE
+        function downloadCardAsJpg() {
+            const cardWrapper = document.getElementById('guest-card-download-wrapper');
+            const guestName = document.getElementById('gcard-guest-name').innerText || 'kadi';
+
+            html2canvas(cardWrapper, { scale: 2, useCORS: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `KADI-${guestName.toUpperCase().replace(/\s+/g, '_')}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                link.click();
             });
         }
 
@@ -1059,6 +1113,33 @@
 
             document.getElementById(`tab-btn-${tabName}`).className = "dash-tab active px-4 py-2.5 rounded-xl bg-slate-900 text-gold-400 border border-gold-500/40 whitespace-nowrap";
             document.getElementById(`pane-${tabName}`).classList.remove('hidden');
+
+            if(tabName === 'scanner') {
+                startCameraScanner();
+            } else {
+                stopCameraScanner();
+            }
+        }
+
+        // CHAGUO LA AINA YA KADI (WANAKAMATI AU MCHANGO)
+        function selectCardPurpose(type) {
+            const btnComm = document.getElementById('btn-card-committee');
+            const btnCont = document.getElementById('btn-card-contribution');
+
+            if(type === 'COMMITTEE') {
+                btnComm.className = "p-2 rounded-xl gold-gradient text-slate-950 font-black";
+                btnCont.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
+                
+                document.getElementById('card-edit-title').value = "KADI YA MWALIKO WA WANAKAMATI";
+                document.getElementById('card-edit-msg').value = "Unakaribishwa kwa heshima kujumuika katika Kamati ya maandalizi ya sherehe yetu.";
+            } else {
+                btnCont.className = "p-2 rounded-xl gold-gradient text-slate-950 font-black";
+                btnComm.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
+
+                document.getElementById('card-edit-title').value = "KADI YA MCHANGO NA AHADI";
+                document.getElementById('card-edit-msg').value = "Tafadhali unakaribishwa kuchangia na kuunga mkono maandalizi ya sherehe yetu.";
+            }
+            updateLiveCard();
         }
 
         function applyCardTheme(theme) {
@@ -1135,8 +1216,94 @@
                     });
                 }
                 renderCardsList();
-                populateScanCardSelect();
             });
+
+            // REALTIME LISTENER YA SCANNED GUESTS (MHANGAIKO WA MAGETI YOTE)
+            rdb.ref('scans').on('value', snapshot => {
+                const tbody = document.getElementById('scanned-guests-tbody');
+                const badge = document.getElementById('scanned-count-badge');
+                if(!tbody) return;
+
+                let scanItems = [];
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => scanItems.push(child.val()));
+                }
+
+                if(badge) badge.innerText = `${scanItems.length} WALIOINGIA`;
+
+                if(scanItems.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Bado hakuna mgeni aliyescaniwa mlangoni.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = scanItems.reverse().map(s => `
+                    <tr class="hover:bg-slate-900">
+                        <td class="p-2 font-bold text-white">${s.guestName}</td>
+                        <td class="p-2 font-mono text-gold-400 text-[10px]">${s.cardId}</td>
+                        <td class="p-2 text-slate-400 text-[10px]">${s.gateName || 'Gate 1'} • ${s.time}</td>
+                        <td class="p-2 text-right"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[9px]">✅ ALLOWED</span></td>
+                    </tr>
+                `).join('');
+            });
+        }
+
+        // START HTML5 CAMERA SCANNER LENS
+        function startCameraScanner() {
+            const feedback = document.getElementById('scan-live-feedback');
+            if(html5QrCodeScanner) return;
+
+            html5QrCodeScanner = new Html5Qrcode("qr-reader");
+            html5QrCodeScanner.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 220, height: 220 } },
+                onScanSuccess,
+                onScanFailure
+            ).catch(err => {
+                if(feedback) {
+                    feedback.classList.remove('hidden');
+                    feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                    feedback.innerText = "Tafadhali ruhusu kamera ya simu/browser ili uweze kuscan QR Code.";
+                }
+            });
+        }
+
+        function stopCameraScanner() {
+            if(html5QrCodeScanner) {
+                html5QrCodeScanner.stop().then(() => {
+                    html5QrCodeScanner = null;
+                }).catch(err => console.log(err));
+            }
+        }
+
+        // KADI IKISCANIWA KIFAFANANISHI CHA QR CODE
+        async function onScanSuccess(decodedText) {
+            const feedback = document.getElementById('scan-live-feedback');
+            feedback.classList.remove('hidden');
+
+            const matchedCard = cardsList.find(c => decodedText.includes(c.id));
+
+            if(matchedCard) {
+                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                feedback.innerText = `🎉 MATCH FOUND: ${matchedCard.name} (${matchedCard.id}) - ALLOWED!`;
+
+                // Hifadhi kwenye Realtime Database 'scans' ili mageti yote yaone
+                const scanData = {
+                    cardId: matchedCard.id,
+                    guestName: matchedCard.name,
+                    gateName: currentUser ? currentUser.dbData.role : 'Gate Scanner',
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    timestamp: Date.now()
+                };
+
+                await rdb.ref('scans/' + matchedCard.id).set(scanData);
+            } else {
+                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                feedback.innerText = `⚠️ KADI HAITAMBULIKANI AU HAIPO KWENYE Mfumo! (${decodedText})`;
+            }
+        }
+
+        function onScanFailure(error) {
+            // Scanner inaendelea kutafuta QR Code
         }
 
         async function saveBudgetRates() {
@@ -1157,7 +1324,6 @@
             alert("Taarifa za Malipo na Bajeti zimesasishwa kikamilifu!");
         }
 
-        // BUGET AUTO-BALANCING LOGIC
         function renderBudgetSummary() {
             const paidList = contributionsList.filter(c => c.status === 'PAID');
             const totalCollected = paidList.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
@@ -1165,7 +1331,6 @@
             const pledgeList = contributionsList.filter(c => c.status === 'PLEDGE');
             const totalPledges = pledgeList.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
 
-            // AUTO-BALANCE: Bajeti Kuu - Pesa Iliyopatikana = Deficit/Salio Bado
             const remainingDeficit = Math.max(0, eventData.budget - totalCollected);
 
             document.getElementById('budget-total-display').innerText = `TSh ${eventData.budget.toLocaleString()}`;
@@ -1174,7 +1339,6 @@
             document.getElementById('rate-single-display').innerText = `TSh ${eventData.rateSingle.toLocaleString()}`;
             document.getElementById('rate-double-display').innerText = `TSh ${eventData.rateDouble.toLocaleString()}`;
 
-            // Update Board ya Chat
             document.getElementById('chat-summary-budget').innerText = `TSh ${eventData.budget.toLocaleString()}`;
             document.getElementById('chat-summary-collected').innerText = `TSh ${totalCollected.toLocaleString()}`;
             document.getElementById('chat-summary-deficit').innerText = `TSh ${remainingDeficit.toLocaleString()}`;
@@ -1233,7 +1397,6 @@
             alert(`Mchango umehifadhiwa kikamilifu! Mfumo umemweka Kundi la: ${categoryType} (${cardTypeAssigned} Card)`);
         }
 
-        // PUBLIC GUEST ONBOARDING & DIRECT REDIRECT TO GROUP CHAT
         async function handlePublicGuestSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('pub-guest-name').value;
@@ -1255,7 +1418,6 @@
                 cardTypeAssigned = 'SINGLE';
             }
 
-            // Hifadhi mchango au ahadi ya mgeni
             await rdb.ref('contributions').push({
                 name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
             });
@@ -1267,7 +1429,6 @@
                 });
             }
 
-            // Tuma Taarifa kwenye Group Chat
             const msg = {
                 sender: "SYSTEM (MWENGENI ONLINE)",
                 text: `✨ ${name} amewasilisha ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} na kujiunga na Group Chat!`,
@@ -1275,7 +1436,6 @@
             };
             await rdb.ref('messages').push(msg);
 
-            // Mfanye Mgeni awe Current Session User bila kumlazimisha Kujisajili
             currentUser = { 
                 uid: 'guest-' + Date.now(), 
                 email: `${phone}@guest.com`, 
@@ -1284,7 +1444,6 @@
 
             alert(`🎉 Hongera ${name}! Taarifa zako zimepokelewa kikamilifu. Sasa unahamishwa moja kwa moja kwenye Group Chat ya ${eventData.title}!`);
 
-            // Mpeleke Mgeni Direct Kwenye Dashboard & Group Chat
             switchView('dashboard');
             switchDashTab('chat');
             initRealtimeListeners();
@@ -1332,7 +1491,6 @@
             `).join('');
         }
 
-        // LOGIC YA KUTUMA KADI KWA WOTE WALIOCHANGA NA KUTIMIZA VIGEZO (BULK SEND)
         function sendCardsToAllPaidGuests() {
             if(cardsList.length === 0) {
                 alert("Hakuna kadi au mwaalikwa aliyekamilisha mchango bado!");
@@ -1358,7 +1516,7 @@
                                 `Unakaribishwa Kwenye: *${cardTitle}*\n` +
                                 `Maharusi/Wahusika: *${coupleNames}*\n` +
                                 `Namba ya Kadi: *${id}*\n\n` +
-                                `👇 *BOFYA LINK HII CHINI KUONA NA KUDOWNLOAD KADI YAKO MAALUM:* 👇\n` +
+                                `👇 *BOFYA LINK HII CHINI KUONA NA KUDOWNLOAD KADI YAKO MAALUM (JPG):* 👇\n` +
                                 `${cardLink}\n\n` +
                                 `_Tafadhali onyesha kadi hii yenye QR Code Mlangoni Siku ya Sherehe!_`;
 
@@ -1369,7 +1527,7 @@
         function sendSmsTemplateCard(cardKey, id, name, phone, type) {
             const cardLink = `${window.location.origin}${window.location.pathname}?card_id=${cardKey}`;
             const coupleNames = document.getElementById('card-edit-names').value || 'Juma & Amina';
-            const smsText = `Habari ${name}, umepokea KADI YA MWALIKO (${type} - ${id}) ya ${coupleNames}. Fungua Link hii kuona kadi yako: ${cardLink}`;
+            const smsText = `Habari ${name}, umepokea KADI YA MWALIKO (${type} - ${id}) ya ${coupleNames}. Fungua Link hii kuona na kupakua kadi yako: ${cardLink}`;
             window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(smsText)}`, '_blank');
         }
 
@@ -1408,7 +1566,7 @@
         function sendSmsThanks(name, phone) {
             const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana kwa ushirikiano na kujumuika nasi!';
             const fullMsg = `Habari ${name}, ${customMsg} (Sherehe: ${eventData.title})`;
-            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(fullMsg)}`, '_blank');
+            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(smsText)}`, '_blank');
         }
 
         async function handleSendGroupMessage(e) {
@@ -1448,24 +1606,6 @@
             const shareUrl = `${window.location.origin}${window.location.pathname}?event_id=${eventId}`;
             navigator.clipboard.writeText(shareUrl);
             alert("🔗 Link ya Mwenyekiti Imekopiwa! Tuma Link hii WhatsApp ili watu wajisajili na kutoa Ahadi au Michango na kuingia kwenye Group Chat!");
-        }
-
-        function populateScanCardSelect() {
-            const select = document.getElementById('scan-card-select');
-            if(!select) return;
-            select.innerHTML = cardsList.map(c => `<option value="${c.id}">${c.id} - ${c.name} (${c.type})</option>`).join('');
-        }
-
-        async function executeScanCardAction() {
-            const cardId = document.getElementById('scan-card-select').value;
-            const card = cardsList.find(c => c.id === cardId);
-            if(!card) return;
-
-            const box = document.getElementById('scan-result-box');
-            box.classList.remove('hidden');
-            document.getElementById('scan-icon-area').innerHTML = '✅';
-            document.getElementById('scan-title-text').innerText = "ENTRY APPROVED!";
-            document.getElementById('scan-desc-text').innerText = `${card.name} (${card.id}) - Aina: ${card.type} CARD`;
         }
 
         function openVipModal() {
