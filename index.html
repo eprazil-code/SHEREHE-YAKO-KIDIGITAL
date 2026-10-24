@@ -269,7 +269,7 @@
                             <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Inaonekana Kwenye Trial</span>
                         </div>
                         
-                        <!-- CHAGUO LA AINA YA KADI (WANAKAMATI / MCHANGO / UKUMBINI) -->
+                        <!-- CHAGUO LA AINA YA KADI -->
                         <div class="p-3 rounded-2xl bg-slate-950 border border-gold-500/40 space-y-2">
                             <label class="block text-xs font-bold text-gold-400">1. Chagua Aina Ya Kadi Unayotengeneza:</label>
                             <div class="grid grid-cols-3 gap-1.5 text-[11px]">
@@ -363,7 +363,6 @@
             <!-- TAB 2: GROUP CHAT & LIVE SUMMARY -->
             <div id="pane-chat" class="dash-pane hidden space-y-4">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                    <!-- Live Summary Board -->
                     <div class="lg:col-span-4 bg-slate-900 p-4 rounded-3xl border border-slate-800 space-y-3">
                         <h4 class="text-xs font-bold text-gold-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-chart-line"></i> Dashboard ya Wanakamati</h4>
                         <div class="space-y-2 text-xs">
@@ -385,7 +384,6 @@
                             </div>
                         </div>
 
-                        <!-- LINK YA MWENYEKITI -->
                         <div class="p-3 rounded-2xl bg-slate-950 border border-gold-500/30 space-y-2">
                             <span class="text-[10px] font-bold text-gold-400 block">🔗 LINK YA SHUTI/SHARE SHREHE:</span>
                             <button type="button" onclick="copyChairmanEventLink()" class="w-full py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs uppercase">
@@ -394,7 +392,6 @@
                         </div>
                     </div>
 
-                    <!-- Chat Section -->
                     <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-3xl p-4 space-y-3">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
                             <div>
@@ -448,7 +445,6 @@
                         </div>
                     </div>
 
-                    <!-- PAYMENT ACCOUNTS DISPLAY & EDITOR -->
                     <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
                         <h4 class="text-xs font-bold text-gold-400">Seta Taarifa Za Benki Na Simu Za Kuchangia:</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -610,23 +606,29 @@
                 </div>
             </div>
 
-            <!-- TAB 7: LIVE SCANNER WITH CAMERA LENS & REALTIME SCANNED LIST -->
+            <!-- TAB 7: LIVE SCANNER WITH CAMERA LENS & FILE UPLOAD BACKUP -->
             <div id="pane-scanner" class="dash-pane hidden space-y-6">
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-6">
                     <div class="text-center max-w-md mx-auto space-y-2">
                         <i class="fa-solid fa-camera text-gold-400 text-4xl mb-1"></i>
                         <h3 class="text-xl font-extrabold text-white">Live Gate Camera Scanner</h3>
-                        <p class="text-xs text-slate-400">Scan QR Code ya Kadi ya Mgeni Mlangoni Kwa Kutumia Kamera Ya Simu/Laptop</p>
+                        <p class="text-xs text-slate-400">Scan QR Code ya Kadi ya Mgeni Mlangoni ama Tumia Picha ya QR kutoka kwenye Simu</p>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                        <!-- CAMERA LENS SCANNER BOX -->
+                        <!-- CAMERA LENS SCANNER BOX WITH FILE FALLBACK -->
                         <div class="lg:col-span-6 bg-slate-950 border-2 border-gold-500/50 p-4 rounded-3xl space-y-3 text-center">
-                            <div id="qr-reader" class="w-full rounded-2xl overflow-hidden bg-black min-h-[280px]"></div>
+                            <div id="qr-reader" class="w-full rounded-2xl overflow-hidden bg-black min-h-[240px]"></div>
                             
-                            <div class="flex justify-center gap-2 pt-2">
+                            <div class="flex justify-center gap-2 pt-1">
                                 <button type="button" onclick="startCameraScanner()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-bold text-xs uppercase"><i class="fa-solid fa-video mr-1"></i> WASHA KAMERA</button>
                                 <button type="button" onclick="stopCameraScanner()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase"><i class="fa-solid fa-video-slash mr-1"></i> ZIMA</button>
+                            </div>
+
+                            <!-- FILE UPLOAD QR SCANNER BACKUP (Works 100% when camera is blocked) -->
+                            <div class="p-3 bg-slate-900 rounded-2xl border border-gold-500/30 space-y-1.5 text-left">
+                                <label class="block text-[11px] font-bold text-gold-400">📁 Njia Mbadala (Kama Kamera Imezingua): Chagua Picha ya QR Code:</label>
+                                <input type="file" id="qr-file-input" accept="image/*" onchange="scanQrFromFile(event)" class="text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gold-500 file:text-slate-950 hover:file:bg-gold-400 cursor-pointer w-full">
                             </div>
 
                             <div id="scan-live-feedback" class="hidden p-3 rounded-2xl text-xs font-bold text-center"></div>
@@ -1343,7 +1345,7 @@
             });
         }
 
-        // IMPROVED CAMERA SCANNER WITH DELAYED DOM RENDERING
+        // CAMERA SCANNER & FILE FALLBACK
         function startCameraScanner() {
             const feedback = document.getElementById('scan-live-feedback');
             if(html5QrCodeScanner) {
@@ -1361,24 +1363,24 @@
                     html5QrCodeScanner = new Html5Qrcode("qr-reader");
                     html5QrCodeScanner.start(
                         { facingMode: "environment" },
-                        { fps: 10, qrbox: { width: 220, height: 220 } },
+                        { fps: 10, qrbox: { width: 200, height: 200 } },
                         onScanSuccess,
                         onScanFailure
                     ).catch(err => {
                         if(feedback) {
                             feedback.classList.remove('hidden');
-                            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
-                            feedback.innerText = "Kamera haijawashwa. Hakikisha unatumia HTTPS au Localhost na umeruhusu ruhusa ya kamera (Camera Permission).";
+                            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-amber-500/20 text-amber-400 border border-amber-500/30";
+                            feedback.innerText = "Kamera imezuiwa na kivinjari au huna HTTPS. Tumia njia ya pili hapa chini (Chagua Picha ya QR Code) kuscan kwa urahisi!";
                         }
                     });
                 } catch(e) {
                     if(feedback) {
                         feedback.classList.remove('hidden');
                         feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
-                        feedback.innerText = "Imeshindikana kuanzisha kamera: " + e.message;
+                        feedback.innerText = "Imeshindikana kuwasha kamera. Tumia kitufe cha kuchagua picha ya QR hapa chini.";
                     }
                 }
-            }, 350);
+            }, 300);
         }
 
         function stopCameraScanner() {
@@ -1386,6 +1388,27 @@
                 html5QrCodeScanner.stop().then(() => {
                     html5QrCodeScanner = null;
                 }).catch(err => console.log(err));
+            }
+        }
+
+        // SCAN QR CODE FROM IMAGE FILE (100% RELIABLE BACKUP)
+        async function scanQrFromFile(e) {
+            const file = e.target.files[0];
+            const feedback = document.getElementById('scan-live-feedback');
+            if(!file) return;
+
+            feedback.classList.remove('hidden');
+            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-slate-800 text-gold-400 border border-gold-500/30";
+            feedback.innerText = "Inasoma QR Code kwenye picha...";
+
+            try {
+                const tempScanner = new Html5Qrcode("qr-reader");
+                const decodedText = await tempScanner.scanFile(file, true);
+                await tempScanner.clear();
+                onScanSuccess(decodedText);
+            } catch (err) {
+                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                feedback.innerText = "Imeshindikana kusoma QR Code kutoka kwenye picha hii. Hakikisha picha iko wazi.";
             }
         }
 
@@ -1415,7 +1438,7 @@
         }
 
         function onScanFailure(error) {
-            // Scanner inaendelea kutafuta QR code
+            // Scanner inaendelea kusubiri
         }
 
         async function saveBudgetRates() {
