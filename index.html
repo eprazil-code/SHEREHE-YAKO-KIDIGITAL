@@ -1,4 +1,1312 @@
 <!DOCTYPE html>
+<html lang="sw" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHEREHE YAKO KIDIGITAL - Platform Halisi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    <!-- QR Code Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: { 400: '#facc15', 500: '#eab308', 600: '#ca8a04' },
+                        silver: { 300: '#cbd5e1', 400: '#94a3b8' }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gold-gradient { background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%); }
+        .gold-text { background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-frame { border: 4px solid #eab308; box-shadow: 0 0 25px rgba(234, 179, 8, 0.3); }
+        .card-preview { aspect-ratio: 9/16; max-width: 340px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+</head>
+<body class="font-sans text-slate-100 bg-slate-950 h-full flex flex-col antialiased selection:bg-gold-500 selection:text-slate-950">
+
+    <!-- TOP HEADER BAR -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex justify-between items-center gap-2">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('splash')">
+                <div class="w-10 h-10 rounded-xl gold-gradient text-slate-950 font-black text-xl flex items-center justify-center shadow-lg shadow-gold-500/20">S</div>
+                <div>
+                    <span class="font-extrabold text-base tracking-tight gold-text block leading-none">SHEREHE YAKO</span>
+                    <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest" data-i18n="appSubtitle">KIDIGITAL PLATFORM</span>
+                </div>
+            </div>
+
+            <!-- Customer Support Contacts & Language & Admin -->
+            <div class="flex items-center gap-3">
+                <div class="hidden md:flex items-center gap-3 text-[11px] font-bold bg-slate-950 px-3 py-1.5 rounded-xl border border-gold-500/30">
+                    <span class="text-slate-400"><i class="fa-solid fa-headset text-gold-400 mr-1"></i> Msaada:</span>
+                    <a href="tel:0657576696" class="text-gold-400 hover:underline">0657576696</a>
+                    <span class="text-slate-700">|</span>
+                    <a href="tel:0755154363" class="text-gold-400 hover:underline">0755154363</a>
+                </div>
+
+                <div class="flex items-center gap-1 bg-slate-800 p-1 rounded-lg border border-slate-700 text-xs font-bold">
+                    <button type="button" onclick="changeLang('sw')" id="lang-sw-btn" class="px-2 py-0.5 rounded text-gold-400 font-bold">SW</button>
+                    <span class="text-slate-600">|</span>
+                    <button type="button" onclick="changeLang('en')" id="lang-en-btn" class="px-2 py-0.5 rounded text-slate-400">EN</button>
+                </div>
+
+                <div id="nav-user-area" class="hidden flex items-center gap-2">
+                    <span id="user-badge" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-800 text-gold-400 border border-gold-500/30">TRIAL</span>
+                    <button type="button" onclick="logoutUser()" class="text-xs text-rose-400 hover:text-rose-300 p-1" title="Toka"><i class="fa-solid fa-power-off"></i></button>
+                </div>
+
+                <button type="button" onclick="openAdminModal()" class="text-slate-400 hover:text-gold-400 text-xs p-1" title="Admin Portal">
+                    <i class="fa-solid fa-user-shield text-base"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: PAGE YA KWANZA (GOLD MOBILE FRAME) -->
+        <!-- ========================================== -->
+        <section id="view-splash" class="flex flex-col items-center justify-center py-6 space-y-6">
+            <div class="w-full max-w-sm bg-slate-900 rounded-[40px] p-6 gold-frame relative flex flex-col justify-between items-center text-center space-y-6">
+                <div class="w-28 h-4 bg-slate-950 rounded-full mx-auto border border-gold-500/30 mb-2"></div>
+
+                <div class="w-20 h-20 rounded-2xl gold-gradient text-slate-950 font-black text-4xl flex items-center justify-center shadow-xl shadow-gold-500/30">
+                    S
+                </div>
+
+                <div class="space-y-2">
+                    <h1 class="text-2xl font-black text-white gold-text uppercase tracking-tight" data-i18n="splashTitle">
+                        KARIBU SHEREHE YAKO KIDIGITAL
+                    </h1>
+                    <p class="text-xs text-slate-400 italic" data-i18n="splashTagline">
+                        "Panga • Shiriki • Sherehe Pamoja"
+                    </p>
+                </div>
+
+                <!-- Customer Support Mobile Notice -->
+                <div class="p-3 rounded-2xl bg-slate-950/90 border border-gold-500/30 text-[11px] text-slate-300 space-y-1 w-full text-center">
+                    <span class="text-gold-400 font-bold block"><i class="fa-solid fa-phone"></i> Huduma kwa Wateja:</span>
+                    <p class="text-[11px] font-mono font-bold text-white">0657 576 696 | 0755 154 363</p>
+                </div>
+
+                <!-- Trial Notice -->
+                <div class="p-3 rounded-2xl bg-slate-950/80 border border-gold-500/30 text-[11px] text-slate-300 space-y-1">
+                    <span class="text-gold-400 font-bold block" data-i18n="trialNoticeTitle">🌟 Jaribu Mfumo Bure (Trial Mode)</span>
+                    <p class="text-[10px] text-slate-400" data-i18n="trialNoticeDesc">Ona jinsi mfumo unavyofanya kazi na templates za kadi kabla ya kulipia VIP (TSh 50,000/=).</p>
+                </div>
+
+                <!-- Registration / Sign In Actions -->
+                <div class="w-full space-y-2.5 pt-2">
+                    <button type="button" onclick="goToAuth('register')" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 shadow-lg shadow-gold-500/20 transition uppercase tracking-wider" data-i18n="btnRegister">
+                        REGISTER (JISAJILI)
+                    </button>
+                    <button type="button" onclick="goToAuth('login')" class="w-full py-3 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold text-xs hover:bg-slate-700 transition uppercase tracking-wider" data-i18n="btnSignIn">
+                        SIGN IN (INGIA)
+                    </button>
+                    <button type="button" onclick="startTrialExperience()" class="w-full py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-gold-400 font-bold text-xs hover:bg-slate-900 transition" data-i18n="btnDemo">
+                        ⚡ JARIBU TRIAL DEMO NOW
+                    </button>
+                </div>
+
+                <div class="w-32 h-1 bg-slate-700 rounded-full mx-auto mt-4"></div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: USAJILI / LOGIN                    -->
+        <!-- ========================================== -->
+        <section id="view-auth" class="hidden max-w-md mx-auto space-y-6 pt-4">
+            <!-- REGISTER FORM -->
+            <div id="form-register" class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 shadow-xl">
+                <div class="text-center space-y-1">
+                    <h2 class="text-xl font-bold text-white" data-i18n="regHeader">Jisajili Akaunti Mpya</h2>
+                    <p class="text-xs text-slate-400" data-i18n="regSub">Weka taarifa zako na nenosiri kuanza</p>
+                </div>
+
+                <form onsubmit="handleRegistration(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1" data-i18n="lblName">Majina Yako Kamili</label>
+                        <input type="text" id="reg-name" required placeholder="Mfano: Juma Mkwawa" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-gold-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1" data-i18n="lblUsername">Username / Barua Pepe (Email)</label>
+                        <input type="text" id="reg-username" required placeholder="juma@gmail.com / juma123" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-gold-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1" data-i18n="lblPass">Neno la Siri (Password)</label>
+                        <input type="password" id="reg-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-gold-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1" data-i18n="lblPhone">Namba ya WhatsApp</label>
+                        <input type="tel" id="reg-phone" required placeholder="0712345678" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-gold-500">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1" data-i18n="lblRole">Nafasi Yako Kwenye Sherehe</label>
+                        <select id="reg-role" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-gold-500">
+                            <option value="Mwenyekiti">Mwenyekiti wa Kamati</option>
+                            <option value="Katibu">Katibu wa Kamati</option>
+                            <option value="Mhasibu">Mhasibu / Mwekahazina</option>
+                            <option value="Mjumbe">Mjumbe / Mwaalikwa</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1" data-i18n="lblCat">Aina ya Sherehe</label>
+                        <select id="reg-category" onchange="toggleCustomCategory(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-gold-500">
+                            <option value="Harusi / Wedding">Harusi / Wedding</option>
+                            <option value="Send-off">Send-off</option>
+                            <option value="Kitchen Party">Kitchen Party</option>
+                            <option value="Birthday">Birthday</option>
+                            <option value="Graduation">Graduation</option>
+                            <option value="CUSTOM">Custom Event / Aina Nyingine..</option>
+                        </select>
+                    </div>
+                    <!-- CUSTOM CATEGORY INPUT FIELD -->
+                    <div id="custom-cat-box" class="hidden">
+                        <label class="block font-semibold text-gold-400 mb-1">Andika Aina Yako ya Sherehe (Custom Event)</label>
+                        <input type="text" id="reg-custom-cat" placeholder="Mfano: Sherehe ya Jubilei / Mashujaa" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1" data-i18n="lblEventTitle">Jina la Sherehe Yako</label>
+                        <input type="text" id="reg-event-title" required placeholder="Mfano: Harusi ya Juma & Amina" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                    </div>
+
+                    <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 shadow-lg shadow-gold-500/20 transition mt-2" data-i18n="btnSubmitReg">
+                        JISAJILI & FUNGUA SHEREHE
+                    </button>
+                </form>
+                <p class="text-center text-xs text-slate-400 pt-2">
+                    <span data-i18n="hasAcc">Tayari una akaunti?</span> <button type="button" onclick="toggleAuthMode('login')" class="text-gold-400 font-bold underline" data-i18n="linkLogin">Ingia Hapa</button>
+                </p>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <div id="form-login" class="hidden bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 shadow-xl">
+                <div class="text-center space-y-1">
+                    <h2 class="text-xl font-bold text-white" data-i18n="loginHeader">Ingia Kwenye Sherehe Yako</h2>
+                    <p class="text-xs text-slate-400" data-i18n="loginSub">Weka Username/Email na Password yako</p>
+                </div>
+                <form onsubmit="handleLogin(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1" data-i18n="lblUsername">Username / Email</label>
+                        <input type="text" id="login-username" required placeholder="juma@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-300 mb-1" data-i18n="lblPass">Neno la Siri (Password)</label>
+                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 shadow-lg transition" data-i18n="btnLoginSubmit">
+                        INGIA KWENYE DASHBOARD
+                    </button>
+                </form>
+                <p class="text-center text-xs text-slate-400 pt-2">
+                    <span data-i18n="noAcc">Huna akaunti bado?</span> <button type="button" onclick="toggleAuthMode('register')" class="text-gold-400 font-bold underline" data-i18n="linkReg">Jisajili Hapa</button>
+                </p>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: MAIN DASHBOARD & MODULES           -->
+        <!-- ========================================== -->
+        <section id="view-dashboard" class="hidden space-y-6">
+            <!-- Event Banner Header -->
+            <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span id="dash-event-type" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-gold-500/20 text-gold-400 border border-gold-500/30">HARUSI</span>
+                        <span id="dash-vip-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-800 text-slate-400 border border-slate-700">⚪ TRIAL MODE</span>
+                    </div>
+                    <h1 id="dash-event-title" class="text-2xl font-extrabold text-white mt-1">Harusi ya Juma & Amina</h1>
+                    <p class="text-xs text-slate-400 mt-0.5"><span data-i18n="lblHost">Mwenyeji:</span> <strong id="dash-user-name" class="text-slate-200">Juma Mkwawa</strong> (<span id="dash-user-role" class="text-gold-400">Mwenyekiti</span>)</p>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="openVipModal()" id="btn-upgrade-vip" class="px-4 py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition shadow-lg shadow-gold-500/20" data-i18n="btnUpgradeVip">
+                        👑 FUNGUA VIP (TSh 50,000)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Navigation Menu -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800 scrollbar-none text-xs font-bold">
+                <button type="button" onclick="switchDashTab('templates')" id="tab-btn-templates" class="dash-tab active px-4 py-2.5 rounded-xl bg-slate-900 text-gold-400 border border-gold-500/40 whitespace-nowrap">
+                    <i class="fa-solid fa-paint-brush"></i> Card Templates & Editor
+                </button>
+                <button type="button" onclick="switchDashTab('chat')" id="tab-btn-chat" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
+                    <i class="fa-brands fa-whatsapp text-emerald-400"></i> Group Chat
+                </button>
+                <button type="button" onclick="switchDashTab('budget')" id="tab-btn-budget" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
+                    <i class="fa-solid fa-calculator"></i> Bajeti Ya Sherehe
+                </button>
+                <button type="button" onclick="switchDashTab('contributions')" id="tab-btn-contributions" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
+                    <i class="fa-solid fa-wallet"></i> Michango & Orodha
+                </button>
+                <button type="button" onclick="switchDashTab('cards')" id="tab-btn-cards" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
+                    <i class="fa-solid fa-address-card"></i> Kadi & Mialiko
+                </button>
+                <button type="button" onclick="switchDashTab('scanner')" id="tab-btn-scanner" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap flex items-center gap-1">
+                    <i class="fa-solid fa-qrcode text-gold-400"></i> Scan Mlangoni
+                </button>
+            </div>
+
+            <!-- TAB 1: CARD TEMPLATES & EDITOR (AVAILABLE IN TRIAL) -->
+            <div id="pane-templates" class="dash-pane space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <h3 class="text-sm font-bold text-white">Card Designer & Color Templates</h3>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Inaonekana Kwenye Trial</span>
+                        </div>
+                        
+                        <!-- COLOR TEMPLATES (ORIGINAL + NEW) -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">Chagua Theme Ya Rangi Za Kadi:</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                <button type="button" onclick="applyCardTheme('gold')" class="p-2.5 rounded-xl bg-slate-950 border border-gold-500/60 text-xs font-bold text-gold-400">✨ Gold Royalty</button>
+                                <button type="button" onclick="applyCardTheme('silver')" class="p-2.5 rounded-xl bg-slate-950 border border-slate-400/60 text-xs font-bold text-slate-300">🥈 Silver Elegance</button>
+                                <button type="button" onclick="applyCardTheme('emerald')" class="p-2.5 rounded-xl bg-emerald-950 border border-emerald-500/60 text-xs font-bold text-emerald-400">🕌 Islamic Emerald</button>
+                                <button type="button" onclick="applyCardTheme('purple')" class="p-2.5 rounded-xl bg-indigo-950 border border-indigo-500/60 text-xs font-bold text-indigo-300">👑 Royal Purple</button>
+                                <button type="button" onclick="applyCardTheme('rose')" class="p-2.5 rounded-xl bg-rose-950 border border-rose-500/60 text-xs font-bold text-rose-300">🌹 Rose Gold</button>
+                                <button type="button" onclick="applyCardTheme('ruby')" class="p-2.5 rounded-xl bg-red-950 border border-red-500/60 text-xs font-bold text-red-400">💎 Crimson Ruby</button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Kichwa cha Kadi</label>
+                                <input type="text" id="card-edit-title" oninput="updateLiveCard()" value="HARUSI YA WAPENDANAO" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Majina ya Wahusika</label>
+                                <input type="text" id="card-edit-names" oninput="updateLiveCard()" value="Juma & Amina" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Tarehe & Eneo</label>
+                                <input type="text" id="card-edit-date" oninput="updateLiveCard()" value="12 Desemba 2026 - Mlimani City" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Ujumbe Mfupi wa Mwaliko</label>
+                                <textarea id="card-edit-msg" oninput="updateLiveCard()" rows="2" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">Tunayo furaha kubwa kukualika katika sherehe yetu...</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Card Visual Preview Frame WITH QR CODE -->
+                    <div class="lg:col-span-7 flex flex-col items-center justify-center">
+                        <div id="live-card-frame" class="card-preview w-full rounded-3xl p-6 bg-slate-950 border-4 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden">
+                            <div class="space-y-4 relative z-10">
+                                <div class="w-12 h-12 rounded-full mx-auto border border-gold-500 flex items-center justify-center"><i class="fa-solid fa-sparkles text-gold-400 text-lg"></i></div>
+                                <div>
+                                    <span id="prev-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">HARUSI YA WAPENDANAO</span>
+                                    <h2 id="prev-names" class="text-2xl font-serif font-bold text-white mt-1">Juma & Amina</h2>
+                                </div>
+                                <p id="prev-msg" class="text-xs text-slate-300 italic px-2">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
+                            </div>
+
+                            <div class="space-y-2 bg-slate-900/80 p-3 rounded-2xl border border-gold-500/30 text-xs text-left relative z-10 flex items-center justify-between">
+                                <div>
+                                    <p class="text-gold-400 font-bold" id="prev-date">12 Desemba 2026 - Mlimani City</p>
+                                    <p class="text-[10px] text-slate-400">Mgeni Rasmi: Mwaliko Maalum (VIP)</p>
+                                </div>
+                                <!-- MINI QR CODE PREVIEW -->
+                                <div class="bg-white p-1 rounded-lg">
+                                    <div id="preview-mini-qr"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center text-[9px] text-slate-500 font-bold uppercase tracking-widest relative z-10 border-t border-slate-800 pt-2">
+                                <span>ID #001</span>
+                                <span>Sherehe Yako Kidigital</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: GROUP CHAT (WITH DOCUMENTS & MEDIA) -->
+            <div id="pane-chat" class="dash-pane hidden space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl"><i class="fa-brands fa-whatsapp"></i></div>
+                            <div>
+                                <h3 class="text-sm font-bold text-white">Group Chat La Sherehe Yenu</h3>
+                                <p class="text-[11px] text-slate-400">Watu wote waliojiunga kupitia Link ya Viongozi wanapo-chat</p>
+                            </div>
+                        </div>
+
+                        <!-- Invite Link Copy Box -->
+                        <div class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800 text-xs w-full sm:w-auto">
+                            <span class="text-slate-400 text-[10px] font-mono">Link Ya Mwaliko:</span>
+                            <button type="button" onclick="copyGroupInviteLink()" class="px-3 py-1 rounded bg-gold-500 text-slate-950 font-bold text-[10px] whitespace-nowrap">
+                                <i class="fa-solid fa-copy"></i> Kopi Link
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages Stream Box -->
+                    <div id="chat-messages-stream" class="h-80 overflow-y-auto p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 text-xs">
+                        <!-- Messages render dynamically -->
+                    </div>
+
+                    <!-- Send Message & Documents Form -->
+                    <form onsubmit="handleSendGroupMessage(event)" class="space-y-2">
+                        <div id="file-attached-pill" class="hidden text-[10px] text-gold-400 bg-slate-800 px-3 py-1 rounded-lg border border-gold-500/30 flex items-center gap-2">
+                            <i class="fa-solid fa-paperclip"></i> <span id="file-name-text">filename.pdf</span>
+                            <button type="button" onclick="clearAttachedFile()" class="text-rose-400 font-bold ml-auto">X</button>
+                        </div>
+
+                        <div class="flex gap-2 text-xs">
+                            <label class="p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white cursor-pointer flex items-center justify-center">
+                                <i class="fa-solid fa-paperclip text-base"></i>
+                                <input type="file" id="chat-file-input" onchange="handleFileAttach(event)" class="hidden">
+                            </label>
+                            <input type="text" id="chat-text-input" placeholder="Andika ujumbe au tuma document/picha..." class="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-gold-500">
+                            <button type="submit" class="px-5 py-2.5 rounded-xl gold-gradient text-slate-950 font-bold hover:brightness-110">
+                                TUMA <i class="fa-solid fa-paper-plane ml-1"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TAB 3: BAJETI YA SHEREHE (MWENYEKITI ONLY EDIT) -->
+            <div id="pane-budget" class="dash-pane hidden space-y-6">
+                <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <div>
+                            <h3 class="text-base font-bold text-white">Bajeti Kuu Ya Sherehe</h3>
+                            <p class="text-xs text-slate-400">Mwenyekiti ndiye aliye na uwezo wa kuweka na kubadilisha bajeti hii</p>
+                        </div>
+                        <span id="budget-authority-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                            🔒 Ruksa Ya Mwenyekiti Tu
+                        </span>
+                    </div>
+
+                    <!-- Budget Summary Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-center">
+                        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+                            <span class="text-slate-400 block">Bajeti Iliyopangwa</span>
+                            <span id="budget-total-display" class="text-xl font-black text-gold-400">TSh 5,000,000</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+                            <span class="text-emerald-400 block">Michango Iliyokusanywa</span>
+                            <span id="budget-collected-display" class="text-xl font-black text-emerald-400">TSh 0</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
+                            <span class="text-rose-400 block">Pengo / Deficit</span>
+                            <span id="budget-deficit-display" class="text-xl font-black text-rose-400">TSh 5,000,000</span>
+                        </div>
+                    </div>
+
+                    <!-- Edit Budget Section (Controlled for Chairman) -->
+                    <div id="budget-edit-box" class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                        <h4 class="text-xs font-bold text-slate-300">Rekebisha Bajeti Kuu (Mwenyekiti Only):</h4>
+                        <div class="flex gap-2">
+                            <input type="number" id="budget-input-amount" placeholder="Weka kiasi kipya cha Bajeti (TSh)..." class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white outline-none">
+                            <button type="button" onclick="updateChairmanBudget()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-bold text-xs">
+                                HIFADHI BAJETI
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: MICHANGO & ORODHA -->
+            <div id="pane-contributions" class="dash-pane hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Add Contribution Form -->
+                    <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
+                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Rekodi Mchango Mpya</h4>
+                        <form onsubmit="handleAddContribution(event)" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Jina la Mchangiaji</label>
+                                <input type="text" id="c-name" required placeholder="Amina Hassan" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Kundi La Mchangiaji</label>
+                                <select id="c-group" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                    <option value="Kamati">Kamati ya Sherehe</option>
+                                    <option value="Familia">Familia</option>
+                                    <option value="Waalikwa">Waalikwa / Marafiki</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Kiasi Alicholipa (TSh)</label>
+                                <input type="number" id="c-amount" required placeholder="50000" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs hover:brightness-110">
+                                HIFADHI MCHANGO
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Contribution Table -->
+                    <div class="lg:col-span-7 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
+                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Orodha ya Michango</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                                    <tr>
+                                        <th class="p-2.5">Jina</th>
+                                        <th class="p-2.5">Kundi</th>
+                                        <th class="p-2.5">Kiasi</th>
+                                        <th class="p-2.5">Tarehe</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contrib-table-body" class="divide-y divide-slate-800 text-slate-200">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: KADI & MIALIKO (SINGLE / DOUBLE & ID CODES) -->
+            <div id="pane-cards" class="dash-pane hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
+                        <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Tengeneza / Tuma Kadi Za Mwaliko</h3>
+
+                        <form onsubmit="handleGenerateCard(event)" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Jina la Mwaalikwa</label>
+                                <input type="text" id="card-guest-name" required placeholder="Ndugu Joseph Mbilinyi" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Namba ya Simu / WhatsApp</label>
+                                <input type="tel" id="card-guest-phone" required placeholder="0712345678" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Aina ya Kadi</label>
+                                <select id="card-type-select" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                    <option value="SINGLE">Single Card (Mtu 1)</option>
+                                    <option value="DOUBLE">Double Card (Watu 2)</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs hover:brightness-110">
+                                TENGENEZA KADI MPYA
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Guests & Cards Table -->
+                    <div class="lg:col-span-7 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
+                        <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Orodha ya Kadi Zilizotengenezwa</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                                    <tr>
+                                        <th class="p-2.5">ID / Namba</th>
+                                        <th class="p-2.5">Mwaalikwa</th>
+                                        <th class="p-2.5">Aina</th>
+                                        <th class="p-2.5">Status Mlangoni</th>
+                                        <th class="p-2.5 text-right">Tuma Mwaliko</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cards-table-body" class="divide-y divide-slate-800 text-slate-200">
+                                    <!-- Cards Render Here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: GATE SCANNER (RESTRICTED TO LEADERS) -->
+            <div id="pane-scanner" class="dash-pane hidden space-y-6">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 text-center">
+                    <div class="max-w-md mx-auto space-y-2">
+                        <i class="fa-solid fa-qrcode text-gold-400 text-4xl mb-2"></i>
+                        <h3 class="text-lg font-bold text-white">Gate Scan Check-in (Viongozi Tu)</h3>
+                        <p class="text-xs text-slate-400">Simulate au scan QR Code ya kadi ya mgeni kuthibitisha kuingia ukumbini.</p>
+                    </div>
+
+                    <!-- Scanner Simulation Control -->
+                    <div class="max-w-sm mx-auto p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 text-xs">
+                        <label class="block text-slate-300 font-semibold">Chagua Kadi Ya Mgeni Inayoscaniwa:</label>
+                        <select id="scan-card-select" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
+                            <!-- Dynamic Card List -->
+                        </select>
+                        <button type="button" onclick="executeScanCardAction()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110">
+                            SCAN KADI SASA
+                        </button>
+                    </div>
+
+                    <!-- Scan Feedback Result Box -->
+                    <div id="scan-result-box" class="hidden max-w-sm mx-auto p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-center">
+                        <div id="scan-icon-area" class="text-3xl"></div>
+                        <h4 id="scan-title-text" class="text-base font-bold text-white"></h4>
+                        <p id="scan-desc-text" class="text-xs text-slate-400"></p>
+                        <div id="scan-ticks-badge" class="text-2xl font-black text-gold-400"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- VIP UPGRADE MODAL -->
+    <div id="modal-vip" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-gold-500/50 rounded-3xl max-w-md w-full p-6 relative shadow-2xl space-y-4">
+            <button type="button" onclick="closeVipModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="text-center space-y-2">
+                <span class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-xs font-black uppercase">UPGRADE TO VIP</span>
+                <h3 class="text-xl font-bold text-white">Fungua Huduma Zote Za VIP</h3>
+                <p class="text-xs text-slate-400">Fanya malipo ya TSh 50,000/= kuanza kutumia mfumo kamili</p>
+            </div>
+
+            <!-- Payment Details & Customer Service Numbers -->
+            <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="text-slate-400">Kiasi cha Kulipia:</span>
+                    <span class="text-base font-black text-gold-400">TSh 50,000/=</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="text-slate-400">Namba za Malipo:</span>
+                    <span class="font-mono text-white font-bold bg-slate-800 px-2 py-1 rounded">0755 154 363</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <span class="text-slate-400">Huduma kwa Wateja:</span>
+                    <span class="font-mono text-gold-400 font-bold">0657 576 696</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Akaunti Name:</span>
+                    <span class="font-bold text-slate-200">Sherehe Yako Kidigital</span>
+                </div>
+            </div>
+
+            <form onsubmit="handleSubmitVipProof(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1">Kumbukumbu ya Muamala (Transaction Code)</label>
+                    <input type="text" id="vip-tx-code" required placeholder="Mfano: SH892374829X au TX-9921" class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none font-mono uppercase">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 shadow-lg shadow-gold-500/20">
+                    WASILISHA MALIPO YAKO
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONGRATULATIONS VIP POPUP MODAL -->
+    <div id="modal-vip-success" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-gold-500 rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
+            <div class="w-16 h-16 rounded-full gold-gradient text-slate-950 font-black text-3xl flex items-center justify-center mx-auto shadow-lg shadow-gold-500/30">
+                🎉
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-xl font-black text-white gold-text">YOU ARE VIP NOW!</h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Hongera sana! Akaunti yako imethibitishwa na Admin kuwa <strong class="text-gold-400">VIP ACTIVE</strong>. Sasa una uwezo wa kutumia huduma zote za mfumo bila kikomo!
+                </p>
+            </div>
+            <button type="button" onclick="closeVipSuccessModal()" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition uppercase">
+                ENDELEA NA SHEREHE YAKO 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- ADMIN MANAGEMENT MODAL -->
+    <div id="modal-admin" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 relative shadow-2xl space-y-4">
+            <button type="button" onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+
+            <!-- Admin Login Box -->
+            <div id="admin-login-box" class="space-y-4">
+                <div class="text-center space-y-1">
+                    <i class="fa-solid fa-user-shield text-gold-500 text-3xl"></i>
+                    <h3 class="text-base font-bold text-white">Admin Management Portal</h3>
+                    <p class="text-xs text-slate-400">Ingiza Email na Password yako ya Admin kuingia</p>
+                </div>
+                <form onsubmit="handleAdminLogin(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Email / Username ya Admin</label>
+                        <input type="text" id="adm-email" placeholder="Weka Email ya Admin" required class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Password</label>
+                        <input type="password" id="adm-pass" placeholder="••••••••" required class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                    </div>
+                    <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs hover:brightness-110">
+                        INGIA ADMIN PANEL
+                    </button>
+                </form>
+            </div>
+
+            <!-- Admin Dashboard Panel -->
+            <div id="admin-panel-box" class="hidden space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <h3 class="text-sm font-bold text-white">Admin Management Panel</h3>
+                    <span class="text-[10px] text-emerald-400 font-mono">ONLINE</span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                        <span class="text-slate-400 block text-[10px]">Waliotisajili (Trial)</span>
+                        <span id="adm-count-total" class="font-black text-white text-base">1</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                        <span class="text-slate-400 block text-[10px]">Walio-click VIP</span>
+                        <span id="adm-count-clicked" class="font-black text-amber-400 text-base">0</span>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                        <span class="text-slate-400 block text-[10px]">Waliolipa (TSh 50,000)</span>
+                        <span id="adm-count-vip" class="font-black text-gold-400 text-base">0</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                    <h4 class="font-bold text-slate-300">Orodha ya Watumiaji, Malipo na Hali ya VIP:</h4>
+                    <div id="adm-users-list" class="space-y-2 max-h-56 overflow-y-auto">
+                        <!-- Dynamic User Rows -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP ENGINE (LOCALSTORAGE PERSISTENCE & MULTI-LANGUAGE) -->
+    <script>
+        // GLOBAL APP STATE persistence
+        let state = JSON.parse(localStorage.getItem('sherehe_app_v6_state')) || {
+            user: null,
+            event: { title: 'Harusi ya Juma & Amina', category: 'Harusi', budget: 5000000 },
+            chatMessages: [
+                { sender: 'Mwenyekiti', text: 'Karibuni kwenye Group Chat la Sherehe Yetu! Hapa tuta-share taarifa na document zote.', time: '10:00 AM', file: null }
+            ],
+            contributions: [],
+            cards: [],
+            attachedFile: null,
+            allRegisteredUsers: []
+        };
+
+        let currentLang = 'sw';
+
+        const i18nDict = {
+            sw: {
+                appSubtitle: "KIDIGITAL PLATFORM",
+                splashTitle: "KARIBU SHEREHE YAKO KIDIGITAL",
+                splashTagline: '"Panga • Shiriki • Sherehe Pamoja"',
+                trialNoticeTitle: "🌟 Jaribu Mfumo Bure (Trial Mode)",
+                trialNoticeDesc: "Ona jinsi mfumo unavyofanya kazi na templates za kadi kabla ya kulipia VIP (TSh 50,000/=).",
+                btnRegister: "REGISTER (JISAJILI)",
+                btnSignIn: "SIGN IN (INGIA)",
+                btnDemo: "⚡ JARIBU TRIAL DEMO NOW",
+                regHeader: "Jisajili Akaunti Mpya",
+                regSub: "Weka taarifa zako na nenosiri kuanza",
+                lblName: "Majina Yako Kamili",
+                lblUsername: "Username / Barua Pepe (Email)",
+                lblPass: "Neno la Siri (Password)",
+                lblPhone: "Namba ya WhatsApp",
+                lblRole: "Nafasi Yako Kwenye Sherehe",
+                lblCat: "Aina ya Sherehe",
+                lblEventTitle: "Jina la Sherehe Yako",
+                btnSubmitReg: "JISAJILI & FUNGUA SHEREHE",
+                hasAcc: "Tayari una akaunti?",
+                linkLogin: "Ingia Hapa",
+                loginHeader: "Ingia Kwenye Sherehe Yako",
+                loginSub: "Weka Username/Email na Password yako",
+                btnLoginSubmit: "INGIA KWENYE DASHBOARD",
+                noAcc: "Huna akaunti bado?",
+                linkReg: "Jisajili Hapa",
+                lblHost: "Mwenyeji:",
+                btnUpgradeVip: "👑 FUNGUA VIP (TSh 50,000)"
+            },
+            en: {
+                appSubtitle: "DIGITAL PLATFORM",
+                splashTitle: "WELCOME TO SHEREHE YAKO KIDIGITAL",
+                splashTagline: '"Plan • Share • Celebrate Together"',
+                trialNoticeTitle: "🌟 Try Free Trial Mode",
+                trialNoticeDesc: "Explore all features and card templates before upgrading to VIP (TSh 50,000/=).",
+                btnRegister: "REGISTER NOW",
+                btnSignIn: "SIGN IN",
+                btnDemo: "⚡ TRY DEMO TRIAL NOW",
+                regHeader: "Register New Account",
+                regSub: "Fill in your details and password to get started",
+                lblName: "Full Names",
+                lblUsername: "Username / Email Address",
+                lblPass: "Password",
+                lblPhone: "WhatsApp Phone Number",
+                lblRole: "Your Role in Event",
+                lblCat: "Event Category",
+                lblEventTitle: "Your Event Title",
+                btnSubmitReg: "REGISTER & CREATE EVENT",
+                hasAcc: "Already have an account?",
+                linkLogin: "Sign In Here",
+                loginHeader: "Login to Your Event",
+                loginSub: "Enter your Username/Email and Password",
+                btnLoginSubmit: "LOGIN TO DASHBOARD",
+                noAcc: "Don't have an account yet?",
+                linkReg: "Register Here",
+                lblHost: "Host:",
+                btnUpgradeVip: "👑 UNLOCK VIP (TSh 50,000)"
+            }
+        };
+
+        window.onload = function() {
+            if(state.user) {
+                renderDashboard();
+                switchView('dashboard');
+
+                // Check if user was just approved for VIP
+                if(state.user.justApprovedVIP) {
+                    delete state.user.justApprovedVIP;
+                    saveState();
+                    openVipSuccessModal();
+                }
+            } else {
+                switchView('splash');
+            }
+            populateScanCardSelect();
+            initPreviewMiniQR();
+        };
+
+        function saveState() {
+            localStorage.setItem('sherehe_app_v6_state', JSON.stringify(state));
+        }
+
+        function changeLang(lang) {
+            currentLang = lang;
+            document.getElementById('lang-sw-btn').className = lang === 'sw' ? 'px-2 py-0.5 rounded text-gold-400 font-bold' : 'px-2 py-0.5 rounded text-slate-400';
+            document.getElementById('lang-en-btn').className = lang === 'en' ? 'px-2 py-0.5 rounded text-gold-400 font-bold' : 'px-2 py-0.5 rounded text-slate-400';
+
+            const dict = i18nDict[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(dict[key]) el.innerText = dict[key];
+            });
+        }
+
+        function switchView(viewName) {
+            document.getElementById('view-splash').classList.add('hidden');
+            document.getElementById('view-auth').classList.add('hidden');
+            document.getElementById('view-dashboard').classList.add('hidden');
+
+            if(viewName === 'splash') document.getElementById('view-splash').classList.remove('hidden');
+            if(viewName === 'auth') document.getElementById('view-auth').classList.remove('hidden');
+            if(viewName === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
+        }
+
+        function goToAuth(mode) {
+            switchView('auth');
+            toggleAuthMode(mode);
+        }
+
+        function toggleAuthMode(mode) {
+            if(mode === 'register') {
+                document.getElementById('form-register').classList.remove('hidden');
+                document.getElementById('form-login').classList.add('hidden');
+            } else {
+                document.getElementById('form-login').classList.remove('hidden');
+                document.getElementById('form-register').classList.add('hidden');
+            }
+        }
+
+        function startTrialExperience() {
+            state.user = { id: 'u-demo', username: 'demo', name: 'Mteja Trial Demo', phone: '0700000000', role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' };
+            saveState();
+            renderDashboard();
+            switchView('dashboard');
+        }
+
+        function toggleCustomCategory(val) {
+            const box = document.getElementById('custom-cat-box');
+            if(val === 'CUSTOM') box.classList.remove('hidden');
+            else box.classList.add('hidden');
+        }
+
+        function handleRegistration(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const username = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+            const phone = document.getElementById('reg-phone').value;
+            const role = document.getElementById('reg-role').value;
+            let cat = document.getElementById('reg-category').value;
+            if(cat === 'CUSTOM') cat = document.getElementById('reg-custom-cat').value || 'Sherehe Maalum';
+            const title = document.getElementById('reg-event-title').value;
+
+            const newUser = { id: 'u-' + Date.now(), name, username, password, phone, role, isVIP: false, status: 'TRIAL', clickedVIP: false, txCode: null };
+            state.user = newUser;
+            state.event = { title, category: cat, budget: 5000000 };
+            
+            if(!state.allRegisteredUsers.some(u => u.username === username)) {
+                state.allRegisteredUsers.push(newUser);
+            }
+
+            saveState();
+            renderDashboard();
+            switchView('dashboard');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const pass = document.getElementById('login-password').value;
+
+            const existing = state.allRegisteredUsers.find(u => u.username === username && u.password === pass);
+
+            if(existing) {
+                state.user = existing;
+            } else {
+                state.user = { id: 'u-' + Date.now(), username, name: username.split('@')[0], phone: '0700000000', role: 'Mjumbe', isVIP: false, status: 'TRIAL', clickedVIP: false };
+                state.allRegisteredUsers.push(state.user);
+            }
+
+            saveState();
+            renderDashboard();
+            switchView('dashboard');
+        }
+
+        function logoutUser() {
+            if(confirm("Je, una uhakika unataka kutoka?")) {
+                state.user = null;
+                saveState();
+                switchView('splash');
+                location.reload();
+            }
+        }
+
+        function renderDashboard() {
+            document.getElementById('nav-user-area').classList.remove('hidden');
+            document.getElementById('nav-user-area').classList.add('flex');
+
+            document.getElementById('dash-event-type').innerText = state.event.category;
+            document.getElementById('dash-event-title').innerText = state.event.title;
+            document.getElementById('dash-user-name').innerText = state.user.name;
+            document.getElementById('dash-user-role').innerText = state.user.role;
+
+            const vipBadge = document.getElementById('dash-vip-badge');
+            const btnUpgrade = document.getElementById('btn-upgrade-vip');
+
+            if(state.user.isVIP) {
+                vipBadge.innerText = '🟢 VIP ACTIVE';
+                vipBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-gold-500/20 text-gold-400 border border-gold-500/40';
+                btnUpgrade.innerText = '✨ VIP ACTIVE';
+                btnUpgrade.className = 'px-4 py-2.5 rounded-xl bg-slate-800 text-gold-400 font-black text-xs border border-gold-500/40';
+            } else if(state.user.status === 'PENDING') {
+                vipBadge.innerText = '⏳ PENDING APPROVAL';
+                vipBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-500/20 text-amber-400 border border-amber-500/40';
+                btnUpgrade.innerText = '⏳ PENDING ADMIN APPROVAL';
+                btnUpgrade.className = 'px-4 py-2.5 rounded-xl bg-amber-500/20 text-amber-400 font-black text-xs border border-amber-500/40';
+            } else {
+                vipBadge.innerText = '⚪ TRIAL MODE';
+                vipBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-800 text-slate-400 border border-slate-700';
+                btnUpgrade.innerText = currentLang === 'sw' ? '👑 FUNGUA VIP (TSh 50,000)' : '👑 UNLOCK VIP (TSh 50,000)';
+                btnUpgrade.className = 'px-4 py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition shadow-lg shadow-gold-500/20';
+            }
+
+            const isChairman = state.user.role === 'Mwenyekiti';
+            document.getElementById('budget-authority-badge').innerText = isChairman ? '✅ Mwenyekiti (Uwezo Wa Ku-edit)' : '🔒 Mwenyekiti Tu Ana Edit';
+
+            renderBudgetSummary();
+            renderGroupChat();
+            renderContributions();
+            renderCardsList();
+        }
+
+        function switchDashTab(tabName) {
+            document.querySelectorAll('.dash-tab').forEach(b => b.className = "dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap");
+            document.querySelectorAll('.dash-pane').forEach(p => p.classList.add('hidden'));
+
+            document.getElementById(`tab-btn-${tabName}`).className = "dash-tab active px-4 py-2.5 rounded-xl bg-slate-900 text-gold-400 border border-gold-500/40 whitespace-nowrap";
+            document.getElementById(`pane-${tabName}`).classList.remove('hidden');
+        }
+
+        // CARD TEMPLATES & COLOR SWITCHER (ALL COLORS RESTORED)
+        function applyCardTheme(theme) {
+            const frame = document.getElementById('live-card-frame');
+            if(theme === 'gold') { frame.style.backgroundColor = '#020617'; frame.style.borderColor = '#eab308'; }
+            if(theme === 'silver') { frame.style.backgroundColor = '#0f172a'; frame.style.borderColor = '#cbd5e1'; }
+            if(theme === 'emerald') { frame.style.backgroundColor = '#022c22'; frame.style.borderColor = '#10b981'; }
+            if(theme === 'purple') { frame.style.backgroundColor = '#1e1b4b'; frame.style.borderColor = '#6366f1'; }
+            if(theme === 'rose') { frame.style.backgroundColor = '#4c0519'; frame.style.borderColor = '#f43f5e'; }
+            if(theme === 'ruby') { frame.style.backgroundColor = '#450a0a'; frame.style.borderColor = '#ef4444'; }
+        }
+
+        function updateLiveCard() {
+            document.getElementById('prev-title').innerText = document.getElementById('card-edit-title').value;
+            document.getElementById('prev-names').innerText = document.getElementById('card-edit-names').value;
+            document.getElementById('prev-date').innerText = document.getElementById('card-edit-date').value;
+            document.getElementById('prev-msg').innerText = document.getElementById('card-edit-msg').value;
+        }
+
+        function initPreviewMiniQR() {
+            const qrElem = document.getElementById('preview-mini-qr');
+            if(qrElem) {
+                qrElem.innerHTML = '';
+                new QRCode(qrElem, { text: "SHEREHE-DEMO-001", width: 40, height: 40 });
+            }
+        }
+
+        // GROUP CHAT ENGINE (WITH MEDIA & DOCUMENTS)
+        function handleFileAttach(e) {
+            const file = e.target.files[0];
+            if(file) {
+                state.attachedFile = { name: file.name, type: file.type };
+                document.getElementById('file-name-text').innerText = file.name;
+                document.getElementById('file-attached-pill').classList.remove('hidden');
+            }
+        }
+
+        function clearAttachedFile() {
+            state.attachedFile = null;
+            document.getElementById('file-attached-pill').classList.add('hidden');
+            document.getElementById('chat-file-input').value = '';
+        }
+
+        function handleSendGroupMessage(e) {
+            e.preventDefault();
+            const textInput = document.getElementById('chat-text-input');
+            const text = textInput.value.trim();
+
+            if(!text && !state.attachedFile) return;
+
+            state.chatMessages.push({
+                sender: `${state.user.name} (${state.user.role})`,
+                text: text || 'Ameshea faili:',
+                file: state.attachedFile ? state.attachedFile.name : null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            clearAttachedFile();
+            textInput.value = '';
+            saveState();
+            renderGroupChat();
+        }
+
+        function renderGroupChat() {
+            const stream = document.getElementById('chat-messages-stream');
+            stream.innerHTML = state.chatMessages.map(m => `
+                <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 max-w-md">
+                    <div class="flex justify-between items-center text-[10px] mb-1">
+                        <span class="font-bold text-gold-400">${m.sender}</span>
+                        <span class="text-slate-500">${m.time}</span>
+                    </div>
+                    <p class="text-slate-200 text-xs">${m.text}</p>
+                    ${m.file ? `<div class="mt-2 p-2 rounded bg-slate-950 border border-gold-500/30 text-gold-400 font-mono text-[10px] flex items-center gap-1.5"><i class="fa-solid fa-file-pdf"></i> ${m.file}</div>` : ''}
+                </div>
+            `).join('');
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function copyGroupInviteLink() {
+            navigator.clipboard.writeText(`https://shereheyako.co.tz/join?event=${encodeURIComponent(state.event.title)}`);
+            alert("Link ya Group la Sherehe imekopiwa! Tuma kwa wajumbe kujiunga.");
+        }
+
+        // BUDGET MANAGEMENT (MWENYEKITI ONLY)
+        function updateChairmanBudget() {
+            if(state.user.role !== 'Mwenyekiti') {
+                alert("Ruksa hii ni kwa ajili ya Mwenyekiti wa Sherehe tu!");
+                return;
+            }
+            const amount = parseFloat(document.getElementById('budget-input-amount').value);
+            if(!amount) return;
+
+            state.event.budget = amount;
+            saveState();
+            renderBudgetSummary();
+            alert("Bajeti Kuu ya Sherehe imebadilishwa na kuhifadhiwa!");
+        }
+
+        function renderBudgetSummary() {
+            const totalCollected = state.contributions.reduce((acc, curr) => acc + curr.amount, 0);
+            const budget = state.event.budget || 5000000;
+            const deficit = Math.max(0, budget - totalCollected);
+
+            document.getElementById('budget-total-display').innerText = `TSh ${budget.toLocaleString()}`;
+            document.getElementById('budget-collected-display').innerText = `TSh ${totalCollected.toLocaleString()}`;
+            document.getElementById('budget-deficit-display').innerText = `TSh ${deficit.toLocaleString()}`;
+        }
+
+        // CONTRIBUTIONS ENGINE
+        function handleAddContribution(e) {
+            e.preventDefault();
+            const name = document.getElementById('c-name').value;
+            const group = document.getElementById('c-group').value;
+            const amount = parseFloat(document.getElementById('c-amount').value);
+
+            state.contributions.push({ name, group, amount, date: new Date().toLocaleDateString() });
+            saveState();
+            renderContributions();
+            renderBudgetSummary();
+
+            document.getElementById('c-name').value = '';
+            document.getElementById('c-amount').value = '';
+        }
+
+        function renderContributions() {
+            const tbody = document.getElementById('contrib-table-body');
+            tbody.innerHTML = state.contributions.map(c => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-2.5 font-bold text-white">${c.name}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 text-[10px]">${c.group}</span></td>
+                    <td class="p-2.5 font-bold text-emerald-400">TSh ${c.amount.toLocaleString()}</td>
+                    <td class="p-2.5 text-slate-400 text-[10px]">${c.date}</td>
+                </tr>
+            `).join('') || '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Hakuna mchango uliorekodiwa.</td></tr>';
+        }
+
+        // CARDS & INVITATIONS (SINGLE / DOUBLE & SMALL ID NUMBERS)
+        function handleGenerateCard(e) {
+            e.preventDefault();
+            const name = document.getElementById('card-guest-name').value;
+            const phone = document.getElementById('card-guest-phone').value;
+            const type = document.getElementById('card-type-select').value;
+
+            const cardId = `ID #${String(state.cards.length + 1).padStart(3, '0')}`;
+            state.cards.push({ id: cardId, name, phone, type, scanned: false, ticks: 0 });
+
+            saveState();
+            renderCardsList();
+            populateScanCardSelect();
+
+            document.getElementById('card-guest-name').value = '';
+            document.getElementById('card-guest-phone').value = '';
+        }
+
+        function renderCardsList() {
+            const tbody = document.getElementById('cards-table-body');
+            tbody.innerHTML = state.cards.map(c => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-2.5 font-mono text-gold-400 font-bold text-[10px]">${c.id}</td>
+                    <td class="p-2.5 font-bold text-white">${c.name}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-xs font-bold text-slate-300">${c.type}</span></td>
+                    <td class="p-2.5">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.scanned ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'}">
+                            ${c.scanned ? (c.type === 'SINGLE' ? '✔ Scanned (Single)' : '✔✔ Scanned (Double)') : 'Bado Gate'}
+                        </span>
+                    </td>
+                    <td class="p-2.5 text-right space-x-1">
+                        <button type="button" onclick="sendWhatsappInvite('${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2 py-1 rounded bg-emerald-600 text-white font-bold text-[10px]" title="WhatsApp">
+                            <i class="fa-brands fa-whatsapp"></i> WSP
+                        </button>
+                        <button type="button" onclick="sendSmsInvite('${c.id}', '${c.name}', '${c.phone}')" class="px-2 py-1 rounded bg-slate-800 text-slate-300 font-bold text-[10px]" title="SMS Ka kawaida">
+                            <i class="fa-solid fa-comment-sms"></i> SMS
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Hakuna kadi iliyotengenezwa.</td></tr>';
+        }
+
+        function sendWhatsappInvite(id, name, phone, type) {
+            const msg = encodeURIComponent(`Habari ${name}! Umewekewa Kadi ya Mwaliko (${type} - ${id}) ya ${state.event.title}. Bonyeza link kutazama kadi yako: https://shereheyako.co.tz/card/${id}`);
+            window.open(`https://wa.me/255${phone.replace(/^0/,'')}?text=${msg}`, '_blank');
+        }
+
+        function sendSmsInvite(id, name, phone) {
+            alert(`SMS ya mwaliko imetumwa kwa ${name} (${phone}):\n"Habari ${name}, kadi yako ya ${state.event.title} (${id}) imetayarishwa."`);
+        }
+
+        // SCANNER LOGIC
+        function populateScanCardSelect() {
+            const select = document.getElementById('scan-card-select');
+            if(!select) return;
+            select.innerHTML = state.cards.map(c => `<option value="${c.id}">${c.id} - ${c.name} (${c.type})</option>`).join('');
+        }
+
+        function executeScanCardAction() {
+            const cardId = document.getElementById('scan-card-select').value;
+            const card = state.cards.find(c => c.id === cardId);
+
+            if(!card) return;
+
+            const box = document.getElementById('scan-result-box');
+            const icon = document.getElementById('scan-icon-area');
+            const title = document.getElementById('scan-title-text');
+            const desc = document.getElementById('scan-desc-text');
+            const ticks = document.getElementById('scan-ticks-badge');
+
+            box.classList.remove('hidden');
+
+            if(!card.scanned) {
+                card.scanned = true;
+                card.ticks = card.type === 'SINGLE' ? 1 : 2;
+
+                icon.innerHTML = '✅';
+                title.innerText = "ENTRY APPROVED!";
+                desc.innerText = `${card.name} (${card.id}) amethibitishwa kuingia mlangoni.`;
+                ticks.innerText = card.type === 'SINGLE' ? '✔ (Tiki 1 - Single)' : '✔✔ (Tiki 2 - Double)';
+            } else {
+                icon.innerHTML = '⚠️';
+                title.innerText = "ALREADY SCANNED!";
+                desc.innerText = `Kadi hii (${card.id}) TAYARI IMETUMIKA KUINGILIA MLANGONI!`;
+                ticks.innerText = card.type === 'SINGLE' ? '✔ (Tiki 1)' : '✔✔ (Tiki 2)';
+            }
+
+            saveState();
+            renderCardsList();
+        }
+
+        // VIP MODAL & PROOF SUBMISSION
+        function openVipModal() {
+            if(state.user) {
+                state.user.clickedVIP = true;
+                saveState();
+            }
+            document.getElementById('modal-vip').classList.remove('hidden');
+            document.getElementById('modal-vip').classList.add('flex');
+        }
+
+        function closeVipModal() {
+            document.getElementById('modal-vip').classList.add('hidden');
+            document.getElementById('modal-vip').classList.remove('flex');
+        }
+
+        function handleSubmitVipProof(e) {
+            e.preventDefault();
+            const tx = document.getElementById('vip-tx-code').value;
+
+            if(state.user) {
+                state.user.status = 'PENDING';
+                state.user.txCode = tx;
+                saveState();
+            }
+
+            closeVipModal();
+            renderDashboard();
+            alert(`Kumbukumbu ya muamala [${tx}] imepokelewa!\n\nStatus yako ipo: PENDING ADMIN APPROVAL.\nAdmin ata-approve malipo yako hivi karibuni.`);
+        }
+
+        function openVipSuccessModal() {
+            document.getElementById('modal-vip-success').classList.remove('hidden');
+            document.getElementById('modal-vip-success').classList.add('flex');
+        }
+
+        function closeVipSuccessModal() {
+            document.getElementById('modal-vip-success').classList.add('hidden');
+            document.getElementById('modal-vip-success').classList.remove('flex');
+        }
+
+        // ADMIN MODAL & CONTROLS
+        function openAdminModal() {
+            document.getElementById('modal-admin').classList.remove('hidden');
+            document.getElementById('modal-admin').classList.add('flex');
+            renderAdminUserList();
+        }
+
+        function closeAdminModal() {
+            document.getElementById('modal-admin').classList.add('hidden');
+            document.getElementById('modal-admin').classList.remove('flex');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('adm-email').value;
+            const pass = document.getElementById('adm-pass').value;
+
+            // Admin Login Verification
+            if(email && pass) {
+                document.getElementById('admin-login-box').classList.add('hidden');
+                document.getElementById('admin-panel-box').classList.remove('hidden');
+                renderAdminUserList();
+            } else {
+                alert("Weka Email na Password ya Admin!");
+            }
+        }
+
+        function renderAdminUserList() {
+            const list = document.getElementById('adm-users-list');
+            if(!list) return;
+
+            const users = state.allRegisteredUsers.length ? state.allRegisteredUsers : [state.user || { id: 'u-1', name: 'Juma Mkwawa', username: 'juma', phone: '0712345678', isVIP: false, status: 'TRIAL', clickedVIP: true, txCode: 'TX-9921' }];
+
+            document.getElementById('adm-count-total').innerText = users.length;
+            document.getElementById('adm-count-clicked').innerText = users.filter(u => u.clickedVIP || u.status === 'PENDING').length;
+            document.getElementById('adm-count-vip').innerText = users.filter(u => u.isVIP).length;
+
+            list.innerHTML = users.map(u => `
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1 text-xs">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="font-bold text-white block">${u.name} (${u.phone})</span>
+                            <span class="text-[10px] text-slate-400 font-mono">User: ${u.username || u.phone}</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.isVIP ? 'bg-emerald-500/20 text-emerald-400' : (u.status === 'PENDING' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-400')}">
+                            ${u.isVIP ? 'VIP ACTIVE 🟢' : (u.status === 'PENDING' ? 'PENDING APPROVAL ⏳' : 'TRIAL MODE ⚪')}
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-1 border-t border-slate-900 text-[10px]">
+                        <span class="text-gold-400 font-mono">Muamala: ${u.txCode || 'Hakuna'} | Kiasi: TSh 50,000</span>
+                        <div class="space-x-1">
+                            ${!u.isVIP ? `
+                                <button type="button" onclick="approveVIPFromAdmin('${u.id}')" class="px-2.5 py-1 rounded gold-gradient text-slate-950 font-black text-[10px]">
+                                    APPROVE VIP
+                                </button>
+                            ` : `
+                                <button type="button" onclick="revokeVIPFromAdmin('${u.id}')" class="px-2.5 py-1 rounded bg-rose-600 text-white font-bold text-[10px]">
+                                    TOA VIP
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approveVIPFromAdmin(userId) {
+            const target = state.allRegisteredUsers.find(u => u.id === userId) || state.user;
+            if(target) {
+                target.isVIP = true;
+                target.status = 'VIP';
+                target.justApprovedVIP = true;
+
+                if(state.user && state.user.id === target.id) {
+                    state.user.isVIP = true;
+                    state.user.status = 'VIP';
+                    state.user.justApprovedVIP = true;
+                }
+
+                saveState();
+                renderDashboard();
+                renderAdminUserList();
+                alert(`Malipo ya ${target.name} (TSh 50,000/=) YAMEANIDHINISHWA! Sasa ni VIP ACTIVE.`);
+            }
+        }
+
+        function revokeVIPFromAdmin(userId) {
+            const target = state.allRegisteredUsers.find(u => u.id === userId) || state.user;
+            if(target) {
+                target.isVIP = false;
+                target.status = 'TRIAL';
+
+                if(state.user && state.user.id === target.id) {
+                    state.user.isVIP = false;
+                    state.user.status = 'TRIAL';
+                }
+
+                saveState();
+                renderDashboard();
+                renderAdminUserList();
+                alert(`VIP Status ya ${target.name} imerudishwa kuwa TRIAL MODE.`);
+            }
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
 <html lang="sw" class="h-full bg-slate-900">
 <head>
     <meta charset="UTF-8">
