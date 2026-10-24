@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHEREHE YAKO KIDIGITAL - Firebase Realtime Platform</title>
+    <title>SHEREHE YAKO KIDIGITAL - Realtime Platform</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -223,22 +223,25 @@
                 </div>
             </div>
 
-            <!-- Tab Navigation Menu -->
+            <!-- TAB NAVIGATION MENU -->
             <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800 scrollbar-none text-xs font-bold">
                 <button type="button" onclick="switchDashTab('templates')" id="tab-btn-templates" class="dash-tab active px-4 py-2.5 rounded-xl bg-slate-900 text-gold-400 border border-gold-500/40 whitespace-nowrap">
                     <i class="fa-solid fa-paint-brush"></i> Card Templates & Editor
                 </button>
                 <button type="button" onclick="switchDashTab('chat')" id="tab-btn-chat" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-brands fa-whatsapp text-emerald-400"></i> Group Chat
+                    <i class="fa-brands fa-whatsapp text-emerald-400"></i> Group Chat & Live Summary
                 </button>
                 <button type="button" onclick="switchDashTab('budget')" id="tab-btn-budget" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-calculator"></i> Bajeti Ya Sherehe
+                    <i class="fa-solid fa-calculator"></i> Bajeti Ya Sherehe & Account Payment
                 </button>
                 <button type="button" onclick="switchDashTab('contributions')" id="tab-btn-contributions" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-wallet"></i> Michango & Orodha
+                    <i class="fa-solid fa-wallet"></i> Michango & Ahadi Za Watu
                 </button>
                 <button type="button" onclick="switchDashTab('cards')" id="tab-btn-cards" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-address-card"></i> Kadi & Mialiko
+                    <i class="fa-solid fa-address-card"></i> Kadi Za Digital (Single/Double)
+                </button>
+                <button type="button" onclick="switchDashTab('thanks')" id="tab-btn-thanks" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
+                    <i class="fa-solid fa-heart text-rose-400"></i> Ujumbe Wa Shukrani
                 </button>
                 <button type="button" onclick="switchDashTab('scanner')" id="tab-btn-scanner" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap flex items-center gap-1">
                     <i class="fa-solid fa-qrcode text-gold-400"></i> Scan Mlangoni
@@ -316,66 +319,115 @@
                 </div>
             </div>
 
-            <!-- TAB 2: GROUP CHAT -->
+            <!-- TAB 2: GROUP CHAT & LIVE SUMMARY -->
             <div id="pane-chat" class="dash-pane hidden space-y-4">
-                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl"><i class="fa-brands fa-whatsapp"></i></div>
-                            <div>
-                                <h3 class="text-sm font-bold text-white">Group Chat La Sherehe Yenu</h3>
-                                <p class="text-[11px] text-slate-400">Realtime Database Messaging</p>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <!-- Live Summary Board -->
+                    <div class="lg:col-span-4 bg-slate-900 p-4 rounded-3xl border border-slate-800 space-y-3">
+                        <h4 class="text-xs font-bold text-gold-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-chart-line"></i> Dashboard ya Wanakamati</h4>
+                        <div class="space-y-2 text-xs">
+                            <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                                <span class="text-slate-400 block text-[10px]">Bajeti Kuu:</span>
+                                <span id="chat-summary-budget" class="font-black text-gold-400 text-sm">TSh 0</span>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                                <span class="text-slate-400 block text-[10px]">Michango Iliyopokelewa:</span>
+                                <span id="chat-summary-collected" class="font-black text-emerald-400 text-sm">TSh 0</span>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                                <span class="text-slate-400 block text-[10px]">Jumla ya Ahadi Bado:</span>
+                                <span id="chat-summary-pledges" class="font-black text-amber-400 text-sm">TSh 0</span>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800 text-xs w-full sm:w-auto">
-                            <span class="text-slate-400 text-[10px] font-mono">Link Ya Mwaliko:</span>
-                            <button type="button" onclick="copyGroupInviteLink()" class="px-3 py-1 rounded bg-gold-500 text-slate-950 font-bold text-[10px]">Kopi Link</button>
+
+                        <!-- LINK YA MWENYEKITI -->
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-gold-500/30 space-y-2">
+                            <span class="text-[10px] font-bold text-gold-400 block">🔗 LINK YA SHUTI/SHARE SHREHE:</span>
+                            <button type="button" onclick="copyChairmanEventLink()" class="w-full py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs uppercase">
+                                KOPI LINK YA MWENYEKITI
+                            </button>
                         </div>
                     </div>
 
-                    <div id="chat-messages-stream" class="h-80 overflow-y-auto p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 text-xs"></div>
-
-                    <form onsubmit="handleSendGroupMessage(event)" class="space-y-2">
-                        <div class="flex gap-2 text-xs">
-                            <input type="text" id="chat-text-input" placeholder="Andika ujumbe wako hapa..." class="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
-                            <button type="submit" class="px-5 py-2.5 rounded-xl gold-gradient text-slate-950 font-bold hover:brightness-110">TUMA</button>
+                    <!-- Chat Section -->
+                    <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-3xl p-4 space-y-3">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
+                            <div>
+                                <h3 class="text-xs font-bold text-white"><i class="fa-brands fa-whatsapp text-emerald-400"></i> Group Chat Ya Sherehe</h3>
+                                <p class="text-[10px] text-slate-400">Wanakamati Wote Wanaona Maendeleo</p>
+                            </div>
+                            <button type="button" onclick="copyChairmanEventLink()" class="px-3 py-1 rounded bg-gold-500 text-slate-950 font-bold text-[10px]">📋 Kopi Link Ya Group</button>
                         </div>
-                    </form>
+
+                        <div id="chat-messages-stream" class="h-64 overflow-y-auto p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs"></div>
+
+                        <form onsubmit="handleSendGroupMessage(event)" class="flex gap-2 text-xs">
+                            <input type="text" id="chat-text-input" placeholder="Andika ujumbe wako..." class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            <button type="submit" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-bold">TUMA</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
-            <!-- TAB 3: BAJETI -->
+            <!-- TAB 3: BAJETI & ACCOUNT PAYMENT -->
             <div id="pane-budget" class="dash-pane hidden space-y-6">
                 <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                         <div>
-                            <h3 class="text-base font-bold text-white">Bajeti Kuu Ya Sherehe</h3>
-                            <p class="text-xs text-slate-400">Mwenyekiti ndiye pekee mwenye uwezo wa kuweka na kubadilisha bajeti</p>
+                            <h3 class="text-base font-bold text-white">Bajeti Kuu & Account Za Benki/Simu Za Kuchangia</h3>
+                            <p class="text-xs text-slate-400">Weka viwango na namba za simu/bank ambazo kila mchangiaji ataziona</p>
                         </div>
-                        <span id="budget-authority-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">🔒 Mwenyekiti Tu</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">🔒 Mwenyekiti Only</span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-center">
-                        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-                            <span class="text-slate-400 block">Bajeti Iliyopangwa</span>
-                            <span id="budget-total-display" class="text-xl font-black text-gold-400">TSh 5,000,000</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs text-center">
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
+                            <span class="text-slate-400 block text-[10px]">Bajeti Kuu</span>
+                            <span id="budget-total-display" class="text-base font-black text-gold-400">TSh 5,000,000</span>
                         </div>
-                        <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-                            <span class="text-emerald-400 block">Michango Iliyokusanywa</span>
-                            <span id="budget-collected-display" class="text-xl font-black text-emerald-400">TSh 0</span>
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
+                            <span class="text-slate-400 block text-[10px]">Kiwango Cha Single</span>
+                            <span id="rate-single-display" class="text-base font-black text-white">TSh 50,000</span>
                         </div>
-                        <div class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
-                            <span class="text-rose-400 block">Pengo / Deficit</span>
-                            <span id="budget-deficit-display" class="text-xl font-black text-rose-400">TSh 5,000,000</span>
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
+                            <span class="text-slate-400 block text-[10px]">Kiwango Cha Double</span>
+                            <span id="rate-double-display" class="text-base font-black text-white">TSh 100,000</span>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
+                            <span class="text-slate-400 block text-[10px]">Mwanakamati</span>
+                            <span id="rate-committee-display" class="text-base font-black text-white">TSh 150,000</span>
                         </div>
                     </div>
 
+                    <!-- PAYMENT ACCOUNTS DISPLAY & EDITOR -->
                     <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                        <h4 class="text-xs font-bold text-slate-300">Rekebisha Bajeti Kuu:</h4>
-                        <div class="flex gap-2">
-                            <input type="number" id="budget-input-amount" placeholder="Weka kiasi kipya cha Bajeti (TSh)..." class="flex-1 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white outline-none">
-                            <button type="button" onclick="updateChairmanBudget()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-bold text-xs">HIFADHI</button>
+                        <h4 class="text-xs font-bold text-gold-400">Seta Taarifa Za Benki Na Simu Za Kuchangia:</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div class="space-y-1">
+                                <label class="text-slate-300 font-semibold">Benki / Bank Name & Account Number:</label>
+                                <input type="text" id="cfg-bank" placeholder="Mfano: CRDB Bank - 015012345678" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-slate-300 font-semibold">Jina La Account Ya Benki:</label>
+                                <input type="text" id="cfg-bank-name" placeholder="Mfano: JUMA MKWAWA" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-slate-300 font-semibold">Namba Ya Simu Ya Kuchangia (M-Pesa/Tigo Pesa):</label>
+                                <input type="text" id="cfg-phone-acc" placeholder="Mfano: 0755123456 (M-PESA)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-slate-300 font-semibold">Jina Linalosoma Kwenye Simu:</label>
+                                <input type="text" id="cfg-phone-name" placeholder="Mfano: JUMA MKWAWA" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
+                            </div>
                         </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs pt-2">
+                            <input type="number" id="cfg-budget" placeholder="Bajeti Kuu (TSh)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
+                            <input type="number" id="cfg-single" placeholder="Single Rate (TSh)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
+                            <input type="number" id="cfg-double" placeholder="Double Rate (TSh)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
+                            <input type="number" id="cfg-committee" placeholder="Kamati Rate (TSh)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
+                        </div>
+                        <button type="button" onclick="saveBudgetRates()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs uppercase">HIFADHI TAARIFA ZA MALIPO NA BAJETI</button>
                     </div>
                 </div>
             </div>
@@ -384,38 +436,42 @@
             <div id="pane-contributions" class="dash-pane hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
-                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Rekodi Mchango Mpya</h4>
+                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Rekodi Mchango / Ahadi</h4>
                         <form onsubmit="handleAddContribution(event)" class="space-y-3 text-xs">
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Jina la Mchangiaji</label>
                                 <input type="text" id="c-name" required placeholder="Amina Hassan" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Kundi</label>
-                                <select id="c-group" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
-                                    <option value="Kamati">Kamati ya Sherehe</option>
-                                    <option value="Familia">Familia</option>
-                                    <option value="Waalikwa">Waalikwa / Marafiki</option>
+                                <label class="block text-slate-300 font-semibold mb-1">Namba ya Simu / WhatsApp</label>
+                                <input type="tel" id="c-phone" required placeholder="0712345678" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Aina ya Malipo</label>
+                                <select id="c-status" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                    <option value="PAID">Mchango Uliolipwa (Cash / Bank)</option>
+                                    <option value="PLEDGE">Ahadi Bado Hajaidhinisha</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Kiasi (TSh)</label>
                                 <input type="number" id="c-amount" required placeholder="50000" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
+                            <p class="text-[10px] text-slate-400 italic">* Mfano: Mtu akilipa au kuzidi kiwango cha Double/Kamati, mfumo utamweka DOUBLE CARD kiotomatiki!</p>
                             <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs">HIFADHI MCHANGO</button>
                         </form>
                     </div>
 
                     <div class="lg:col-span-7 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
-                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Orodha ya Michango</h4>
+                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Orodha ya Michango na Aina ya Kadi (Automatic)</h4>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
                                 <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
                                     <tr>
                                         <th class="p-2.5">Jina</th>
-                                        <th class="p-2.5">Kundi</th>
-                                        <th class="p-2.5">Kiasi</th>
-                                        <th class="p-2.5">Tarehe</th>
+                                        <th class="p-2.5">Aina (Automatic)</th>
+                                        <th class="p-2.5">Kiasi (TSh)</th>
+                                        <th class="p-2.5">Hali</th>
                                     </tr>
                                 </thead>
                                 <tbody id="contrib-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -427,50 +483,82 @@
 
             <!-- TAB 5: KADI -->
             <div id="pane-cards" class="dash-pane hidden space-y-6">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
-                        <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Tengeneza Kadi Za Mwaliko</h3>
-                        <form onsubmit="handleGenerateCard(event)" class="space-y-3 text-xs">
-                            <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Jina la Mwaalikwa</label>
-                                <input type="text" id="card-guest-name" required placeholder="Ndugu Joseph Mbilinyi" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Namba ya Simu / WhatsApp</label>
-                                <input type="tel" id="card-guest-phone" required placeholder="0712345678" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Aina ya Kadi</label>
-                                <select id="card-type-select" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
-                                    <option value="SINGLE">Single Card (Mtu 1)</option>
-                                    <option value="DOUBLE">Double Card (Watu 2)</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs">TENGENEZA KADI</button>
-                        </form>
+                <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <h3 class="text-sm font-bold text-white">Kadi Za Digital Zilizotengenezwa Kiotomatiki</h3>
+                        <span id="demo-limit-badge" class="text-[10px] bg-slate-800 text-gold-400 border border-gold-500/30 px-2.5 py-0.5 rounded-full font-bold">VIP: Unlimited Cards</span>
                     </div>
 
-                    <div class="lg:col-span-7 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
-                        <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Orodha ya Kadi</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-2.5">ID / Kadi</th>
+                                    <th class="p-2.5">Mwaalikwa</th>
+                                    <th class="p-2.5">Namba</th>
+                                    <th class="p-2.5">Aina</th>
+                                    <th class="p-2.5 text-right">Tuma Kadi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cards-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: UJUMBE WA SHUKRANI (THANK YOU MESSAGES) -->
+            <div id="pane-thanks" class="dash-pane hidden space-y-6">
+                <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-4">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h3 class="text-base font-bold text-white"><i class="fa-solid fa-heart text-rose-500"></i> Ujumbe Wa Shukrani Baada Ya Sherehe</h3>
+                        <p class="text-xs text-slate-400">Chagua ujumbe uliotayarishwa tayari au andika maneno yako mwenyewe kuwatumia waalikwa waliofanikisha sherehe</p>
+                    </div>
+
+                    <!-- Options za Text zilizosetiwa -->
+                    <div class="space-y-3">
+                        <label class="block text-xs font-bold text-gold-400">Chagua Au Bonyeza Template Ya Ujumbe:</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div onclick="selectThanksTemplate(1)" class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-gold-500/60 cursor-pointer transition space-y-1">
+                                <span class="text-xs font-bold text-white block">Template 1: Rasmi & Ya Heshima</span>
+                                <p id="tpl-text-1" class="text-[11px] text-slate-300 italic">"Tunatoa shukrani za dhati kutoka moyoni kwa ushirikiano, mchango na uwepo wako uliotukuka katika kufanikisha sherehe yetu. Mungu akubariki sana!"</p>
+                            </div>
+                            <div onclick="selectThanksTemplate(2)" class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-gold-500/60 cursor-pointer transition space-y-1">
+                                <span class="text-xs font-bold text-white block">Template 2: Ya Kirafiki & Upendo</span>
+                                <p id="tpl-text-2" class="text-[11px] text-slate-300 italic">"Asante sana kwa kuwa sehemu ya furaha yetu siku ya leo! Presence yako na ushirikiano wako umefanya sherehe yetu kuwa ya kipekee na ya kukumbukwa. Ahsante mno!"</p>
+                            </div>
+                            <div onclick="selectThanksTemplate(3)" class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-gold-500/60 cursor-pointer transition space-y-1">
+                                <span class="text-xs font-bold text-white block">Template 3: Kifupi & Ya Baraka</span>
+                                <p id="tpl-text-3" class="text-[11px] text-slate-300 italic">"Shukrani za dhati kwa mchango na حضور wako kwenye sherehe yetu. Tunathamini sana upendo wako na tunakuombea baraka tele!"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form ya Kujaza Maneno Yake Mwenyewe au Kuedit -->
+                    <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+                        <label class="block text-xs font-bold text-slate-200">Andika Au Hariri Ujumbe Wako Wa Shukrani Hapa:</label>
+                        <textarea id="thanks-custom-input" rows="3" placeholder="Andika au badilisha maneno yako binafsi ya shukrani..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white outline-none"></textarea>
+                    </div>
+
+                    <!-- Orodha ya Watu Kwenye Sherehe Ya Kutumiwa Shukrani -->
+                    <div class="space-y-3 pt-2">
+                        <h4 class="text-xs font-bold text-white border-b border-slate-800 pb-2">Tuma Ujumbe Wa Shukrani Kwa Waalikwa Na Waliochangia:</h4>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
                                 <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
                                     <tr>
-                                        <th class="p-2.5">ID</th>
-                                        <th class="p-2.5">Mwaalikwa</th>
-                                        <th class="p-2.5">Aina</th>
-                                        <th class="p-2.5">Status</th>
-                                        <th class="p-2.5 text-right">Tuma</th>
+                                        <th class="p-2.5">Mhusika</th>
+                                        <th class="p-2.5">Namba</th>
+                                        <th class="p-2.5 text-right">Tuma Shukrani</th>
                                     </tr>
                                 </thead>
-                                <tbody id="cards-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
+                                <tbody id="thanks-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 6: SCANNER -->
+            <!-- TAB 7: SCANNER -->
             <div id="pane-scanner" class="dash-pane hidden space-y-6">
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 text-center">
                     <div class="max-w-md mx-auto space-y-2">
@@ -488,9 +576,65 @@
                         <div id="scan-icon-area" class="text-3xl"></div>
                         <h4 id="scan-title-text" class="text-base font-bold text-white"></h4>
                         <p id="scan-desc-text" class="text-xs text-slate-400"></p>
-                        <div id="scan-ticks-badge" class="text-2xl font-black text-gold-400"></div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- VIEW 4: PUBLIC GUEST CONTRIBUTION PAGE -->
+        <section id="view-public-guest" class="hidden max-w-lg mx-auto space-y-6 pt-4">
+            <div class="bg-slate-900 border-2 border-gold-500/60 p-6 rounded-3xl space-y-4 shadow-2xl">
+                <div class="text-center space-y-2 border-b border-slate-800 pb-4">
+                    <span class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-[10px] font-black uppercase">MWALIKO & MCHANGO</span>
+                    <h2 id="public-event-name" class="text-xl font-bold text-white gold-text">Sherehe ya Harusi</h2>
+                    <p class="text-xs text-slate-300">Weka Mchango au Ahadi yako hapa chini kuunga mkono sherehe hii:</p>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+                    <h4 class="font-bold text-gold-400 text-center uppercase tracking-wider mb-1">💳 Namba Za Kuchangia Pesa:</h4>
+                    <div class="flex justify-between border-b border-slate-900 pb-1">
+                        <span class="text-slate-400">Benki:</span>
+                        <span id="pub-bank-acc" class="font-bold text-white">CRDB: 0150...</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-900 pb-1">
+                        <span class="text-slate-400">Jina La Benki:</span>
+                        <span id="pub-bank-name" class="font-bold text-gold-400">JUMA...</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-900 pb-1">
+                        <span class="text-slate-400">Simu (M-Pesa):</span>
+                        <span id="pub-phone-acc" class="font-bold text-white">0755...</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Jina La Simu:</span>
+                        <span id="pub-phone-name" class="font-bold text-gold-400">JUMA...</span>
+                    </div>
+                </div>
+
+                <form onsubmit="handlePublicGuestSubmit(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Majina Yako Kamili</label>
+                        <input type="text" id="pub-guest-name" required placeholder="Mfano: Hassan Ali" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Namba ya WhatsApp / Simu</label>
+                        <input type="tel" id="pub-guest-phone" required placeholder="0712345678" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Unatoa Mchango au Ahadi?</label>
+                        <select id="pub-guest-status" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            <option value="PAID">Nimelipa Cash / Benki (Mchango)</option>
+                            <option value="PLEDGE">Natoa Ahadi (Ntalipa Baadaye)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-semibold mb-1">Kiasi Unachotoa / Unachoahidi (TSh)</label>
+                        <input type="number" id="pub-guest-amount" required placeholder="50000" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                    </div>
+
+                    <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs uppercase shadow-lg">
+                        WASILISHA MCHANGO / AHADI
+                    </button>
+                </form>
             </div>
         </section>
 
@@ -503,7 +647,7 @@
 
             <div class="text-center space-y-2">
                 <span class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-xs font-black uppercase">UPGRADE TO VIP</span>
-                <h3 class="text-xl font-bold text-white">Fungua Huduma Zote Za VIP</h3>
+                <h3 class="text-xl font-bold text-white">Fungua VIP (Bila Limit Ya Kusajili)</h3>
                 <p class="text-xs text-slate-400">Fanya malipo ya TSh 50,000/=</p>
             </div>
 
@@ -596,7 +740,7 @@
         </div>
     </div>
 
-    <!-- FIREBASE & APP LOGIC (REALTIME DATABASE VERSION) -->
+    <!-- FIREBASE & APP LOGIC -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyC8kIR7RylUdtt9QHOdQe1xUn_PMuATs2s",
@@ -609,18 +753,36 @@
             measurementId: "G-ZYF94F62C4"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const rdb = firebase.database();
         const auth = firebase.auth();
 
         let currentUser = null;
-        let eventData = { title: 'Harusi ya Juma & Amina', category: 'Harusi', budget: 5000000 };
+        let eventData = { 
+            title: 'Harusi ya Juma & Amina', 
+            category: 'Harusi', 
+            budget: 5000000, 
+            rateSingle: 50000, 
+            rateDouble: 100000, 
+            rateCommittee: 150000,
+            bankAcc: 'CRDB Bank - 015012345678',
+            bankName: 'JUMA MKWAWA',
+            phoneAcc: '0755123456 (M-PESA)',
+            phoneName: 'JUMA MKWAWA'
+        };
         let contributionsList = [];
         let cardsList = [];
         let chatMessagesList = [];
 
         window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventIdParam = urlParams.get('event_id');
+
+            if(eventIdParam) {
+                setupPublicGuestView(eventIdParam);
+                return;
+            }
+
             auth.onAuthStateChanged(async (user) => {
                 if(user) {
                     currentUser = user;
@@ -632,7 +794,28 @@
                 }
             });
             initPreviewMiniQR();
+            selectThanksTemplate(1); // Default thank you text
         };
+
+        async function setupPublicGuestView(eventId) {
+            switchView('public-guest');
+            rdb.ref('config').on('value', snapshot => {
+                if(snapshot.exists()) {
+                    const cfg = snapshot.val();
+                    if(cfg.bankAcc) eventData.bankAcc = cfg.bankAcc;
+                    if(cfg.bankName) eventData.bankName = cfg.bankName;
+                    if(cfg.phoneAcc) eventData.phoneAcc = cfg.phoneAcc;
+                    if(cfg.phoneName) eventData.phoneName = cfg.phoneName;
+                    if(cfg.title) eventData.title = cfg.title;
+
+                    document.getElementById('pub-bank-acc').innerText = eventData.bankAcc;
+                    document.getElementById('pub-bank-name').innerText = eventData.bankName;
+                    document.getElementById('pub-phone-acc').innerText = eventData.phoneAcc;
+                    document.getElementById('pub-phone-name').innerText = eventData.phoneName;
+                    document.getElementById('public-event-name').innerText = eventData.title;
+                }
+            });
+        }
 
         async function fetchUserData(uid) {
             try {
@@ -643,10 +826,6 @@
                     if(data.title) eventData.title = data.title;
                     if(data.category) eventData.category = data.category;
                     renderDashboard();
-                    if(data.justApprovedVIP) {
-                        await rdb.ref('users/' + uid).update({ justApprovedVIP: false });
-                        openVipSuccessModal();
-                    }
                 } else {
                     const defaultData = {
                         name: currentUser.email || 'Mtumiaji',
@@ -656,17 +835,13 @@
                         category: 'Harusi',
                         title: 'Sherehe Yangu',
                         isVIP: false,
-                        status: 'TRIAL',
-                        clickedVIP: false,
-                        txCode: null,
-                        justApprovedVIP: false
+                        status: 'TRIAL'
                     };
                     await rdb.ref('users/' + uid).set(defaultData);
                     currentUser.dbData = defaultData;
                     renderDashboard();
                 }
             } catch(err) {
-                console.error("Kosa la kupata user data:", err);
                 currentUser.dbData = { name: currentUser.email, role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' };
                 renderDashboard();
             }
@@ -687,7 +862,7 @@
                 const res = await auth.createUserWithEmailAndPassword(email, password);
                 const userData = {
                     name, email, phone, role, category: cat, title,
-                    isVIP: false, status: 'TRIAL', clickedVIP: false, txCode: null, justApprovedVIP: false
+                    isVIP: false, status: 'TRIAL'
                 };
                 await rdb.ref('users/' + res.user.uid).set(userData);
                 alert("Usajili umefanikiwa!");
@@ -709,14 +884,12 @@
         }
 
         function logoutUser() {
-            auth.signOut().then(() => {
-                location.reload();
-            });
+            auth.signOut().then(() => location.reload());
         }
 
         function startTrialExperience() {
             currentUser = { uid: 'demo-user', email: 'demo@trial.com', dbData: { name: 'Mteja Trial', role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' } };
-            eventData = { title: 'Harusi ya Demo', category: 'Harusi', budget: 5000000 };
+            eventData = { title: 'Harusi ya Demo', category: 'Harusi', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000 };
             renderDashboard();
             switchView('dashboard');
         }
@@ -725,10 +898,12 @@
             document.getElementById('view-splash').classList.add('hidden');
             document.getElementById('view-auth').classList.add('hidden');
             document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-public-guest').classList.add('hidden');
 
             if(v === 'splash') document.getElementById('view-splash').classList.remove('hidden');
             if(v === 'auth') document.getElementById('view-auth').classList.remove('hidden');
             if(v === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
+            if(v === 'public-guest') document.getElementById('view-public-guest').classList.remove('hidden');
         }
 
         function goToAuth(mode) {
@@ -765,23 +940,23 @@
 
             const vipBadge = document.getElementById('dash-vip-badge');
             const btnUpgrade = document.getElementById('btn-upgrade-vip');
+            const demoBadge = document.getElementById('demo-limit-badge');
 
             if(data.isVIP) {
                 vipBadge.innerText = '🟢 VIP ACTIVE';
                 vipBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-gold-500/20 text-gold-400 border border-gold-500/40';
-                btnUpgrade.innerText = '✨ VIP ACTIVE';
-            } else if(data.status === 'PENDING') {
-                vipBadge.innerText = '⏳ PENDING';
-                vipBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-500/20 text-amber-400 border border-amber-500/40';
-                btnUpgrade.innerText = '⏳ PENDING APPROVAL';
+                btnUpgrade.innerText = '✨ VIP ACTIVE (NO LIMIT)';
+                if(demoBadge) demoBadge.innerText = "VIP: Unlimited Cards Allowed";
             } else {
-                vipBadge.innerText = '⚪ TRIAL MODE';
+                vipBadge.innerText = '⚪ TRIAL DEMO';
                 vipBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-800 text-slate-400 border border-slate-700';
+                if(demoBadge) demoBadge.innerText = "TRIAL DEMO: Limit Of 2 Cards Only";
             }
 
             renderBudgetSummary();
             renderContributions();
             renderCardsList();
+            renderThanksTable();
         }
 
         function switchDashTab(tabName) {
@@ -818,6 +993,21 @@
         }
 
         function initRealtimeListeners() {
+            rdb.ref('config').on('value', snapshot => {
+                if(snapshot.exists()) {
+                    const cfg = snapshot.val();
+                    eventData.budget = cfg.budget || 5000000;
+                    eventData.rateSingle = cfg.single || 50000;
+                    eventData.rateDouble = cfg.double || 100000;
+                    eventData.rateCommittee = cfg.committee || 150000;
+                    if(cfg.bankAcc) eventData.bankAcc = cfg.bankAcc;
+                    if(cfg.bankName) eventData.bankName = cfg.bankName;
+                    if(cfg.phoneAcc) eventData.phoneAcc = cfg.phoneAcc;
+                    if(cfg.phoneName) eventData.phoneName = cfg.phoneName;
+                    renderBudgetSummary();
+                }
+            });
+
             rdb.ref('messages').on('value', snapshot => {
                 chatMessagesList = [];
                 snapshot.forEach(child => chatMessagesList.push(child.val()));
@@ -826,9 +1016,10 @@
 
             rdb.ref('contributions').on('value', snapshot => {
                 contributionsList = [];
-                snapshot.forEach(child => contributionsList.push(child.val()));
+                snapshot.forEach(child => contributionsList.push({ key: child.key, ...child.val() }));
                 renderContributions();
                 renderBudgetSummary();
+                renderThanksTable();
             });
 
             rdb.ref('cards').on('value', snapshot => {
@@ -837,6 +1028,214 @@
                 renderCardsList();
                 populateScanCardSelect();
             });
+        }
+
+        async function saveBudgetRates() {
+            const b = Number(document.getElementById('cfg-budget').value) || eventData.budget;
+            const s = Number(document.getElementById('cfg-single').value) || eventData.rateSingle;
+            const d = Number(document.getElementById('cfg-double').value) || eventData.rateDouble;
+            const c = Number(document.getElementById('cfg-committee').value) || eventData.rateCommittee;
+            const bAcc = document.getElementById('cfg-bank').value || eventData.bankAcc;
+            const bName = document.getElementById('cfg-bank-name').value || eventData.bankName;
+            const pAcc = document.getElementById('cfg-phone-acc').value || eventData.phoneAcc;
+            const pName = document.getElementById('cfg-phone-name').value || eventData.phoneName;
+
+            await rdb.ref('config').set({ 
+                budget: b, single: s, double: d, committee: c,
+                bankAcc: bAcc, bankName: bName, phoneAcc: pAcc, phoneName: pName,
+                title: eventData.title
+            });
+            alert("Taarifa za Malipo na Bajeti zimesasishwa kikamilifu!");
+        }
+
+        function renderBudgetSummary() {
+            document.getElementById('budget-total-display').innerText = `TSh ${eventData.budget.toLocaleString()}`;
+            document.getElementById('rate-single-display').innerText = `TSh ${eventData.rateSingle.toLocaleString()}`;
+            document.getElementById('rate-double-display').innerText = `TSh ${eventData.rateDouble.toLocaleString()}`;
+            document.getElementById('rate-committee-display').innerText = `TSh ${eventData.rateCommittee.toLocaleString()}`;
+
+            const paidList = contributionsList.filter(c => c.status === 'PAID');
+            const totalCollected = paidList.reduce((acc, curr) => acc + Number(curr.amount), 0);
+            
+            const pledgeList = contributionsList.filter(c => c.status === 'PLEDGE');
+            const totalPledges = pledgeList.reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+            document.getElementById('chat-summary-budget').innerText = `TSh ${eventData.budget.toLocaleString()}`;
+            document.getElementById('chat-summary-collected').innerText = `TSh ${totalCollected.toLocaleString()}`;
+            document.getElementById('chat-summary-pledges').innerText = `TSh ${totalPledges.toLocaleString()}`;
+        }
+
+        async function handleAddContribution(e) {
+            e.preventDefault();
+
+            if(!currentUser.dbData.isVIP && cardsList.length >= 2) {
+                alert("⚠️ Hali ya TRIAL/DEMO inaruhusu kusajili wageni/kadi 2 pekee! Tafadhali Boresha kwenda VIP ili uweze kusajili bila kikomo.");
+                openVipModal();
+                return;
+            }
+
+            const name = document.getElementById('c-name').value;
+            const phone = document.getElementById('c-phone').value;
+            const status = document.getElementById('c-status').value;
+            const amount = Number(document.getElementById('c-amount').value);
+
+            let categoryType = 'SINGLE';
+            let cardTypeAssigned = 'SINGLE';
+
+            if(amount >= eventData.rateCommittee) {
+                categoryType = 'KAMATI';
+                cardTypeAssigned = 'DOUBLE';
+            } else if(amount >= eventData.rateDouble) {
+                categoryType = 'DOUBLE';
+                cardTypeAssigned = 'DOUBLE';
+            } else {
+                categoryType = 'SINGLE';
+                cardTypeAssigned = 'SINGLE';
+            }
+
+            await rdb.ref('contributions').push({
+                name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
+            });
+
+            if(status === 'PAID') {
+                const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+                await rdb.ref('cards').push({
+                    id: cardId, name, phone, type: cardTypeAssigned, scanned: false
+                });
+            }
+
+            const msg = {
+                sender: "SYSTEM (MCHANGO MPYA)",
+                text: `🎉 ${name} ametoa ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} (${categoryType} - ${cardTypeAssigned} CARD)!`,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            await rdb.ref('messages').push(msg);
+
+            document.getElementById('c-name').value = '';
+            document.getElementById('c-phone').value = '';
+            document.getElementById('c-amount').value = '';
+            alert(`Mchango umehifadhiwa! Mfumo umemweka Kundi la: ${categoryType} (${cardTypeAssigned} Card)`);
+        }
+
+        async function handlePublicGuestSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('pub-guest-name').value;
+            const phone = document.getElementById('pub-guest-phone').value;
+            const status = document.getElementById('pub-guest-status').value;
+            const amount = Number(document.getElementById('pub-guest-amount').value);
+
+            let categoryType = 'SINGLE';
+            let cardTypeAssigned = 'SINGLE';
+
+            if(amount >= eventData.rateCommittee) {
+                categoryType = 'KAMATI';
+                cardTypeAssigned = 'DOUBLE';
+            } else if(amount >= eventData.rateDouble) {
+                categoryType = 'DOUBLE';
+                cardTypeAssigned = 'DOUBLE';
+            } else {
+                categoryType = 'SINGLE';
+                cardTypeAssigned = 'SINGLE';
+            }
+
+            await rdb.ref('contributions').push({
+                name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
+            });
+
+            if(status === 'PAID') {
+                const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+                await rdb.ref('cards').push({
+                    id: cardId, name, phone, type: cardTypeAssigned, scanned: false
+                });
+            }
+
+            const msg = {
+                sender: "SYSTEM (ONLINE GUEST)",
+                text: `✨ ${name} amewasilisha ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} kumpitia Link ya Sherehe!`,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            await rdb.ref('messages').push(msg);
+
+            alert(`Asante ${name}! Taarifa zako za ${status === 'PAID' ? 'Mchango' : 'Ahadi'} zimefanikiwa kuwasilishwa kwenye sherehe ya ${eventData.title}.`);
+            location.href = window.location.origin + window.location.pathname;
+        }
+
+        function renderContributions() {
+            const tbody = document.getElementById('contrib-table-body');
+            tbody.innerHTML = contributionsList.map(c => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-2.5 font-bold text-white">${c.name} (${c.phone})</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 font-bold text-[10px]">${c.categoryType || 'SINGLE'} (${c.cardTypeAssigned || 'SINGLE'})</span></td>
+                    <td class="p-2.5 font-bold text-emerald-400">TSh ${Number(c.amount).toLocaleString()}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] ${c.status === 'PAID' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${c.status === 'PAID' ? '✅ Imelipwa' : '⏳ Ahadi'}</span></td>
+                </tr>
+            `).join('') || '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Hakuna mchango uliorekodiwa.</td></tr>';
+        }
+
+        function renderCardsList() {
+            const tbody = document.getElementById('cards-table-body');
+            tbody.innerHTML = cardsList.map(c => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-2.5 font-mono text-gold-400 font-bold text-[10px]">${c.id}</td>
+                    <td class="p-2.5 font-bold text-white">${c.name}</td>
+                    <td class="p-2.5 font-mono text-slate-400">${c.phone}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 text-[10px] font-bold">${c.type} CARD</span></td>
+                    <td class="p-2.5 text-right flex justify-end gap-1">
+                        <button type="button" onclick="sendWhatsappCard('${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2 py-1 rounded bg-emerald-600 text-white font-bold text-[10px]" title="Tuma WhatsApp Card"><i class="fa-brands fa-whatsapp"></i> WhatsApp Card</button>
+                        <button type="button" onclick="sendSmsCard('${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2 py-1 rounded bg-indigo-600 text-white font-bold text-[10px]" title="Tuma SMS za Kawaida"><i class="fa-solid fa-comment-sms"></i> SMS</button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Hakuna kadi.</td></tr>';
+        }
+
+        /* LOGIC MPYA ZA UJUMBE WA SHUKRANI */
+        function selectThanksTemplate(num) {
+            const txt = document.getElementById(`tpl-text-${num}`).innerText.replace(/^"|"$/g, '');
+            document.getElementById('thanks-custom-input').value = txt;
+        }
+
+        function renderThanksTable() {
+            const tbody = document.getElementById('thanks-table-body');
+            if(!tbody) return;
+            tbody.innerHTML = contributionsList.map(c => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-2.5 font-bold text-white">${c.name}</td>
+                    <td class="p-2.5 font-mono text-slate-400">${c.phone}</td>
+                    <td class="p-2.5 text-right flex justify-end gap-1">
+                        <button type="button" onclick="sendWhatsappThanks('${c.name}', '${c.phone}')" class="px-2 py-1 rounded bg-emerald-600 text-white font-bold text-[10px]"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                        <button type="button" onclick="sendSmsThanks('${c.name}', '${c.phone}')" class="px-2 py-1 rounded bg-indigo-600 text-white font-bold text-[10px]"><i class="fa-solid fa-comment-sms"></i> SMS</button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="3" class="p-4 text-center text-slate-500 italic">Hakuna mwaalikwa kwenye orodha.</td></tr>';
+        }
+
+        function sendWhatsappThanks(name, phone) {
+            const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana kwa ushirikiano na kujumuika nasi!';
+            const fullMsg = `Habari Ndugu *${name}*,\n\n${customMsg}\n\nKutoka kwa Kamati ya: *${eventData.title}* 🎉`;
+            window.open(`https://wa.me/255${phone.replace(/^0/,'')}?text=${encodeURIComponent(fullMsg)}`, '_blank');
+        }
+
+        function sendSmsThanks(name, phone) {
+            const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana kwa ushirikiano na kujumuika nasi!';
+            const fullMsg = `Habari ${name}, ${customMsg} (Sherehe: ${eventData.title})`;
+            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(fullMsg)}`, '_blank');
+        }
+
+        function sendWhatsappCard(id, name, phone, type) {
+            const cardMessage = `🎉 *KADI YA MWALIKO MAALUM (${type} CARD)* 🎉\n\n` +
+                                `Ndugu: *${name}*\n` +
+                                `Unakaribishwa Kwenye: *${eventData.title}*\n` +
+                                `Kadi Namba: *${id}*\n` +
+                                `Aina ya Kadi: *${type} CARD*\n\n` +
+                                `Tafadhali onyesha ujumbe huu au Kadi yako Mlangoni siku ya Sherehe!\n` +
+                                `Powered by Sherehe Yako Kidigital Platform.`;
+            const encoded = encodeURIComponent(cardMessage);
+            window.open(`https://wa.me/255${phone.replace(/^0/,'')}?text=${encoded}`, '_blank');
+        }
+
+        function sendSmsCard(id, name, phone, type) {
+            const smsText = `Habari ${name}, umefanikiwa kupokea KADI YA MWALIKO (${type} - ${id}) ya ${eventData.title}. Onyesha SMS hii mlangoni siku ya sherehe.`;
+            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(smsText)}`, '_blank');
         }
 
         async function handleSendGroupMessage(e) {
@@ -858,7 +1257,7 @@
         function renderGroupChat() {
             const stream = document.getElementById('chat-messages-stream');
             stream.innerHTML = chatMessagesList.map(m => `
-                <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 max-w-md">
+                <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
                     <div class="flex justify-between items-center text-[10px] mb-1">
                         <span class="font-bold text-gold-400">${m.sender}</span>
                         <span class="text-slate-500">${m.time}</span>
@@ -869,94 +1268,17 @@
             stream.scrollTop = stream.scrollHeight;
         }
 
-        function copyGroupInviteLink() {
-            navigator.clipboard.writeText(`https://shereheyako.co.tz/join?event=${encodeURIComponent(eventData.title)}`);
-            alert("Link ya Group imekopiwa!");
-        }
-
-        async function updateChairmanBudget() {
-            if(currentUser.dbData.role !== 'Mwenyekiti') {
-                alert("Ruksa hii ni kwa Mwenyekiti tu!");
-                return;
-            }
-            const amount = parseFloat(document.getElementById('budget-input-amount').value);
-            if(!amount) return;
-            eventData.budget = amount;
-            renderBudgetSummary();
-            alert("Bajeti imesasishwa!");
-        }
-
-        function renderBudgetSummary() {
-            const totalCollected = contributionsList.reduce((acc, curr) => acc + Number(curr.amount), 0);
-            const deficit = Math.max(0, eventData.budget - totalCollected);
-
-            document.getElementById('budget-total-display').innerText = `TSh ${eventData.budget.toLocaleString()}`;
-            document.getElementById('budget-collected-display').innerText = `TSh ${totalCollected.toLocaleString()}`;
-            document.getElementById('budget-deficit-display').innerText = `TSh ${deficit.toLocaleString()}`;
-        }
-
-        async function handleAddContribution(e) {
-            e.preventDefault();
-            const name = document.getElementById('c-name').value;
-            const group = document.getElementById('c-group').value;
-            const amount = document.getElementById('c-amount').value;
-
-            await rdb.ref('contributions').push({
-                name, group, amount: Number(amount), date: new Date().toLocaleDateString()
-            });
-
-            document.getElementById('c-name').value = '';
-            document.getElementById('c-amount').value = '';
-        }
-
-        function renderContributions() {
-            const tbody = document.getElementById('contrib-table-body');
-            tbody.innerHTML = contributionsList.map(c => `
-                <tr class="hover:bg-slate-800/40">
-                    <td class="p-2.5 font-bold text-white">${c.name}</td>
-                    <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 text-[10px]">${c.group}</span></td>
-                    <td class="p-2.5 font-bold text-emerald-400">TSh ${Number(c.amount).toLocaleString()}</td>
-                    <td class="p-2.5 text-slate-400 text-[10px]">${c.date}</td>
-                </tr>
-            `).join('') || '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Hakuna mchango bado.</td></tr>';
-        }
-
-        async function handleGenerateCard(e) {
-            e.preventDefault();
-            const name = document.getElementById('card-guest-name').value;
-            const phone = document.getElementById('card-guest-phone').value;
-            const type = document.getElementById('card-type-select').value;
-            const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
-
-            await rdb.ref('cards').push({ id: cardId, name, phone, type, scanned: false });
-            document.getElementById('card-guest-name').value = '';
-            document.getElementById('card-guest-phone').value = '';
-        }
-
-        function renderCardsList() {
-            const tbody = document.getElementById('cards-table-body');
-            tbody.innerHTML = cardsList.map(c => `
-                <tr class="hover:bg-slate-800/40">
-                    <td class="p-2.5 font-mono text-gold-400 font-bold text-[10px]">${c.id}</td>
-                    <td class="p-2.5 font-bold text-white">${c.name}</td>
-                    <td class="p-2.5">${c.type}</td>
-                    <td class="p-2.5">${c.scanned ? '✔ Scanned' : 'Bado'}</td>
-                    <td class="p-2.5 text-right">
-                        <button type="button" onclick="sendWhatsappInvite('${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2 py-1 rounded bg-emerald-600 text-white text-[10px]">WSP</button>
-                    </td>
-                </tr>
-            `).join('') || '<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Hakuna kadi.</td></tr>';
-        }
-
-        function sendWhatsappInvite(id, name, phone, type) {
-            const msg = encodeURIComponent(`Habari ${name}! Kadi yako (${type} - ${id}) ya ${eventData.title}.`);
-            window.open(`https://wa.me/255${phone.replace(/^0/,'')}?text=${msg}`, '_blank');
+        function copyChairmanEventLink() {
+            const eventId = currentUser ? currentUser.uid : 'sherehe-001';
+            const shareUrl = `${window.location.origin}${window.location.pathname}?event_id=${eventId}`;
+            navigator.clipboard.writeText(shareUrl);
+            alert("🔗 Link ya Mwenyekiti Imekopiwa! Tuma Link hii WhatsApp ili watu wajisajili na kutoa Ahadi au Michango.");
         }
 
         function populateScanCardSelect() {
             const select = document.getElementById('scan-card-select');
             if(!select) return;
-            select.innerHTML = cardsList.map(c => `<option value="${c.id}">${c.id} - ${c.name}</option>`).join('');
+            select.innerHTML = cardsList.map(c => `<option value="${c.id}">${c.id} - ${c.name} (${c.type})</option>`).join('');
         }
 
         async function executeScanCardAction() {
@@ -968,7 +1290,7 @@
             box.classList.remove('hidden');
             document.getElementById('scan-icon-area').innerHTML = '✅';
             document.getElementById('scan-title-text').innerText = "ENTRY APPROVED!";
-            document.getElementById('scan-desc-text').innerText = `${card.name} (${card.id}) amethibitishwa.`;
+            document.getElementById('scan-desc-text').innerText = `${card.name} (${card.id}) - Aina: ${card.type} CARD`;
         }
 
         function openVipModal() {
@@ -984,10 +1306,10 @@
             e.preventDefault();
             const tx = document.getElementById('vip-tx-code').value;
             if(currentUser && currentUser.uid !== 'demo-user') {
-                await rdb.ref('users/' + currentUser.uid).update({ status: 'PENDING', txCode: tx, clickedVIP: true });
+                await rdb.ref('users/' + currentUser.uid).update({ status: 'PENDING', txCode: tx });
             }
             closeVipModal();
-            alert("Malipo yamewasilishwa! Subiri Admin approval.");
+            alert("Malipo yamewasilishwa! Admin atakuthibitishea muda mfupi.");
         }
 
         function openVipSuccessModal() {
@@ -1041,7 +1363,7 @@
                     <div class="flex justify-between items-center pt-1 border-t border-slate-900 text-[10px]">
                         <span class="text-gold-400 font-mono">Muamala: ${u.txCode || 'Hakuna'}</span>
                         <div>
-                            ${!u.isVIP ? `<button type="button" onclick="approveVIP('${u.id}')" class="px-2 py-1 rounded bg-gold-500 text-slate-950 font-bold">APPROVE</button>` : 
+                            ${!u.isVIP ? `<button type="button" onclick="approveVIP('${u.id}')" class="px-2 py-1 rounded bg-gold-500 text-slate-950 font-bold">APPROVE VIP</button>` : 
                                          `<button type="button" onclick="revokeVIP('${u.id}')" class="px-2 py-1 rounded bg-rose-600 text-white font-bold">TOA VIP</button>`}
                         </div>
                     </div>
@@ -1050,15 +1372,15 @@
         }
 
         async function approveVIP(uid) {
-            await rdb.ref('users/' + uid).update({ isVIP: true, status: 'VIP', justApprovedVIP: true });
+            await rdb.ref('users/' + uid).update({ isVIP: true, status: 'VIP' });
             loadAdminUsers();
-            alert("Amethibitishwa kuwa VIP!");
+            alert("Amethibitishwa kuwa VIP (Unimited Cards)!");
         }
 
         async function revokeVIP(uid) {
             await rdb.ref('users/' + uid).update({ isVIP: false, status: 'TRIAL' });
             loadAdminUsers();
-            alert("Hali ya VIP imeondolewa.");
+            alert("VIP imeondolewa.");
         }
     </script>
 </body>
