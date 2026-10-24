@@ -148,7 +148,12 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
-                        <input type="password" id="reg-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                        <div class="relative">
+                            <input type="password" id="reg-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none pr-10">
+                            <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                                <i id="reg-eye" class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-300 mb-1">Namba ya WhatsApp</label>
@@ -204,7 +209,15 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
-                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                        <div class="relative">
+                            <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none pr-10">
+                            <button type="button" onclick="togglePasswordVisibility('login-password', 'login-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                                <i id="login-eye" class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <button type="button" onclick="handlePasswordReset()" class="text-[11px] text-gold-400 hover:underline font-semibold">Umesahau Password? Reseti Hapa</button>
                     </div>
                     <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition">
                         INGIA KWENYE DASHBOARD
@@ -606,13 +619,13 @@
                 </div>
             </div>
 
-            <!-- TAB 7: SCANNER WITH MANUAL CONFIRMATION & DOUBLE/SINGLE LIMIT -->
+            <!-- TAB 7: SCANNER WITH LIVE AUTO-SUGGESTION & CONFIRMATION LIMIT -->
             <div id="pane-scanner" class="dash-pane hidden space-y-6">
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-6">
                     <div class="text-center max-w-md mx-auto space-y-2">
                         <i class="fa-solid fa-qrcode text-gold-400 text-4xl mb-1"></i>
                         <h3 class="text-xl font-extrabold text-white">Live Gate Scanner & Check-in</h3>
-                        <p class="text-xs text-slate-400">Tafuta Mgeni au Scan Kadi. Kadi ya Single inaruhusu Confirmation 1, Double inaruhusu Confirmation 2!</p>
+                        <p class="text-xs text-slate-400">Tafuta Mgeni (Auto-suggest) au Scan Kadi. Single = 1 Confirm, Double = 2 Confirms!</p>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -629,13 +642,17 @@
                                 </label>
                             </div>
 
-                            <!-- OPTION 2: MANUAL SEARCH & CONFIRM CHECK-IN -->
-                            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-2 text-left">
-                                <span class="text-xs font-bold text-gold-400 block"><i class="fa-solid fa-magnifying-glass"></i> Njia ya 2: Tafuta Mgeni kwa Jina au ID (Manual)</span>
-                                <p class="text-[11px] text-slate-400">Andika jina la mgeni hapa kisha ubonyeze Confirm/Ingiza:</p>
-                                <div class="flex gap-2">
-                                    <input type="text" id="manual-search-input" placeholder="Andika Jina la Mgeni..." class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs outline-none">
-                                    <button type="button" onclick="manualCheckInGuest()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase">CONFIRM</button>
+                            <!-- OPTION 2: MANUAL SEARCH WITH LIVE AUTO-SUGGESTION -->
+                            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-3 text-left">
+                                <span class="text-xs font-bold text-gold-400 block"><i class="fa-solid fa-magnifying-glass"></i> Njia ya 2: Tafuta Mgeni kwa Jina (Auto-Suggest)</span>
+                                <p class="text-[11px] text-slate-400">Anza kuandika jina au herufi (mfano: "A"), majina yatajitokeza kiotomatiki:</p>
+                                <div class="relative">
+                                    <div class="flex gap-2">
+                                        <input type="text" id="manual-search-input" oninput="filterManualSearchGuests(this.value)" placeholder="Anza kuandika jina la mgeni..." class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs outline-none">
+                                        <button type="button" onclick="manualCheckInGuest()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase">CONFIRM</button>
+                                    </div>
+                                    <!-- AUTO-SUGGESTION DROPDOWN -->
+                                    <div id="manual-search-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-slate-950 border border-gold-500/40 rounded-xl shadow-2xl max-h-44 overflow-y-auto z-20 text-xs divide-y divide-slate-800"></div>
                                 </div>
                             </div>
 
@@ -855,7 +872,12 @@
                     </div>
                     <div>
                         <label class="block text-slate-300 font-semibold mb-1">Password</label>
-                        <input type="password" id="adm-pass" required class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                        <div class="relative">
+                            <input type="password" id="adm-pass" required class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none pr-10">
+                            <button type="button" onclick="togglePasswordVisibility('adm-pass', 'adm-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                                <i id="adm-eye" class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs">INGIA ADMIN PANEL</button>
                 </form>
@@ -956,6 +978,31 @@
             initPreviewMiniQR();
             selectThanksTemplate(1);
         };
+
+        // PASSWORD VISIBILITY TOGGLE (EYE ICON)
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if(input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        // PASSWORD RESET FUNCTIONALITY
+        async function handlePasswordReset() {
+            const email = prompt("Weka Barua Pepe (Email) uliyojisajilia kupokea maelekezo ya kureset password:");
+            if(!email) return;
+            try {
+                await auth.sendPasswordResetEmail(email.trim());
+                alert("Link ya kureset password imetumwa kwenye email yako! Angalia Inbox au Spam folder.");
+            } catch(err) {
+                alert("Kosa: " + err.message);
+            }
+        }
 
         async function renderPublicCardView(cardKey) {
             switchView('public-card');
@@ -1355,6 +1402,39 @@
             });
         }
 
+        // LIVE AUTO-SUGGESTION FOR MANUAL SEARCH
+        function filterManualSearchGuests(query) {
+            const dropdown = document.getElementById('manual-search-dropdown');
+            if(!query.trim()) {
+                dropdown.classList.add('hidden');
+                dropdown.innerHTML = '';
+                return;
+            }
+
+            const q = query.toLowerCase();
+            const matches = cardsList.filter(c => c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q));
+
+            if(matches.length === 0) {
+                dropdown.classList.add('hidden');
+                dropdown.innerHTML = '';
+                return;
+            }
+
+            dropdown.classList.remove('hidden');
+            dropdown.innerHTML = matches.map(m => `
+                <div onclick="selectSuggestedGuest('${m.name.replace(/'/g, "\\'")}')" class="p-2.5 hover:bg-slate-900 cursor-pointer flex justify-between items-center transition">
+                    <span class="font-bold text-white">${m.name}</span>
+                    <span class="text-[10px] text-gold-400 font-mono">${m.id} (${m.type})</span>
+                </div>
+            `).join('');
+        }
+
+        function selectSuggestedGuest(name) {
+            document.getElementById('manual-search-input').value = name;
+            document.getElementById('manual-search-dropdown').classList.add('hidden');
+            manualCheckInGuest();
+        }
+
         // CONFIRMATION & LIMIT LOGIC (SINGLE = 1, DOUBLE = 2)
         async function processGuestCheckIn(matchedCard, gateName) {
             const feedback = document.getElementById('scan-live-feedback');
@@ -1417,6 +1497,7 @@
         async function manualCheckInGuest() {
             const query = document.getElementById('manual-search-input').value.trim().toLowerCase();
             const feedback = document.getElementById('scan-live-feedback');
+            document.getElementById('manual-search-dropdown').classList.add('hidden');
             if(!query) return;
 
             const matchedCard = cardsList.find(c => c.name.toLowerCase().includes(query) || c.id.toLowerCase().includes(query));
