@@ -598,9 +598,7 @@
 
     <!-- FIREBASE & APP LOGIC -->
     <script>
-        // ==========================================
-        // FIREBASE CONFIG YAKO HALISI IMESWEKWA HAPA:
-        // ==========================================
+        // FIREBASE CONFIG YAKO HALISI
         const firebaseConfig = {
             apiKey: "AIzaSyC8kIR7RylUdtt9QHOdQe1xUn_PMuATs2s",
             authDomain: "sherehe-yako-kidigitari.firebaseapp.com",
@@ -638,15 +636,42 @@
         };
 
         async function fetchUserData(uid) {
-            const doc = await db.collection('users').doc(uid).get();
-            if(doc.exists) {
-                const data = doc.data();
-                currentUser.dbData = data;
-                renderDashboard();
-                if(data.justApprovedVIP) {
-                    await db.collection('users').doc(uid).update({ justApprovedVIP: false });
-                    openVipSuccessModal();
+            try {
+                const docRef = db.collection('users').doc(uid);
+                const doc = await docRef.get();
+                if(doc.exists) {
+                    const data = doc.data();
+                    currentUser.dbData = data;
+                    if(data.title) eventData.title = data.title;
+                    if(data.category) eventData.category = data.category;
+                    renderDashboard();
+                    if(data.justApprovedVIP) {
+                        await docRef.update({ justApprovedVIP: false });
+                        openVipSuccessModal();
+                    }
+                } else {
+                    // Kama data haipo kwenye Firestore, itengeneze kiotomatiki isikwamishe
+                    const defaultData = {
+                        name: currentUser.email || 'Mtumiaji',
+                        email: currentUser.email,
+                        phone: '0700000000',
+                        role: 'Mwenyekiti',
+                        category: 'Harusi',
+                        title: 'Sherehe Yangu',
+                        isVIP: false,
+                        status: 'TRIAL',
+                        clickedVIP: false,
+                        txCode: null,
+                        justApprovedVIP: false
+                    };
+                    await docRef.set(defaultData);
+                    currentUser.dbData = defaultData;
+                    renderDashboard();
                 }
+            } catch(err) {
+                console.error("Kosa la kupata user data:", err);
+                currentUser.dbData = { name: currentUser.email, role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' };
+                renderDashboard();
             }
         }
 
@@ -938,6 +963,10 @@
             select.innerHTML = cardsList.map(c => `<option value="${c.id}">${c.id} - ${c.name}</option>`).join('');
         }
 
+        async function executeScanCardAccount() {
+            // ... (existing code handler)
+        }
+
         async function executeScanCardAction() {
             const cardId = document.getElementById('scan-card-select').value;
             const card = cardsList.find(c => c.id === cardId);
@@ -1027,7 +1056,7 @@
         }
 
         async function approveVIP(uid) {
-            await db.collection('users').doc(uid).update({ isVIP: true, status: 'VIP', justApprovedVIP: true });
+            await db.collection('users').doc.update({ isVIP: true, status: 'VIP', justApprovedVIP: true });
             loadAdminUsers();
             alert("Amethibitishwa kuwa VIP!");
         }
