@@ -930,16 +930,33 @@
             });
         }
 
-        // DOWNLOAD CARD AS JPG IMAGE
+        // DOWNLOAD CARD AS JPG IMAGE (HIGH COMPATIBILITY FOR ALL MOBILE PHONES & BROWSERS)
         function downloadCardAsJpg() {
             const cardWrapper = document.getElementById('guest-card-download-wrapper');
-            const guestName = document.getElementById('gcard-guest-name').innerText || 'kadi';
+            const guestName = (document.getElementById('gcard-guest-name').innerText || 'kadi').replace(/\s+/g, '_');
 
-            html2canvas(cardWrapper, { scale: 2, useCORS: true }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `KADI-${guestName.toUpperCase().replace(/\s+/g, '_')}.jpg`;
-                link.href = canvas.toDataURL('image/jpeg', 0.95);
-                link.click();
+            html2canvas(cardWrapper, {
+                scale: 3,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#020617'
+            }).then(canvas => {
+                canvas.toBlob(blob => {
+                    if (!blob) {
+                        alert("Kosa katika kutengeneza picha!");
+                        return;
+                    }
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = `KADI-${guestName.toUpperCase()}.jpg`;
+                    link.href = url;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                }, 'image/jpeg', 0.98);
+            }).catch(err => {
+                alert("Imeshindikana kupakua picha moja kwa moja. Mfumo unajaribu njia mbadala...");
             });
         }
 
@@ -1121,7 +1138,6 @@
             }
         }
 
-        // CHAGUO LA AINA YA KADI (WANAKAMATI AU MCHANGO)
         function selectCardPurpose(type) {
             const btnComm = document.getElementById('btn-card-committee');
             const btnCont = document.getElementById('btn-card-contribution');
@@ -1218,7 +1234,6 @@
                 renderCardsList();
             });
 
-            // REALTIME LISTENER YA SCANNED GUESTS (MHANGAIKO WA MAGETI YOTE)
             rdb.ref('scans').on('value', snapshot => {
                 const tbody = document.getElementById('scanned-guests-tbody');
                 const badge = document.getElementById('scanned-count-badge');
@@ -1247,7 +1262,6 @@
             });
         }
 
-        // START HTML5 CAMERA SCANNER LENS
         function startCameraScanner() {
             const feedback = document.getElementById('scan-live-feedback');
             if(html5QrCodeScanner) return;
@@ -1275,7 +1289,6 @@
             }
         }
 
-        // KADI IKISCANIWA KIFAFANANISHI CHA QR CODE
         async function onScanSuccess(decodedText) {
             const feedback = document.getElementById('scan-live-feedback');
             feedback.classList.remove('hidden');
@@ -1286,7 +1299,6 @@
                 feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
                 feedback.innerText = `🎉 MATCH FOUND: ${matchedCard.name} (${matchedCard.id}) - ALLOWED!`;
 
-                // Hifadhi kwenye Realtime Database 'scans' ili mageti yote yaone
                 const scanData = {
                     cardId: matchedCard.id,
                     guestName: matchedCard.name,
@@ -1303,7 +1315,7 @@
         }
 
         function onScanFailure(error) {
-            // Scanner inaendelea kutafuta QR Code
+            // Scanner inaendelea
         }
 
         async function saveBudgetRates() {
