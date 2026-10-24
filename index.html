@@ -64,14 +64,23 @@
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('splash')">
                 <div class="w-10 h-10 rounded-xl gold-gradient text-slate-950 font-black text-xl flex items-center justify-center shadow-lg shadow-gold-500/20">S</div>
                 <div>
-                    <span class="font-extrabold text-base tracking-tight gold-text block leading-none">SHEREHE YAKO</span>
-                    <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">KIDIGITAL PLATFORM</span>
+                    <span id="txt-brand-title" class="font-extrabold text-base tracking-tight gold-text block leading-none">SHEREHE YAKO</span>
+                    <span id="txt-brand-sub" class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">KIDIGITAL PLATFORM</span>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
+                <!-- LANGUAGE SWITCHER -->
+                <div class="flex items-center bg-slate-950 border border-gold-500/30 rounded-xl px-2 py-1 text-xs">
+                    <i class="fa-solid fa-globe text-gold-400 mr-1.5"></i>
+                    <select id="lang-switcher" onchange="changeLanguage(this.value)" class="bg-transparent text-gold-400 font-bold outline-none cursor-pointer">
+                        <option value="sw" class="bg-slate-950 text-white">Kiswahili</option>
+                        <option value="en" class="bg-slate-950 text-white">English</option>
+                    </select>
+                </div>
+
                 <div class="hidden md:flex items-center gap-3 text-[11px] font-bold bg-slate-950 px-3 py-1.5 rounded-xl border border-gold-500/30">
-                    <span class="text-slate-400"><i class="fa-solid fa-headset text-gold-400 mr-1"></i> Msaada:</span>
+                    <span class="text-slate-400"><i class="fa-solid fa-headset text-gold-400 mr-1"></i> <span data-i18n="support">Msaada</span>:</span>
                     <a href="tel:0657576696" class="text-gold-400 hover:underline">0657576696</a>
                     <span class="text-slate-700">|</span>
                     <a href="tel:0755154363" class="text-gold-400 hover:underline">0755154363</a>
@@ -102,25 +111,25 @@
                 </div>
 
                 <div class="space-y-2">
-                    <h1 class="text-2xl font-black text-white gold-text uppercase tracking-tight">
+                    <h1 data-i18n="splash_title" class="text-2xl font-black text-white gold-text uppercase tracking-tight">
                         KARIBU SHEREHE YAKO KIDIGITAL
                     </h1>
-                    <p class="text-xs text-slate-400 italic">"Panga • Shiriki • Sherehe Pamoja"</p>
+                    <p data-i18n="splash_sub" class="text-xs text-slate-400 italic">"Panga • Shiriki • Sherehe Pamoja"</p>
                 </div>
 
                 <div class="p-3 rounded-2xl bg-slate-950/90 border border-gold-500/30 text-[11px] text-slate-300 space-y-1 w-full text-center">
-                    <span class="text-gold-400 font-bold block"><i class="fa-solid fa-phone"></i> Huduma kwa Wateja:</span>
+                    <span data-i18n="cust_care" class="text-gold-400 font-bold block"><i class="fa-solid fa-phone"></i> Huduma kwa Wateja:</span>
                     <p class="text-[11px] font-mono font-bold text-white">0657 576 696 | 0755 154 363</p>
                 </div>
 
                 <div class="w-full space-y-2.5 pt-2">
-                    <button type="button" onclick="goToAuth('register')" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 shadow-lg shadow-gold-500/25 transition uppercase">
+                    <button type="button" onclick="goToAuth('register')" data-i18n="btn_register" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 shadow-lg shadow-gold-500/25 transition uppercase">
                         REGISTER (JISAJILI)
                     </button>
-                    <button type="button" onclick="goToAuth('login')" class="w-full py-3 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold text-xs hover:bg-slate-700 transition uppercase">
+                    <button type="button" onclick="goToAuth('login')" data-i18n="btn_signin" class="w-full py-3 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold text-xs hover:bg-slate-700 transition uppercase">
                         SIGN IN (INGIA)
                     </button>
-                    <button type="button" onclick="startTrialExperience()" class="w-full py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-gold-400 font-bold text-xs hover:bg-slate-900 transition">
+                    <button type="button" onclick="startTrialExperience()" data-i18n="btn_trial" class="w-full py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-gold-400 font-bold text-xs hover:bg-slate-900 transition">
                         ⚡ JARIBU TRIAL DEMO NOW
                     </button>
                 </div>
@@ -133,21 +142,21 @@
         <section id="view-auth" class="hidden max-w-md mx-auto space-y-6 pt-4">
             <div id="form-register" class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 shadow-xl">
                 <div class="text-center space-y-1">
-                    <h2 class="text-xl font-bold text-white">Jisajili Akaunti Mpya</h2>
-                    <p class="text-xs text-slate-400">Weka taarifa zako na nenosiri kuanza</p>
+                    <h2 data-i18n="reg_heading" class="text-xl font-bold text-white">Jisajili Akaunti Mpya</h2>
+                    <p data-i18n="reg_sub" class="text-xs text-slate-400">Weka taarifa zako na nenosiri kuanza</p>
                 </div>
 
                 <form onsubmit="handleRegistration(event)" class="space-y-3 text-xs">
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Majina Yako Kamili</label>
+                        <label data-i18n="lbl_fullname" class="block font-semibold text-slate-300 mb-1">Majina Yako Kamili</label>
                         <input type="text" id="reg-name" required placeholder="Mfano: Juma Mkwawa" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Barua Pepe (Email)</label>
+                        <label data-i18n="lbl_email" class="block font-semibold text-slate-300 mb-1">Barua Pepe (Email)</label>
                         <input type="email" id="reg-username" required placeholder="juma@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
+                        <label data-i18n="lbl_pass" class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
                         <div class="relative">
                             <input type="password" id="reg-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none pr-10">
                             <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
@@ -156,11 +165,25 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Namba ya WhatsApp</label>
-                        <input type="tel" id="reg-phone" required placeholder="0712345678" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                        <label data-i18n="lbl_whatsapp" class="block font-semibold text-slate-300 mb-1">Namba ya WhatsApp</label>
+                        <div class="flex gap-2">
+                            <select id="reg-country-code" class="w-28 px-2 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-gold-400 font-bold outline-none text-xs">
+                                <option value="255">🇹ℤ +255</option>
+                                <option value="254">🇰🇪 +254</option>
+                                <option value="256">🇺🇬 +256</option>
+                                <option value="250">🇷🇼 +250</option>
+                                <option value="257">🇧🇮 +257</option>
+                                <option value="27">🇿🇦 +27</option>
+                                <option value="44">🇬🇧 +44</option>
+                                <option value="1">🇺🇸 +1</option>
+                                <option value="91">🇮🇳 +91</option>
+                                <option value="971">🇦🇪 +971</option>
+                            </select>
+                            <input type="tel" id="reg-phone" required placeholder="712345678" class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                        </div>
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Nafasi Yako Kwenye Sherehe</label>
+                        <label data-i18n="lbl_role" class="block font-semibold text-slate-300 mb-1">Nafasi Yako Kwenye Sherehe</label>
                         <select id="reg-role" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             <option value="Mwenyekiti">Mwenyekiti wa Kamati</option>
                             <option value="Katibu">Katibu wa Kamati</option>
@@ -169,7 +192,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Aina ya Sherehe</label>
+                        <label data-i18n="lbl_event_type" class="block font-semibold text-slate-300 mb-1">Aina ya Sherehe</label>
                         <select id="reg-category" onchange="toggleCustomCategory(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             <option value="Harusi / Wedding">Harusi / Wedding</option>
                             <option value="Send-off">Send-off</option>
@@ -180,35 +203,35 @@
                         </select>
                     </div>
                     <div id="custom-cat-box" class="hidden">
-                        <label class="block font-semibold text-gold-400 mb-1">Andika Aina Yako ya Sherehe (Custom Event)</label>
+                        <label data-i18n="lbl_custom_cat" class="block font-semibold text-gold-400 mb-1">Andika Aina Yako ya Sherehe (Custom Event)</label>
                         <input type="text" id="reg-custom-cat" placeholder="Mfano: Sherehe ya Jubilei" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-white outline-none">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Jina la Sherehe Yako</label>
+                        <label data-i18n="lbl_event_title" class="block font-semibold text-slate-300 mb-1">Jina la Sherehe Yako</label>
                         <input type="text" id="reg-event-title" required placeholder="Mfano: Harusi ya Juma & Amina" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
 
-                    <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition mt-2">
+                    <button type="submit" data-i18n="btn_reg_submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition mt-2">
                         JISAJILI & FUNGUA SHEREHE
                     </button>
                 </form>
                 <p class="text-center text-xs text-slate-400 pt-2">
-                    Tayari una akaunti? <button type="button" onclick="toggleAuthMode('login')" class="text-gold-400 font-bold underline">Ingia Hapa</button>
+                    <span data-i18n="has_acc">Tayari una akaunti?</span> <button type="button" onclick="toggleAuthMode('login')" data-i18n="btn_signin_link" class="text-gold-400 font-bold underline">Ingia Hapa</button>
                 </p>
             </div>
 
             <div id="form-login" class="hidden bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 shadow-xl">
                 <div class="text-center space-y-1">
-                    <h2 class="text-xl font-bold text-white">Ingia Kwenye Sherehe Yako</h2>
-                    <p class="text-xs text-slate-400">Weka Email na Password yako</p>
+                    <h2 data-i18n="login_heading" class="text-xl font-bold text-white">Ingia Kwenye Sherehe Yako</h2>
+                    <p data-i18n="login_sub" class="text-xs text-slate-400">Weka Email na Password yako</p>
                 </div>
                 <form onsubmit="handleLogin(event)" class="space-y-3 text-xs">
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Email</label>
+                        <label data-i18n="lbl_email" class="block font-semibold text-slate-300 mb-1">Email</label>
                         <input type="email" id="login-username" required placeholder="juma@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
+                        <label data-i18n="lbl_pass" class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
                         <div class="relative">
                             <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none pr-10">
                             <button type="button" onclick="togglePasswordVisibility('login-password', 'login-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
@@ -217,14 +240,14 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <button type="button" onclick="handlePasswordReset()" class="text-[11px] text-gold-400 hover:underline font-semibold">Umesahau Password? Reseti Hapa</button>
+                        <button type="button" onclick="handlePasswordReset()" data-i18n="forgot_pass" class="text-[11px] text-gold-400 hover:underline font-semibold">Umesahau Password? Reseti Hapa</button>
                     </div>
-                    <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition">
+                    <button type="submit" data-i18n="btn_login_submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition">
                         INGIA KWENYE DASHBOARD
                     </button>
                 </form>
                 <p class="text-center text-xs text-slate-400 pt-2">
-                    Huna akaunti bado? <button type="button" onclick="toggleAuthMode('register')" class="text-gold-400 font-bold underline">Jisajili Hapa</button>
+                    <span data-i18n="no_acc">Huna akaunti bado?</span> <button type="button" onclick="toggleAuthMode('register')" data-i18n="btn_reg_link" class="text-gold-400 font-bold underline">Jisajili Hapa</button>
                 </p>
             </div>
         </section>
@@ -238,7 +261,7 @@
                         <span id="dash-vip-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-800 text-slate-400 border border-slate-700">⚪ TRIAL MODE</span>
                     </div>
                     <h1 id="dash-event-title" class="text-2xl font-extrabold text-white mt-1">Harusi ya Juma & Amina</h1>
-                    <p class="text-xs text-slate-400 mt-0.5">Mwenyeji: <strong id="dash-user-name" class="text-slate-200">Juma Mkwawa</strong> (<span id="dash-user-role" class="text-gold-400">Mwenyekiti</span>)</p>
+                    <p class="text-xs text-slate-400 mt-0.5"><span data-i18n="host">Mwenyeji</span>: <strong id="dash-user-name" class="text-slate-200">Juma Mkwawa</strong> (<span id="dash-user-role" class="text-gold-400">Mwenyekiti</span>)</p>
                 </div>
                 
                 <div class="flex items-center gap-2">
@@ -251,25 +274,25 @@
             <!-- TAB NAVIGATION MENU -->
             <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800 scrollbar-none text-xs font-bold">
                 <button type="button" onclick="switchDashTab('templates')" id="tab-btn-templates" class="dash-tab active px-4 py-2.5 rounded-xl bg-slate-900 text-gold-400 border border-gold-500/40 whitespace-nowrap">
-                    <i class="fa-solid fa-paint-brush"></i> Card Templates & Editor
+                    <i class="fa-solid fa-paint-brush"></i> <span data-i18n="tab_templates">Card Templates & Editor</span>
                 </button>
                 <button type="button" onclick="switchDashTab('chat')" id="tab-btn-chat" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-brands fa-whatsapp text-emerald-400"></i> Group Chat & Live Summary
+                    <i class="fa-brands fa-whatsapp text-emerald-400"></i> <span data-i18n="tab_chat">Group Chat & Live Summary</span>
                 </button>
                 <button type="button" onclick="switchDashTab('budget')" id="tab-btn-budget" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-calculator"></i> Bajeti Ya Sherehe & Account Payment
+                    <i class="fa-solid fa-calculator"></i> <span data-i18n="tab_budget">Bajeti Ya Sherehe & Payments</span>
                 </button>
                 <button type="button" onclick="switchDashTab('contributions')" id="tab-btn-contributions" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-wallet"></i> Michango & Ahadi Za Watu
+                    <i class="fa-solid fa-wallet"></i> <span data-i18n="tab_contributions">Michango & Ahadi Za Watu</span>
                 </button>
                 <button type="button" onclick="switchDashTab('cards')" id="tab-btn-cards" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-address-card"></i> Kadi Za Digital (Single/Double)
+                    <i class="fa-solid fa-address-card"></i> <span data-i18n="tab_cards">Kadi Za Digital (Single/Double)</span>
                 </button>
                 <button type="button" onclick="switchDashTab('thanks')" id="tab-btn-thanks" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-heart text-rose-400"></i> Ujumbe Wa Shukrani
+                    <i class="fa-solid fa-heart text-rose-400"></i> <span data-i18n="tab_thanks">Ujumbe Wa Shukrani</span>
                 </button>
                 <button type="button" onclick="switchDashTab('scanner')" id="tab-btn-scanner" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap flex items-center gap-1">
-                    <i class="fa-solid fa-qrcode text-gold-400"></i> Live Scan Mlangoni
+                    <i class="fa-solid fa-qrcode text-gold-400"></i> <span data-i18n="tab_scanner">Live Scan Mlangoni</span>
                 </button>
             </div>
 
@@ -282,23 +305,15 @@
                             <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Inaonekana Kwenye Trial</span>
                         </div>
                         
-                        <!-- CHAGUO LA AINA YA KADI -->
                         <div class="p-3 rounded-2xl bg-slate-950 border border-gold-500/40 space-y-2">
                             <label class="block text-xs font-bold text-gold-400">1. Chagua Aina Ya Kadi Unayotengeneza:</label>
                             <div class="grid grid-cols-3 gap-1.5 text-[11px]">
-                                <button type="button" onclick="selectCardPurpose('COMMITTEE')" id="btn-card-committee" class="p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700">
-                                    👑 Wanakamati
-                                </button>
-                                <button type="button" onclick="selectCardPurpose('CONTRIBUTION')" id="btn-card-contribution" class="p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700">
-                                    💳 Mchango / Ahadi
-                                </button>
-                                <button type="button" onclick="selectCardPurpose('HALL')" id="btn-card-hall" class="p-2 rounded-xl gold-gradient text-slate-950 font-black">
-                                    🏛️ Mwaliko Ukumbini
-                                </button>
+                                <button type="button" onclick="selectCardPurpose('COMMITTEE')" id="btn-card-committee" class="p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700">👑 Wanakamati</button>
+                                <button type="button" onclick="selectCardPurpose('CONTRIBUTION')" id="btn-card-contribution" class="p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700">💳 Mchango / Ahadi</button>
+                                <button type="button" onclick="selectCardPurpose('HALL')" id="btn-card-hall" class="p-2 rounded-xl gold-gradient text-slate-950 font-black">🏛️ Mwaliko Ukumbini</button>
                             </div>
                         </div>
 
-                        <!-- CHAGUO LA TEMPLATE STYLES 5 -->
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
                             <label class="block text-xs font-bold text-slate-200">2. Chagua Layout Template Style (Template 1-5):</label>
                             <div class="grid grid-cols-5 gap-1 text-[11px]">
@@ -310,7 +325,6 @@
                             </div>
                         </div>
 
-                        <!-- COLOR THEMES -->
                         <div>
                             <label class="block text-xs font-semibold text-slate-300 mb-2">3. Chagua Theme Ya Rangi Za Kadi:</label>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -502,7 +516,19 @@
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Namba ya Simu / WhatsApp</label>
-                                <input type="tel" id="c-phone" required placeholder="0712345678" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                <div class="flex gap-2">
+                                    <select id="c-country-code" class="w-24 px-1 py-2 rounded-xl bg-slate-950 border border-slate-800 text-gold-400 font-bold outline-none text-xs">
+                                        <option value="255">🇹ℤ +255</option>
+                                        <option value="254">🇰🇪 +254</option>
+                                        <option value="256">🇺🇬 +256</option>
+                                        <option value="250">🇷🇼 +250</option>
+                                        <option value="257">🇧🇮 +257</option>
+                                        <option value="27">🇿🇦 +27</option>
+                                        <option value="44">🇬🇧 +44</option>
+                                        <option value="1">🇺🇸 +1</option>
+                                    </select>
+                                    <input type="tel" id="c-phone" required placeholder="712345678" class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                </div>
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Aina ya Malipo</label>
@@ -570,12 +596,17 @@
                 </div>
             </div>
 
-            <!-- TAB 6: UJUMBE WA SHUKRANI -->
+            <!-- TAB 6: UJUMBE WA SHUKRANI (INATOKA KWENYE ORODHA YA WALIOINGIA UKUMBINI ONLY) -->
             <div id="pane-thanks" class="dash-pane hidden space-y-6">
                 <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-4">
-                    <div class="border-b border-slate-800 pb-3">
-                        <h3 class="text-base font-bold text-white"><i class="fa-solid fa-heart text-rose-500"></i> Ujumbe Wa Shukrani Baada Ya Sherehe</h3>
-                        <p class="text-xs text-slate-400">Chagua ujumbe uliotayarishwa tayari au andika maneno yako mwenyewe kuwatumia waalikwa waliofanikisha sherehe</p>
+                    <div class="border-b border-slate-800 pb-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                        <div>
+                            <h3 class="text-base font-bold text-white"><i class="fa-solid fa-heart text-rose-500"></i> Ujumbe Wa Shukrani (Walioingia Ukumbini)</h3>
+                            <p class="text-xs text-slate-400">Orodha hii inachukua waalikwa waliothibitishwa kuingia Ukumbini pekee (Confirmed Hall Guests)!</p>
+                        </div>
+                        <button type="button" onclick="sendMultiThanksWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase shadow flex items-center gap-1.5">
+                            <i class="fa-brands fa-whatsapp text-sm"></i> TUMA SHUKRANI KWA WOTE WALIOINGIA
+                        </button>
                     </div>
 
                     <div class="space-y-3">
@@ -602,14 +633,15 @@
                     </div>
 
                     <div class="space-y-3 pt-2">
-                        <h4 class="text-xs font-bold text-white border-b border-slate-800 pb-2">Tuma Ujumbe Wa Shukrani Kwa Waalikwa Na Waliochangia:</h4>
+                        <h4 class="text-xs font-bold text-white border-b border-slate-800 pb-2">Orodha ya Waliothibitishwa Ukumbini (Ready for Multi-Send):</h4>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
                                 <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
                                     <tr>
-                                        <th class="p-2.5">Mhusika</th>
-                                        <th class="p-2.5">Namba</th>
-                                        <th class="p-2.5 text-right">Tuma Shukrani</th>
+                                        <th class="p-2.5">Mgeni / Kadi</th>
+                                        <th class="p-2.5">Namba ya Simu</th>
+                                        <th class="p-2.5">Muda wa Kuingia</th>
+                                        <th class="p-2.5 text-right">Tuma Moja Kwa Moja</th>
                                     </tr>
                                 </thead>
                                 <tbody id="thanks-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -721,7 +753,19 @@
                     </div>
                     <div>
                         <label class="block text-slate-300 font-semibold mb-1">Namba ya WhatsApp / Simu</label>
-                        <input type="tel" id="pub-guest-phone" required placeholder="0712345678" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                        <div class="flex gap-2">
+                            <select id="pub-country-code" class="w-28 px-2 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-gold-400 font-bold outline-none text-xs">
+                                <option value="255">🇹ℤ +255</option>
+                                <option value="254">🇰🇪 +254</option>
+                                <option value="256">🇺🇬 +256</option>
+                                <option value="250">🇷🇼 +250</option>
+                                <option value="257">🇧🇮 +257</option>
+                                <option value="27">🇿🇦 +27</option>
+                                <option value="44">🇬🇧 +44</option>
+                                <option value="1">🇺🇸 +1</option>
+                            </select>
+                            <input type="tel" id="pub-guest-phone" required placeholder="712345678" class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                        </div>
                     </div>
                     <div>
                         <label class="block text-slate-300 font-semibold mb-1">Unatoa Mchango au Ahadi?</label>
@@ -950,6 +994,93 @@
         let cardsList = [];
         let chatMessagesList = [];
         let globalScansList = [];
+        let currentLang = 'sw';
+
+        const i18nDictionary = {
+            sw: {
+                support: "Msaada",
+                splash_title: "KARIBU SHEREHE YAKO KIDIGITAL",
+                splash_sub: '"Panga • Shiriki • Sherehe Pamoja"',
+                cust_care: "Huduma kwa Wateja:",
+                btn_register: "REGISTER (JISAJILI)",
+                btn_signin: "SIGN IN (INGIA)",
+                btn_trial: "⚡ JARIBU TRIAL DEMO NOW",
+                reg_heading: "Jisajili Akaunti Mpya",
+                reg_sub: "Weka taarifa zako na nenosiri kuanza",
+                lbl_fullname: "Majina Yako Kamili",
+                lbl_email: "Barua Pepe (Email)",
+                lbl_pass: "Neno la Siri (Password)",
+                lbl_whatsapp: "Namba ya WhatsApp",
+                lbl_role: "Nafasi Yako Kwenye Sherehe",
+                lbl_event_type: "Aina ya Sherehe",
+                lbl_custom_cat: "Andika Aina Yako ya Sherehe (Custom Event)",
+                lbl_event_title: "Jina la Sherehe Yako",
+                btn_reg_submit: "JISAJILI & FUNGUA SHEREHE",
+                has_acc: "Tayari una akaunti?",
+                btn_signin_link: "Ingia Hapa",
+                login_heading: "Ingia Kwenye Sherehe Yako",
+                login_sub: "Weka Email na Password yako",
+                forgot_pass: "Umesahau Password? Reseti Hapa",
+                btn_login_submit: "INGIA KWENYE DASHBOARD",
+                no_acc: "Huna akaunti bado?",
+                btn_reg_link: "Jisajili Hapa",
+                host: "Mwenyeji",
+                tab_templates: "Card Templates & Editor",
+                tab_chat: "Group Chat & Live Summary",
+                tab_budget: "Bajeti Ya Sherehe & Payments",
+                tab_contributions: "Michango & Ahadi Za Watu",
+                tab_cards: "Kadi Za Digital (Single/Double)",
+                tab_thanks: "Ujumbe Wa Shukrani",
+                tab_scanner: "Live Scan Mlangoni"
+            },
+            en: {
+                support: "Support",
+                splash_title: "WELCOME TO YOUR DIGITAL EVENT",
+                splash_sub: '"Plan • Share • Celebrate Together"',
+                cust_care: "Customer Support:",
+                btn_register: "REGISTER NOW",
+                btn_signin: "SIGN IN",
+                btn_trial: "⚡ TRY TRIAL DEMO NOW",
+                reg_heading: "Register New Account",
+                reg_sub: "Enter your details and password to start",
+                lbl_fullname: "Full Names",
+                lbl_email: "Email Address",
+                lbl_pass: "Password",
+                lbl_whatsapp: "WhatsApp Number",
+                lbl_role: "Your Role in Event",
+                lbl_event_type: "Event Type",
+                lbl_custom_cat: "Specify Your Event Type",
+                lbl_event_title: "Event Title",
+                btn_reg_submit: "REGISTER & START EVENT",
+                has_acc: "Already have an account?",
+                btn_signin_link: "Sign In Here",
+                login_heading: "Sign In To Your Event",
+                login_sub: "Enter your email and password",
+                forgot_pass: "Forgot Password? Reset Here",
+                btn_login_submit: "ENTER DASHBOARD",
+                no_acc: "Don't have an account?",
+                btn_reg_link: "Register Here",
+                host: "Host",
+                tab_templates: "Card Templates & Editor",
+                tab_chat: "Group Chat & Live Summary",
+                tab_budget: "Event Budget & Payments",
+                tab_contributions: "Contributions & Pledges",
+                tab_cards: "Digital Cards (Single/Double)",
+                tab_thanks: "Thank You Messages",
+                tab_scanner: "Live Gate Check-in"
+            }
+        };
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const dict = i18nDictionary[lang];
+            document.querySelectorAll('[data-i18n]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n');
+                if(dict[key]) {
+                    elem.innerText = dict[key];
+                }
+            });
+        }
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1110,7 +1241,7 @@
                     const defaultData = {
                         name: currentUser.email || 'Mtumiaji',
                         email: currentUser.email,
-                        phone: '0700000000',
+                        phone: '+255700000000',
                         role: 'Mwenyekiti',
                         category: 'Harusi',
                         title: 'Sherehe Yangu',
@@ -1132,7 +1263,10 @@
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-username').value;
             const password = document.getElementById('reg-password').value;
-            const phone = document.getElementById('reg-phone').value;
+            const countryCode = document.getElementById('reg-country-code').value;
+            const rawPhone = document.getElementById('reg-phone').value.replace(/^0/,'');
+            const fullPhone = `+${countryCode}${rawPhone}`;
+            
             const role = document.getElementById('reg-role').value;
             let cat = document.getElementById('reg-category').value;
             if(cat === 'CUSTOM') cat = document.getElementById('reg-custom-cat').value || 'Sherehe Maalum';
@@ -1141,7 +1275,7 @@
             try {
                 const res = await auth.createUserWithEmailAndPassword(email, password);
                 const userData = {
-                    name, email, phone, role, category: cat, title,
+                    name, email, phone: fullPhone, role, category: cat, title,
                     isVIP: false, status: 'TRIAL'
                 };
                 await rdb.ref('users/' + res.user.uid).set(userData);
@@ -1362,7 +1496,6 @@
                 }
                 renderContributions();
                 renderBudgetSummary();
-                renderThanksTable();
             });
 
             rdb.ref('cards').on('value', snapshot => {
@@ -1391,17 +1524,19 @@
 
                 if(globalScansList.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Bado hakuna mgeni aliyethibitishwa.</td></tr>';
-                    return;
+                } else {
+                    tbody.innerHTML = [...globalScansList].reverse().map(s => `
+                        <tr class="hover:bg-slate-900">
+                            <td class="p-2 font-bold text-white">${s.guestName} <span class="text-[10px] text-gold-400 font-mono">(${s.attemptNumber || 1}/${s.maxAllowed || 1})</span></td>
+                            <td class="p-2 font-mono text-gold-400 text-[10px]">${s.cardId}</td>
+                            <td class="p-2 text-slate-400 text-[10px]">${s.gateName || 'Gate 1'} • ${s.time}</td>
+                            <td class="p-2 text-right"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[9px]">✅ CONFIRMED</span></td>
+                        </tr>
+                    `).join('');
                 }
 
-                tbody.innerHTML = [...globalScansList].reverse().map(s => `
-                    <tr class="hover:bg-slate-900">
-                        <td class="p-2 font-bold text-white">${s.guestName} <span class="text-[10px] text-gold-400 font-mono">(${s.attemptNumber || 1}/${s.maxAllowed || 1})</span></td>
-                        <td class="p-2 font-mono text-gold-400 text-[10px]">${s.cardId}</td>
-                        <td class="p-2 text-slate-400 text-[10px]">${s.gateName || 'Gate 1'} • ${s.time}</td>
-                        <td class="p-2 text-right"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[9px]">✅ CONFIRMED</span></td>
-                    </tr>
-                `).join('');
+                // Synchronize Hall Confirmed Guests to Thank You Table directly
+                renderThanksTable();
             });
         }
 
@@ -1460,7 +1595,6 @@
             const feedback = document.getElementById('scan-live-feedback');
             feedback.classList.remove('hidden');
 
-            // Count existing verified entries directly from globalScansList (Realtime DB State)
             const cardScans = globalScansList.filter(s => s.cardId === matchedCard.id);
             const existingCount = cardScans.length;
 
@@ -1481,6 +1615,7 @@
             const scanData = {
                 cardId: matchedCard.id,
                 guestName: matchedCard.name,
+                guestPhone: matchedCard.phone || '',
                 gateName: gateName || 'Gate Scanner',
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 timestamp: Date.now(),
@@ -1595,7 +1730,10 @@
             }
 
             const name = document.getElementById('c-name').value;
-            const phone = document.getElementById('c-phone').value;
+            const countryCode = document.getElementById('c-country-code').value;
+            const rawPhone = document.getElementById('c-phone').value.replace(/^0/,'');
+            const phone = `+${countryCode}${rawPhone}`;
+
             const status = document.getElementById('c-status').value;
             const amount = Number(document.getElementById('c-amount').value);
 
@@ -1640,7 +1778,10 @@
         async function handlePublicGuestSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('pub-guest-name').value;
-            const phone = document.getElementById('pub-guest-phone').value;
+            const countryCode = document.getElementById('pub-country-code').value;
+            const rawPhone = document.getElementById('pub-guest-phone').value.replace(/^0/,'');
+            const phone = `+${countryCode}${rawPhone}`;
+
             const status = document.getElementById('pub-guest-status').value;
             const amount = Number(document.getElementById('pub-guest-amount').value);
 
@@ -1678,7 +1819,7 @@
 
             currentUser = { 
                 uid: 'guest-' + Date.now(), 
-                email: `${phone}@guest.com`, 
+                email: `${phone.replace('+','')}@guest.com`, 
                 dbData: { name: name, role: 'Mwaalikwa / Mchangiaji', isVIP: true } 
             };
 
@@ -1761,14 +1902,16 @@
                                 `_Tafadhali onyesha kadi hii yenye QR Code Mlangoni Siku ya Sherehe!_`;
 
             const encoded = encodeURIComponent(cardMessage);
-            window.open(`https://wa.me/255${phone.replace(/^0/,'')}?text=${encoded}`, '_blank');
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            window.open(`https://wa.me/${cleanPhone}?text=${encoded}`, '_blank');
         }
 
         function sendSmsTemplateCard(cardKey, id, name, phone, type) {
             const cardLink = `${window.location.origin}${window.location.pathname}?card_id=${cardKey}`;
             const coupleNames = document.getElementById('card-edit-names').value || 'Juma & Amina';
             const smsText = `Habari ${name}, umepokea KADI YA MWALIKO (${type} - ${id}) ya ${coupleNames}. Fungua Link hii kuona na kupakua kadi yako: ${cardLink}`;
-            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(smsText)}`, '_blank');
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            window.open(`sms:+${cleanPhone}?body=${encodeURIComponent(smsText)}`, '_blank');
         }
 
         function selectThanksTemplate(num) {
@@ -1776,37 +1919,65 @@
             document.getElementById('thanks-custom-input').value = txt;
         }
 
+        // RENDER THANK YOU TABLE DIRECTLY FROM HALL CONFIRMED GUESTS (GLOBAL SCANS)
         function renderThanksTable() {
             const tbody = document.getElementById('thanks-table-body');
             if(!tbody) return;
 
-            if(contributionsList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-500 italic">Hakuna mwaalikwa kwenye orodha.</td></tr>';
+            if(globalScansList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Bado hakuna mgeni aliyethibitishwa kuingia Ukumbini. Ukim-confirm mgeni mlangoni ataonekana hapa instantly!</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = contributionsList.map(c => `
-                <tr class="hover:bg-slate-800/40">
-                    <td class="p-2.5 font-bold text-white">${c.name}</td>
-                    <td class="p-2.5 font-mono text-slate-400">${c.phone}</td>
-                    <td class="p-2.5 text-right flex justify-end gap-1">
-                        <button type="button" onclick="sendWhatsappThanks('${c.name}', '${c.phone}')" class="px-2 py-1 rounded bg-emerald-600 text-white font-bold text-[10px]"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
-                        <button type="button" onclick="sendSmsThanks('${c.name}', '${c.phone}')" class="px-2 py-1 rounded bg-indigo-600 text-white font-bold text-[10px]"><i class="fa-solid fa-comment-sms"></i> SMS</button>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = globalScansList.map(s => {
+                const matchedCard = cardsList.find(c => c.id === s.cardId);
+                const phoneNum = (matchedCard && matchedCard.phone) ? matchedCard.phone : (s.guestPhone || 'Namba Haipo');
+
+                return `
+                    <tr class="hover:bg-slate-800/40">
+                        <td class="p-2.5 font-bold text-white">${s.guestName} <span class="text-[10px] text-gold-400 font-mono">(${s.cardId})</span></td>
+                        <td class="p-2.5 font-mono text-slate-400">${phoneNum}</td>
+                        <td class="p-2.5 text-slate-400 text-[10px]">${s.time}</td>
+                        <td class="p-2.5 text-right flex justify-end gap-1">
+                            <button type="button" onclick="sendWhatsappThanks('${s.guestName}', '${phoneNum}')" class="px-2 py-1 rounded bg-emerald-600 text-white font-bold text-[10px]"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                            <button type="button" onclick="sendSmsThanks('${s.guestName}', '${phoneNum}')" class="px-2 py-1 rounded bg-indigo-600 text-white font-bold text-[10px]"><i class="fa-solid fa-comment-sms"></i> SMS</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function sendMultiThanksWhatsApp() {
+            if(globalScansList.length === 0) {
+                alert("Hakuna mgeni aliyethibitishwa kuingia ukumbini bado!");
+                return;
+            }
+
+            let count = 0;
+            globalScansList.forEach(s => {
+                const matchedCard = cardsList.find(c => c.id === s.cardId);
+                const phoneNum = (matchedCard && matchedCard.phone) ? matchedCard.phone : s.guestPhone;
+                if(phoneNum) {
+                    sendWhatsappThanks(s.guestName, phoneNum);
+                    count++;
+                }
+            });
+
+            alert(`🚀 Mchakato wa kutuma ujumbe wa Shukrani umeanza kwa Waalikwa ${count} walioingia ukumbini!`);
         }
 
         function sendWhatsappThanks(name, phone) {
             const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana kwa ushirikiano na kujumuika nasi!';
             const fullMsg = `Habari Ndugu *${name}*,\n\n${customMsg}\n\nKutoka kwa Kamati ya: *${eventData.title}* 🎉`;
-            window.open(`https://wa.me/255${phone.replace(/^0/,'')}?text=${encodeURIComponent(fullMsg)}`, '_blank');
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(fullMsg)}`, '_blank');
         }
 
         function sendSmsThanks(name, phone) {
             const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana kwa ushirikiano na kujumuika nasi!';
             const fullMsg = `Habari ${name}, ${customMsg} (Sherehe: ${eventData.title})`;
-            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(fullMsg)}`, '_blank');
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            window.open(`sms:+${cleanPhone}?body=${encodeURIComponent(fullMsg)}`, '_blank');
         }
 
         async function handleSendGroupMessage(e) {
