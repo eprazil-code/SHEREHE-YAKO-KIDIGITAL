@@ -606,46 +606,46 @@
                 </div>
             </div>
 
-            <!-- TAB 7: BULLETPROOF SCANNER WITH NATIVE CAMERA SNAP & MANUAL SEARCH CHECK-IN -->
+            <!-- TAB 7: SCANNER WITH MANUAL CONFIRMATION & DOUBLE/SINGLE LIMIT -->
             <div id="pane-scanner" class="dash-pane hidden space-y-6">
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-6">
                     <div class="text-center max-w-md mx-auto space-y-2">
                         <i class="fa-solid fa-qrcode text-gold-400 text-4xl mb-1"></i>
                         <h3 class="text-xl font-extrabold text-white">Live Gate Scanner & Check-in</h3>
-                        <p class="text-xs text-slate-400">Chagua Njia Rahisi Zaidi ya Kuingiza Wageni Mlangoni Bila Kukwama</p>
+                        <p class="text-xs text-slate-400">Tafuta Mgeni au Scan Kadi. Kadi ya Single inaruhusu Confirmation 1, Double inaruhusu Confirmation 2!</p>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                        <!-- BULLETPROOF ALTERNATIVES BOX -->
+                        <!-- OPTIONS BOX -->
                         <div class="lg:col-span-6 bg-slate-950 border-2 border-gold-500/50 p-4 rounded-3xl space-y-4 text-center">
                             
-                            <!-- OPTION 1: NATIVE CAMERA CAPTURE (BULLETPROOF) -->
+                            <!-- OPTION 1: NATIVE CAMERA CAPTURE -->
                             <div class="p-4 bg-slate-900 rounded-2xl border border-gold-500/40 space-y-2 text-left">
                                 <span class="text-xs font-bold text-gold-400 block"><i class="fa-solid fa-camera-retro"></i> Njia ya 1: Piga Picha ya QR (Native Camera)</span>
-                                <p class="text-[11px] text-slate-400">Haitumii live video stream. Ukibonyeza hapa chini, kamera ya simu itafunguka, unapiga picha ya kadi ya mgeni na inasoma mara moja bila kugoma!</p>
+                                <p class="text-[11px] text-slate-400">Piga picha ya kadi ya mgeni, mfumo utaikagua kulingana na Single au Double card.</p>
                                 <label class="block w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs text-center uppercase shadow cursor-pointer hover:brightness-110">
                                     <i class="fa-solid fa-camera mr-1"></i> PIGA PICHA YA QR CODE YA MGENI
                                     <input type="file" accept="image/*" capture="environment" onchange="scanQrFromFile(event)" class="hidden">
                                 </label>
                             </div>
 
-                            <!-- OPTION 2: MANUAL SEARCH & INSTANT CHECK-IN -->
+                            <!-- OPTION 2: MANUAL SEARCH & CONFIRM CHECK-IN -->
                             <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-2 text-left">
                                 <span class="text-xs font-bold text-gold-400 block"><i class="fa-solid fa-magnifying-glass"></i> Njia ya 2: Tafuta Mgeni kwa Jina au ID (Manual)</span>
-                                <p class="text-[11px] text-slate-400">Kama kadi imepotea au inasumbua, andika jina la mgeni hapa chini umuingize mara moja:</p>
+                                <p class="text-[11px] text-slate-400">Andika jina la mgeni hapa kisha ubonyeze Confirm/Ingiza:</p>
                                 <div class="flex gap-2">
                                     <input type="text" id="manual-search-input" placeholder="Andika Jina la Mgeni..." class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs outline-none">
-                                    <button type="button" onclick="manualCheckInGuest()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase">INGIZA</button>
+                                    <button type="button" onclick="manualCheckInGuest()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase">CONFIRM</button>
                                 </div>
                             </div>
 
                             <div id="scan-live-feedback" class="hidden p-3 rounded-2xl text-xs font-bold text-center"></div>
                         </div>
 
-                        <!-- LIVE REALTIME SCANNED GUESTS LIST -->
+                        <!-- LIVE REALTIME SCANNED / CONFIRMED GUESTS LIST -->
                         <div class="lg:col-span-6 bg-slate-950 border border-slate-800 p-4 rounded-3xl space-y-3">
                             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                                <h4 class="text-xs font-bold text-white"><i class="fa-solid fa-users-viewfinder text-gold-400 mr-1"></i> Waalikwa Walioingia Ukumbini</h4>
+                                <h4 class="text-xs font-bold text-white"><i class="fa-solid fa-users-viewfinder text-gold-400 mr-1"></i> Waalikwa Waliothibitishwa (Confirmed)</h4>
                                 <span id="scanned-count-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">0 WALIOINGIA</span>
                             </div>
 
@@ -653,7 +653,7 @@
                                 <table class="w-full text-left text-xs">
                                     <thead class="bg-slate-900 text-slate-400 uppercase text-[9px]">
                                         <tr>
-                                            <th class="p-2">Mgeni</th>
+                                            <th class="p-2">Mgeni / Hatua</th>
                                             <th class="p-2">Kadi ID</th>
                                             <th class="p-2">Geti / Muda</th>
                                             <th class="p-2 text-right">Hali</th>
@@ -1340,22 +1340,61 @@
                 if(badge) badge.innerText = `${scanItems.length} WALIOINGIA`;
 
                 if(scanItems.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Bado hakuna mgeni aliyeingia ukumbini.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Bado hakuna mgeni aliyethibitishwa.</td></tr>';
                     return;
                 }
 
                 tbody.innerHTML = scanItems.reverse().map(s => `
                     <tr class="hover:bg-slate-900">
-                        <td class="p-2 font-bold text-white">${s.guestName}</td>
+                        <td class="p-2 font-bold text-white">${s.guestName} <span class="text-[10px] text-gold-400 font-mono">(${s.attemptNumber || 1}/${s.maxAllowed || 1})</span></td>
                         <td class="p-2 font-mono text-gold-400 text-[10px]">${s.cardId}</td>
                         <td class="p-2 text-slate-400 text-[10px]">${s.gateName || 'Gate 1'} • ${s.time}</td>
-                        <td class="p-2 text-right"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[9px]">✅ ALLOWED</span></td>
+                        <td class="p-2 text-right"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[9px]">✅ CONFIRMED</span></td>
                     </tr>
                 `).join('');
             });
         }
 
-        // NATIVE CAMERA CAPTURE / FILE DECODER (100% BULLETPROOF)
+        // CONFIRMATION & LIMIT LOGIC (SINGLE = 1, DOUBLE = 2)
+        async function processGuestCheckIn(matchedCard, gateName) {
+            const feedback = document.getElementById('scan-live-feedback');
+            feedback.classList.remove('hidden');
+
+            const snapshot = await rdb.ref('scans').once('value');
+            let existingCount = 0;
+            if(snapshot.exists()) {
+                snapshot.forEach(child => {
+                    if(child.val().cardId === matchedCard.id) {
+                        existingCount++;
+                    }
+                });
+            }
+
+            const maxAllowed = (matchedCard.type && matchedCard.type.toUpperCase() === 'DOUBLE') ? 2 : 1;
+
+            if(existingCount >= maxAllowed) {
+                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                feedback.innerText = `⚠️ Kadi ya ${matchedCard.name} (${matchedCard.id} - ${matchedCard.type} CARD) imeshakamilisha uthibitisho wote (${existingCount}/${maxAllowed})! Hakuna confirmation tena.`;
+                return;
+            }
+
+            const attemptNo = existingCount + 1;
+            const scanData = {
+                cardId: matchedCard.id,
+                guestName: matchedCard.name,
+                gateName: gateName || 'Gate Scanner',
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now(),
+                attemptNumber: attemptNo,
+                maxAllowed: maxAllowed
+            };
+
+            await rdb.ref('scans').push(scanData);
+
+            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+            feedback.innerText = `🎉 CONFIRMATION ${attemptNo}/${maxAllowed} IMEFANIKIWA: ${matchedCard.name} (${matchedCard.id})!`;
+        }
+
         async function scanQrFromFile(e) {
             const file = e.target.files[0];
             const feedback = document.getElementById('scan-live-feedback');
@@ -1375,7 +1414,6 @@
             e.target.value = '';
         }
 
-        // MANUAL SEARCH CHECK-IN ALTERNATIVE
         async function manualCheckInGuest() {
             const query = document.getElementById('manual-search-input').value.trim().toLowerCase();
             const feedback = document.getElementById('scan-live-feedback');
@@ -1383,46 +1421,25 @@
 
             const matchedCard = cardsList.find(c => c.name.toLowerCase().includes(query) || c.id.toLowerCase().includes(query));
 
-            feedback.classList.remove('hidden');
             if(matchedCard) {
-                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-                feedback.innerText = `🎉 IMETHIBITISHWA: ${matchedCard.name} (${matchedCard.id}) - AMERUHUSIWA!`;
-
-                const scanData = {
-                    cardId: matchedCard.id,
-                    guestName: matchedCard.name,
-                    gateName: currentUser ? currentUser.dbData.role : 'Manual Gate',
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    timestamp: Date.now()
-                };
-
-                await rdb.ref('scans/' + matchedCard.id).set(scanData);
+                const gateName = currentUser ? currentUser.dbData.role : 'Manual Gate';
+                await processGuestCheckIn(matchedCard, gateName);
                 document.getElementById('manual-search-input').value = '';
             } else {
+                feedback.classList.remove('hidden');
                 feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
                 feedback.innerText = `⚠️ Mgeni "${query}" hajapatikana kwenye orodha ya kadi!`;
             }
         }
 
         async function onScanSuccess(decodedText) {
+            const matchedCard = cardsList.find(c => decodedText.includes(c.id));
             const feedback = document.getElementById('scan-live-feedback');
             feedback.classList.remove('hidden');
 
-            const matchedCard = cardsList.find(c => decodedText.includes(c.id));
-
             if(matchedCard) {
-                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-                feedback.innerText = `🎉 KADI IMETHIBITISHWA: ${matchedCard.name} (${matchedCard.id}) - AMERUHUSIWA!`;
-
-                const scanData = {
-                    cardId: matchedCard.id,
-                    guestName: matchedCard.name,
-                    gateName: currentUser ? currentUser.dbData.role : 'Gate Scanner',
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    timestamp: Date.now()
-                };
-
-                await rdb.ref('scans/' + matchedCard.id).set(scanData);
+                const gateName = currentUser ? currentUser.dbData.role : 'Gate Scanner';
+                await processGuestCheckIn(matchedCard, gateName);
             } else {
                 feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
                 feedback.innerText = `⚠️ KADI HAITAMBULIKANI AU HAIPO KWENYE MFUMO! (${decodedText})`;
