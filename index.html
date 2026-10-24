@@ -15,7 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- HTML5 QR Code Camera Scanner CDN -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <!-- html2canvas Library (Kwa Ajili Ya Ku-download Kadi Kama JPG) -->
+    <!-- html2canvas Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <!-- FIREBASE SDK CDN (Compat Version) -->
@@ -47,6 +47,13 @@
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+        /* TEMPLATE STYLES */
+        .tpl-style-1 { border-width: 4px; border-style: solid; border-radius: 1.5rem; }
+        .tpl-style-2 { border-width: 1px; border-style: dashed; border-radius: 0.5rem; }
+        .tpl-style-3 { border-top-width: 12px; border-style: solid; border-radius: 1rem; }
+        .tpl-style-4 { border-width: 8px; border-style: double; border-radius: 2rem; }
+        .tpl-style-5 { border-left-width: 10px; border-style: solid; border-radius: 1rem; }
     </style>
 </head>
 <body class="font-sans text-slate-100 bg-slate-950 h-full flex flex-col antialiased selection:bg-gold-500 selection:text-slate-950">
@@ -253,7 +260,7 @@
                 </button>
             </div>
 
-            <!-- TAB 1: CARD TEMPLATES & EDITOR WITH CARD PURPOSE SELECTOR -->
+            <!-- TAB 1: CARD TEMPLATES & EDITOR -->
             <div id="pane-templates" class="dash-pane space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
@@ -262,21 +269,37 @@
                             <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Inaonekana Kwenye Trial</span>
                         </div>
                         
-                        <!-- CHAGUO LA AINA YA KADI (WANAKAMATI / MCHANGO) -->
+                        <!-- CHAGUO LA AINA YA KADI (WANAKAMATI / MCHANGO / UKUMBINI) -->
                         <div class="p-3 rounded-2xl bg-slate-950 border border-gold-500/40 space-y-2">
-                            <label class="block text-xs font-bold text-gold-400">Chagua Aina Ya Kadi Unayotengeneza:</label>
-                            <div class="grid grid-cols-2 gap-2 text-xs">
+                            <label class="block text-xs font-bold text-gold-400">1. Chagua Aina Ya Kadi Unayotengeneza:</label>
+                            <div class="grid grid-cols-3 gap-1.5 text-[11px]">
                                 <button type="button" onclick="selectCardPurpose('COMMITTEE')" id="btn-card-committee" class="p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700">
-                                    👑 Kadi Ya Wanakamati
+                                    👑 Wanakamati
                                 </button>
-                                <button type="button" onclick="selectCardPurpose('CONTRIBUTION')" id="btn-card-contribution" class="p-2 rounded-xl gold-gradient text-slate-950 font-black">
-                                    💳 Kadi Ya Mchango / Ahadi
+                                <button type="button" onclick="selectCardPurpose('CONTRIBUTION')" id="btn-card-contribution" class="p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700">
+                                    💳 Mchango / Ahadi
+                                </button>
+                                <button type="button" onclick="selectCardPurpose('HALL')" id="btn-card-hall" class="p-2 rounded-xl gold-gradient text-slate-950 font-black">
+                                    🏛️ Mwaliko Ukumbini
                                 </button>
                             </div>
                         </div>
 
+                        <!-- CHAGUO LA TEMPLATE STYLES 5 MPYA -->
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                            <label class="block text-xs font-bold text-slate-200">2. Chagua Layout Template Style (Template 1-5):</label>
+                            <div class="grid grid-cols-5 gap-1 text-[11px]">
+                                <button type="button" onclick="selectCardTemplateStyle(1)" id="btn-tpl-1" class="p-2 rounded-lg gold-gradient text-slate-950 font-black text-center">T1</button>
+                                <button type="button" onclick="selectCardTemplateStyle(2)" id="btn-tpl-2" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T2</button>
+                                <button type="button" onclick="selectCardTemplateStyle(3)" id="btn-tpl-3" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T3</button>
+                                <button type="button" onclick="selectCardTemplateStyle(4)" id="btn-tpl-4" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T4</button>
+                                <button type="button" onclick="selectCardTemplateStyle(5)" id="btn-tpl-5" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T5</button>
+                            </div>
+                        </div>
+
+                        <!-- COLOR THEMES (RANGI ZOTE ZA AWALI) -->
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-2">Chagua Theme Ya Rangi Za Kadi:</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2">3. Chagua Theme Ya Rangi Za Kadi:</label>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                 <button type="button" onclick="applyCardTheme('gold')" class="p-2.5 rounded-xl bg-slate-950 border border-gold-500/60 text-xs font-bold text-gold-400">✨ Gold Royalty</button>
                                 <button type="button" onclick="applyCardTheme('silver')" class="p-2.5 rounded-xl bg-slate-950 border border-slate-400/60 text-xs font-bold text-slate-300">🥈 Silver Elegance</button>
@@ -308,7 +331,7 @@
                     </div>
 
                     <div class="lg:col-span-7 flex flex-col items-center justify-center">
-                        <div id="live-card-frame" class="card-preview w-full rounded-3xl p-6 bg-slate-950 border-4 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden">
+                        <div id="live-card-frame" class="card-preview tpl-style-1 w-full rounded-3xl p-6 bg-slate-950 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden">
                             <div class="space-y-4 relative z-10">
                                 <div class="w-12 h-12 rounded-full mx-auto border border-gold-500 flex items-center justify-center"><i class="fa-solid fa-sparkles text-gold-400 text-lg"></i></div>
                                 <div>
@@ -609,7 +632,7 @@
                             <div id="scan-live-feedback" class="hidden p-3 rounded-2xl text-xs font-bold text-center"></div>
                         </div>
 
-                        <!-- LIVE REALTIME SCANNED GUESTS LIST (HATA KAMA WAMELOGIN SEHEMU TOFAUTI) -->
+                        <!-- LIVE REALTIME SCANNED GUESTS LIST -->
                         <div class="lg:col-span-6 bg-slate-950 border border-slate-800 p-4 rounded-3xl space-y-3">
                             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                                 <h4 class="text-xs font-bold text-white"><i class="fa-solid fa-users-viewfinder text-gold-400 mr-1"></i> Waalikwa Walioscaniwa Mlangoni</h4>
@@ -692,9 +715,9 @@
             </div>
         </section>
 
-        <!-- VIEW 5: PUBLIC CARD TEMPLATE DISPLAY WITH JPG DOWNLOAD OPTION -->
+        <!-- VIEW 5: PUBLIC CARD DISPLAY WITH GUARANTEED DUAL DOWNLOAD OPTION -->
         <section id="view-public-card" class="hidden flex flex-col items-center justify-center min-h-[80vh] p-4 space-y-4">
-            <div id="guest-card-download-wrapper" class="card-preview w-full rounded-3xl p-6 bg-slate-950 border-4 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden my-auto">
+            <div id="guest-card-download-wrapper" class="card-preview tpl-style-1 w-full rounded-3xl p-6 bg-slate-950 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden my-auto">
                 <div class="space-y-4 relative z-10">
                     <div class="w-14 h-14 rounded-full mx-auto border-2 border-gold-500 flex items-center justify-center bg-slate-900 shadow-lg">
                         <i class="fa-solid fa-crown text-gold-400 text-2xl"></i>
@@ -729,10 +752,30 @@
                 </div>
             </div>
 
-            <!-- BUTTON YA KU-DOWNLOAD KADI KAMA PICHA (JPG/PNG) -->
-            <button type="button" onclick="downloadCardAsJpg()" class="w-full max-w-xs py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs uppercase shadow-xl hover:brightness-110 transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-download text-base"></i> DOWNLOAD KADI (JPG / IMAGE)
-            </button>
+            <!-- DUAL DOWNLOAD BUTTONS (DIRECT DOWNLOAD + IMAGE PREVIEW MODAL) -->
+            <div class="w-full max-w-xs space-y-2">
+                <button type="button" onclick="downloadCardAsJpg()" class="w-full py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs uppercase shadow-xl hover:brightness-110 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download text-base"></i> 1. DOWNLOAD DIRECT (JPG/PNG)
+                </button>
+                <button type="button" onclick="generateAndShowImageModal()" class="w-full py-2.5 rounded-2xl bg-slate-800 border border-gold-500/50 text-gold-400 font-bold text-xs uppercase hover:bg-slate-700 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-image text-base"></i> 2. KUFUNGUA PICHA & KU-SAVE
+                </button>
+            </div>
+
+            <!-- MODAL YA KUKANDAMIZA NA KU-SAVE PICHA KAMA DIRECT DOWNLOAD IMEBLOCKIWA NA SIMU -->
+            <div id="modal-card-image-preview" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md hidden flex-col items-center justify-center p-4 space-y-3">
+                <div class="flex justify-between items-center w-full max-w-xs text-white">
+                    <span class="text-xs font-bold text-gold-400">🖼️ Picha Ya Kadi Imetengenezwa:</span>
+                    <button type="button" onclick="closeImageModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="p-2 bg-slate-900 border border-gold-500/50 rounded-2xl shadow-2xl max-w-xs w-full text-center">
+                    <img id="generated-card-img" src="" alt="Kadi Picha" class="w-full rounded-xl border border-slate-800 shadow">
+                </div>
+                <p class="text-[11px] text-slate-300 italic text-center max-w-xs">
+                    💡 **Kama haijaji-download:** Kandamiza picha hiyo hapo juu (Long-press) kisha uchague **"Save Image"** au **"Download Image"** kuhifadhi kwenye Gallery yako!
+                </p>
+                <button type="button" onclick="closeImageModal()" class="px-6 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold">FUNGA</button>
+            </div>
         </section>
 
     </main>
@@ -921,6 +964,7 @@
                         if(cfg.coupleNames) document.getElementById('gcard-couple-names').innerText = cfg.coupleNames;
                         if(cfg.eventDate) document.getElementById('gcard-event-date').innerText = cfg.eventDate;
                         if(cfg.cardMsg) document.getElementById('gcard-custom-msg').innerText = cfg.cardMsg;
+                        if(cfg.tplStyle) selectCardTemplateStyle(cfg.tplStyle);
                     }
 
                     const qrBox = document.getElementById('gcard-main-qr');
@@ -930,7 +974,7 @@
             });
         }
 
-        // DOWNLOAD CARD AS JPG IMAGE (HIGH COMPATIBILITY FOR ALL MOBILE PHONES & BROWSERS)
+        // 1. DIRECT DOWNLOAD FUNCTION (HIGH COMPATIBILITY)
         function downloadCardAsJpg() {
             const cardWrapper = document.getElementById('guest-card-download-wrapper');
             const guestName = (document.getElementById('gcard-guest-name').innerText || 'kadi').replace(/\s+/g, '_');
@@ -941,23 +985,32 @@
                 allowTaint: true,
                 backgroundColor: '#020617'
             }).then(canvas => {
-                canvas.toBlob(blob => {
-                    if (!blob) {
-                        alert("Kosa katika kutengeneza picha!");
-                        return;
-                    }
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.download = `KADI-${guestName.toUpperCase()}.jpg`;
-                    link.href = url;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    setTimeout(() => URL.revokeObjectURL(url), 100);
-                }, 'image/jpeg', 0.98);
+                const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                const a = document.createElement('a');
+                a.href = imgData;
+                a.download = `KADI-${guestName.toUpperCase()}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             }).catch(err => {
-                alert("Imeshindikana kupakua picha moja kwa moja. Mfumo unajaribu njia mbadala...");
+                generateAndShowImageModal();
             });
+        }
+
+        // 2. BACKUP IMAGE PREVIEW MODAL FOR LONG-PRESS SAVE
+        function generateAndShowImageModal() {
+            const cardWrapper = document.getElementById('guest-card-download-wrapper');
+            html2canvas(cardWrapper, { scale: 3, useCORS: true, backgroundColor: '#020617' }).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                document.getElementById('generated-card-img').src = imgData;
+                document.getElementById('modal-card-image-preview').classList.remove('hidden');
+                document.getElementById('modal-card-image-preview').classList.add('flex');
+            });
+        }
+
+        function closeImageModal() {
+            document.getElementById('modal-card-image-preview').classList.add('hidden');
+            document.getElementById('modal-card-image-preview').classList.remove('flex');
         }
 
         async function setupPublicGuestView(eventId) {
@@ -1138,24 +1191,55 @@
             }
         }
 
+        // CHAGUO LA AINA YA KADI (WANAKAMATI / MCHANGO / UKUMBINI)
         function selectCardPurpose(type) {
             const btnComm = document.getElementById('btn-card-committee');
             const btnCont = document.getElementById('btn-card-contribution');
+            const btnHall = document.getElementById('btn-card-hall');
+
+            btnComm.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
+            btnCont.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
+            btnHall.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
 
             if(type === 'COMMITTEE') {
                 btnComm.className = "p-2 rounded-xl gold-gradient text-slate-950 font-black";
-                btnCont.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
-                
                 document.getElementById('card-edit-title').value = "KADI YA MWALIKO WA WANAKAMATI";
                 document.getElementById('card-edit-msg').value = "Unakaribishwa kwa heshima kujumuika katika Kamati ya maandalizi ya sherehe yetu.";
-            } else {
+            } else if(type === 'CONTRIBUTION') {
                 btnCont.className = "p-2 rounded-xl gold-gradient text-slate-950 font-black";
-                btnComm.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
-
                 document.getElementById('card-edit-title').value = "KADI YA MCHANGO NA AHADI";
                 document.getElementById('card-edit-msg').value = "Tafadhali unakaribishwa kuchangia na kuunga mkono maandalizi ya sherehe yetu.";
+            } else if(type === 'HALL') {
+                btnHall.className = "p-2 rounded-xl gold-gradient text-slate-950 font-black";
+                document.getElementById('card-edit-title').value = "KADI YA MWALIKO WA UKUMBINI";
+                document.getElementById('card-edit-msg').value = "Tunayo furaha kubwa kukualika kujumuika nasi Ukumbini siku ya sherehe yetu.";
             }
             updateLiveCard();
+        }
+
+        // CHAGUO LA TEMPLATE STYLES 5
+        function selectCardTemplateStyle(num) {
+            for(let i=1; i<=5; i++) {
+                const btn = document.getElementById(`btn-tpl-${i}`);
+                if(btn) btn.className = "p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center";
+            }
+            const activeBtn = document.getElementById(`btn-tpl-${num}`);
+            if(activeBtn) activeBtn.className = "p-2 rounded-lg gold-gradient text-slate-950 font-black text-center";
+
+            const frame = document.getElementById('live-card-frame');
+            const gFrame = document.getElementById('guest-card-download-wrapper');
+
+            const styleClasses = ['tpl-style-1', 'tpl-style-2', 'tpl-style-3', 'tpl-style-4', 'tpl-style-5'];
+            
+            styleClasses.forEach(cls => {
+                frame.classList.remove(cls);
+                if(gFrame) gFrame.classList.remove(cls);
+            });
+
+            frame.classList.add(`tpl-style-${num}`);
+            if(gFrame) gFrame.classList.add(`tpl-style-${num}`);
+
+            rdb.ref('config').update({ tplStyle: num });
         }
 
         function applyCardTheme(theme) {
@@ -1202,6 +1286,7 @@
                     if(cfg.bankName) eventData.bankName = cfg.bankName;
                     if(cfg.phoneAcc) eventData.phoneAcc = cfg.phoneAcc;
                     if(cfg.phoneName) eventData.phoneName = cfg.phoneName;
+                    if(cfg.tplStyle) selectCardTemplateStyle(cfg.tplStyle);
                     renderBudgetSummary();
                 }
             });
