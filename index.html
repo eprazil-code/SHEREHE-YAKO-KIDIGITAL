@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHEREHE YAKO KIDIGITAL - Firebase Cloud Platform</title>
+    <title>SHEREHE YAKO KIDIGITAL - Firebase Realtime Platform</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -16,7 +16,7 @@
     <!-- FIREBASE SDK CDN (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -324,7 +324,7 @@
                             <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl"><i class="fa-brands fa-whatsapp"></i></div>
                             <div>
                                 <h3 class="text-sm font-bold text-white">Group Chat La Sherehe Yenu</h3>
-                                <p class="text-[11px] text-slate-400">Cloud Firestore Realtime Messaging</p>
+                                <p class="text-[11px] text-slate-400">Realtime Database Messaging</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800 text-xs w-full sm:w-auto">
@@ -570,7 +570,7 @@
             <div id="admin-panel-box" class="hidden space-y-4">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                     <h3 class="text-sm font-bold text-white">Admin Management Panel</h3>
-                    <span class="text-[10px] text-emerald-400 font-mono">FIREBASE CONNECTED</span>
+                    <span class="text-[10px] text-emerald-400 font-mono">REALTIME DB CONNECTED</span>
                 </div>
 
                 <div class="grid grid-cols-3 gap-2 text-center text-xs">
@@ -589,16 +589,15 @@
                 </div>
 
                 <div class="space-y-2 text-xs">
-                    <h4 class="font-bold text-slate-300">Orodha ya Watumiaji (Firestore):</h4>
+                    <h4 class="font-bold text-slate-300">Orodha ya Watumiaji (Realtime DB):</h4>
                     <div id="adm-users-list" class="space-y-2 max-h-56 overflow-y-auto"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- FIREBASE & APP LOGIC -->
+    <!-- FIREBASE & APP LOGIC (REALTIME DATABASE VERSION) -->
     <script>
-        // FIREBASE CONFIG YAKO HALISI
         const firebaseConfig = {
             apiKey: "AIzaSyC8kIR7RylUdtt9QHOdQe1xUn_PMuATs2s",
             authDomain: "sherehe-yako-kidigitari.firebaseapp.com",
@@ -612,7 +611,7 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const rdb = firebase.database();
         const auth = firebase.auth();
 
         let currentUser = null;
@@ -637,20 +636,18 @@
 
         async function fetchUserData(uid) {
             try {
-                const docRef = db.collection('users').doc(uid);
-                const doc = await docRef.get();
-                if(doc.exists) {
-                    const data = doc.data();
+                const snapshot = await rdb.ref('users/' + uid).once('value');
+                if(snapshot.exists()) {
+                    const data = snapshot.val();
                     currentUser.dbData = data;
                     if(data.title) eventData.title = data.title;
                     if(data.category) eventData.category = data.category;
                     renderDashboard();
                     if(data.justApprovedVIP) {
-                        await docRef.update({ justApprovedVIP: false });
+                        await rdb.ref('users/' + uid).update({ justApprovedVIP: false });
                         openVipSuccessModal();
                     }
                 } else {
-                    // Kama data haipo kwenye Firestore, itengeneze kiotomatiki isikwamishe
                     const defaultData = {
                         name: currentUser.email || 'Mtumiaji',
                         email: currentUser.email,
@@ -664,7 +661,7 @@
                         txCode: null,
                         justApprovedVIP: false
                     };
-                    await docRef.set(defaultData);
+                    await rdb.ref('users/' + uid).set(defaultData);
                     currentUser.dbData = defaultData;
                     renderDashboard();
                 }
@@ -692,7 +689,7 @@
                     name, email, phone, role, category: cat, title,
                     isVIP: false, status: 'TRIAL', clickedVIP: false, txCode: null, justApprovedVIP: false
                 };
-                await db.collection('users').doc(res.user.uid).set(userData);
+                await rdb.ref('users/' + res.user.uid).set(userData);
                 alert("Usajili umefanikiwa!");
             } catch(err) {
                 alert("Kosa: " + err.message);
@@ -821,22 +818,22 @@
         }
 
         function initRealtimeListeners() {
-            db.collection('messages').orderBy('time').onSnapshot(snapshot => {
+            rdb.ref('messages').on('value', snapshot => {
                 chatMessagesList = [];
-                snapshot.forEach(doc => chatMessagesList.push(doc.data()));
+                snapshot.forEach(child => chatMessagesList.push(child.val()));
                 renderGroupChat();
             });
 
-            db.collection('contributions').onSnapshot(snapshot => {
+            rdb.ref('contributions').on('value', snapshot => {
                 contributionsList = [];
-                snapshot.forEach(doc => contributionsList.push(doc.data()));
+                snapshot.forEach(child => contributionsList.push(child.val()));
                 renderContributions();
                 renderBudgetSummary();
             });
 
-            db.collection('cards').onSnapshot(snapshot => {
+            rdb.ref('cards').on('value', snapshot => {
                 cardsList = [];
-                snapshot.forEach(doc => cardsList.push(doc.data()));
+                snapshot.forEach(child => cardsList.push({ key: child.key, ...child.val() }));
                 renderCardsList();
                 populateScanCardSelect();
             });
@@ -851,11 +848,10 @@
             const msg = {
                 sender: `${currentUser.dbData.name} (${currentUser.dbData.role})`,
                 text: text,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
 
-            await db.collection('messages').add(msg);
+            await rdb.ref('messages').push(msg);
             textInput.value = '';
         }
 
@@ -905,7 +901,7 @@
             const group = document.getElementById('c-group').value;
             const amount = document.getElementById('c-amount').value;
 
-            await db.collection('contributions').add({
+            await rdb.ref('contributions').push({
                 name, group, amount: Number(amount), date: new Date().toLocaleDateString()
             });
 
@@ -932,7 +928,7 @@
             const type = document.getElementById('card-type-select').value;
             const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
 
-            await db.collection('cards').add({ id: cardId, name, phone, type, scanned: false });
+            await rdb.ref('cards').push({ id: cardId, name, phone, type, scanned: false });
             document.getElementById('card-guest-name').value = '';
             document.getElementById('card-guest-phone').value = '';
         }
@@ -963,10 +959,6 @@
             select.innerHTML = cardsList.map(c => `<option value="${c.id}">${c.id} - ${c.name}</option>`).join('');
         }
 
-        async function executeScanCardAccount() {
-            // ... (existing code handler)
-        }
-
         async function executeScanCardAction() {
             const cardId = document.getElementById('scan-card-select').value;
             const card = cardsList.find(c => c.id === cardId);
@@ -992,7 +984,7 @@
             e.preventDefault();
             const tx = document.getElementById('vip-tx-code').value;
             if(currentUser && currentUser.uid !== 'demo-user') {
-                await db.collection('users').doc(currentUser.uid).update({ status: 'PENDING', txCode: tx, clickedVIP: true });
+                await rdb.ref('users/' + currentUser.uid).update({ status: 'PENDING', txCode: tx, clickedVIP: true });
             }
             closeVipModal();
             alert("Malipo yamewasilishwa! Subiri Admin approval.");
@@ -1024,10 +1016,12 @@
         }
 
         async function loadAdminUsers() {
-            const snapshot = await db.collection('users').get();
+            const snapshot = await rdb.ref('users').once('value');
             const list = document.getElementById('adm-users-list');
             let users = [];
-            snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
+            snapshot.forEach(child => {
+                users.push({ id: child.key, ...child.val() });
+            });
 
             document.getElementById('adm-count-total').innerText = users.length;
             document.getElementById('adm-count-clicked').innerText = users.filter(u => u.status === 'PENDING').length;
@@ -1056,13 +1050,13 @@
         }
 
         async function approveVIP(uid) {
-            await db.collection('users').doc.update({ isVIP: true, status: 'VIP', justApprovedVIP: true });
+            await rdb.ref('users/' + uid).update({ isVIP: true, status: 'VIP', justApprovedVIP: true });
             loadAdminUsers();
             alert("Amethibitishwa kuwa VIP!");
         }
 
         async function revokeVIP(uid) {
-            await db.collection('users').doc(uid).update({ isVIP: false, status: 'TRIAL' });
+            await rdb.ref('users/' + uid).update({ isVIP: false, status: 'TRIAL' });
             loadAdminUsers();
             alert("Hali ya VIP imeondolewa.");
         }
