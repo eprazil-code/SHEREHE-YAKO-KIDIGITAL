@@ -335,6 +335,10 @@
                                 <span id="chat-summary-collected" class="font-black text-emerald-400 text-sm">TSh 0</span>
                             </div>
                             <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                                <span class="text-slate-400 block text-[10px]">Salio Linalohitajika (Deficit):</span>
+                                <span id="chat-summary-deficit" class="font-black text-rose-400 text-sm">TSh 0</span>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
                                 <span class="text-slate-400 block text-[10px]">Jumla ya Ahadi Bado:</span>
                                 <span id="chat-summary-pledges" class="font-black text-amber-400 text-sm">TSh 0</span>
                             </div>
@@ -354,7 +358,7 @@
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
                             <div>
                                 <h3 class="text-xs font-bold text-white"><i class="fa-brands fa-whatsapp text-emerald-400"></i> Group Chat Ya Sherehe</h3>
-                                <p class="text-[10px] text-slate-400">Wanakamati Wote Wanaona Maendeleo</p>
+                                <p class="text-[10px] text-slate-400">Wanakamati Na Waalikwa Wote Wanaona Maendeleo & Kuchat Live</p>
                             </div>
                             <button type="button" onclick="copyChairmanEventLink()" class="px-3 py-1 rounded bg-gold-500 text-slate-950 font-bold text-[10px]">📋 Kopi Link Ya Group</button>
                         </div>
@@ -362,7 +366,7 @@
                         <div id="chat-messages-stream" class="h-64 overflow-y-auto p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs"></div>
 
                         <form onsubmit="handleSendGroupMessage(event)" class="flex gap-2 text-xs">
-                            <input type="text" id="chat-text-input" placeholder="Andika ujumbe wako..." class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            <input type="text" id="chat-text-input" placeholder="Andika ujumbe wako kwenye group..." class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             <button type="submit" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-bold">TUMA</button>
                         </form>
                     </div>
@@ -374,28 +378,32 @@
                 <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                         <div>
-                            <h3 class="text-base font-bold text-white">Bajeti Kuu & Account Za Benki/Simu Za Kuchangia</h3>
-                            <p class="text-xs text-slate-400">Weka viwango na namba za simu/bank ambazo kila mchangiaji ataziona</p>
+                            <h3 class="text-base font-bold text-white">Bajeti Kuu & Auto-Balance Ya Pesa</h3>
+                            <p class="text-xs text-slate-400">Weka viwango vya michango na uone salio linalojibalance kiotomatiki</p>
                         </div>
                         <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">🔒 Mwenyekiti Only</span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs text-center">
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs text-center">
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
                             <span class="text-slate-400 block text-[10px]">Bajeti Kuu</span>
-                            <span id="budget-total-display" class="text-base font-black text-gold-400">TSh 5,000,000</span>
+                            <span id="budget-total-display" class="text-sm font-black text-gold-400">TSh 5,000,000</span>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
+                            <span class="text-slate-400 block text-[10px]">Iliyopatikana (Paid)</span>
+                            <span id="budget-collected-display" class="text-sm font-black text-emerald-400">TSh 0</span>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
+                            <span class="text-slate-400 block text-[10px]">Salio Bado (Deficit)</span>
+                            <span id="budget-deficit-display" class="text-sm font-black text-rose-400">TSh 5,000,000</span>
                         </div>
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
                             <span class="text-slate-400 block text-[10px]">Kiwango Cha Single</span>
-                            <span id="rate-single-display" class="text-base font-black text-white">TSh 50,000</span>
+                            <span id="rate-single-display" class="text-sm font-black text-white">TSh 50,000</span>
                         </div>
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
                             <span class="text-slate-400 block text-[10px]">Kiwango Cha Double</span>
-                            <span id="rate-double-display" class="text-base font-black text-white">TSh 100,000</span>
-                        </div>
-                        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
-                            <span class="text-slate-400 block text-[10px]">Mwanakamati</span>
-                            <span id="rate-committee-display" class="text-base font-black text-white">TSh 150,000</span>
+                            <span id="rate-double-display" class="text-sm font-black text-white">TSh 100,000</span>
                         </div>
                     </div>
 
@@ -484,9 +492,16 @@
             <!-- TAB 5: KADI ZA DIGITAL -->
             <div id="pane-cards" class="dash-pane hidden space-y-6">
                 <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
-                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                        <h3 class="text-sm font-bold text-white">Kadi Za Digital Zilizotengenezwa Kiotomatiki</h3>
-                        <span id="demo-limit-badge" class="text-[10px] bg-slate-800 text-gold-400 border border-gold-500/30 px-2.5 py-0.5 rounded-full font-bold">VIP: Unlimited Cards</span>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-white">Kadi Za Digital Zilizotengenezwa Kiotomatiki</h3>
+                            <span id="demo-limit-badge" class="text-[10px] bg-slate-800 text-gold-400 border border-gold-500/30 px-2.5 py-0.5 rounded-full font-bold">VIP: Unlimited Cards</span>
+                        </div>
+                        
+                        <!-- BUTTON YA KUTUMA KADI KWA WOTE WALIOCHANGA -->
+                        <button type="button" onclick="sendCardsToAllPaidGuests()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition shadow-lg">
+                            🚀 TUMA KADI KWA WOTE WALIOCHANGA (PAID)
+                        </button>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -581,13 +596,13 @@
             </div>
         </section>
 
-        <!-- VIEW 4: PUBLIC GUEST CONTRIBUTION PAGE -->
+        <!-- VIEW 4: PUBLIC GUEST CONTRIBUTION PAGE (Onboarding Mgeni Kuingia Shereheni) -->
         <section id="view-public-guest" class="hidden max-w-lg mx-auto space-y-6 pt-4">
             <div class="bg-slate-900 border-2 border-gold-500/60 p-6 rounded-3xl space-y-4 shadow-2xl">
                 <div class="text-center space-y-2 border-b border-slate-800 pb-4">
-                    <span class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-[10px] font-black uppercase">MWALIKO & MCHANGO</span>
-                    <h2 id="public-event-name" class="text-xl font-bold text-white gold-text">Sherehe ya Harusi</h2>
-                    <p class="text-xs text-slate-300">Weka Mchango au Ahadi yako hapa chini kuunga mkono sherehe hii:</p>
+                    <span class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-[10px] font-black uppercase">KARIBU MWALIKO MAALUM</span>
+                    <h2 id="public-event-name" class="text-2xl font-black text-white gold-text">Sherehe ya Harusi</h2>
+                    <p class="text-xs text-slate-300">Weka taarifa zako hapa chini kutoa Mchango au Ahadi ili ujiunge moja kwa moja kwenye Group Chat ya sherehe hii!</p>
                 </div>
 
                 <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
@@ -632,7 +647,7 @@
                     </div>
 
                     <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs uppercase shadow-lg">
-                        WASILISHA MCHANGO / AHADI
+                        WASILISHA & INGIA KWENYE GROUP CHAT 🚀
                     </button>
                 </form>
             </div>
@@ -650,7 +665,6 @@
                         <h2 id="gcard-couple-names" class="text-3xl font-serif font-bold text-white mt-1">Juma & Amina</h2>
                     </div>
 
-                    <!-- Jina la Mwaalikwa Mwenyewe na Aina ya Kadi -->
                     <div class="p-3 rounded-2xl bg-slate-900/90 border border-gold-500/40 text-center space-y-1">
                         <span class="text-[10px] text-slate-400 uppercase font-bold block">KADI HII NI MAALUM KWA AJILI YA:</span>
                         <h3 id="gcard-guest-name" class="text-lg font-black text-white gold-text">Ndugu Mwaalikwa</h3>
@@ -1063,7 +1077,6 @@
             document.getElementById('prev-date').innerText = document.getElementById('card-edit-date').value;
             document.getElementById('prev-msg').innerText = document.getElementById('card-edit-msg').value;
 
-            // Save card design settings in Realtime DB
             rdb.ref('config').update({
                 cardTitle: document.getElementById('card-edit-title').value,
                 coupleNames: document.getElementById('card-edit-names').value,
@@ -1102,7 +1115,6 @@
                 renderGroupChat();
             });
 
-            // REALTIME LISTENER YA MICHANGO NA AHADI (Sasa hivi inasoma mara moja kila baada ya ongezeko)
             rdb.ref('contributions').on('value', snapshot => {
                 contributionsList = [];
                 if(snapshot.exists()) {
@@ -1145,20 +1157,27 @@
             alert("Taarifa za Malipo na Bajeti zimesasishwa kikamilifu!");
         }
 
+        // BUGET AUTO-BALANCING LOGIC
         function renderBudgetSummary() {
-            document.getElementById('budget-total-display').innerText = `TSh ${eventData.budget.toLocaleString()}`;
-            document.getElementById('rate-single-display').innerText = `TSh ${eventData.rateSingle.toLocaleString()}`;
-            document.getElementById('rate-double-display').innerText = `TSh ${eventData.rateDouble.toLocaleString()}`;
-            document.getElementById('rate-committee-display').innerText = `TSh ${eventData.rateCommittee.toLocaleString()}`;
-
             const paidList = contributionsList.filter(c => c.status === 'PAID');
             const totalCollected = paidList.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
             
             const pledgeList = contributionsList.filter(c => c.status === 'PLEDGE');
             const totalPledges = pledgeList.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
 
+            // AUTO-BALANCE: Bajeti Kuu - Pesa Iliyopatikana = Deficit/Salio Bado
+            const remainingDeficit = Math.max(0, eventData.budget - totalCollected);
+
+            document.getElementById('budget-total-display').innerText = `TSh ${eventData.budget.toLocaleString()}`;
+            document.getElementById('budget-collected-display').innerText = `TSh ${totalCollected.toLocaleString()}`;
+            document.getElementById('budget-deficit-display').innerText = `TSh ${remainingDeficit.toLocaleString()}`;
+            document.getElementById('rate-single-display').innerText = `TSh ${eventData.rateSingle.toLocaleString()}`;
+            document.getElementById('rate-double-display').innerText = `TSh ${eventData.rateDouble.toLocaleString()}`;
+
+            // Update Board ya Chat
             document.getElementById('chat-summary-budget').innerText = `TSh ${eventData.budget.toLocaleString()}`;
             document.getElementById('chat-summary-collected').innerText = `TSh ${totalCollected.toLocaleString()}`;
+            document.getElementById('chat-summary-deficit').innerText = `TSh ${remainingDeficit.toLocaleString()}`;
             document.getElementById('chat-summary-pledges').innerText = `TSh ${totalPledges.toLocaleString()}`;
         }
 
@@ -1214,6 +1233,7 @@
             alert(`Mchango umehifadhiwa kikamilifu! Mfumo umemweka Kundi la: ${categoryType} (${cardTypeAssigned} Card)`);
         }
 
+        // PUBLIC GUEST ONBOARDING & DIRECT REDIRECT TO GROUP CHAT
         async function handlePublicGuestSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('pub-guest-name').value;
@@ -1235,6 +1255,7 @@
                 cardTypeAssigned = 'SINGLE';
             }
 
+            // Hifadhi mchango au ahadi ya mgeni
             await rdb.ref('contributions').push({
                 name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
             });
@@ -1246,15 +1267,27 @@
                 });
             }
 
+            // Tuma Taarifa kwenye Group Chat
             const msg = {
-                sender: "SYSTEM (ONLINE GUEST)",
-                text: `✨ ${name} amewasilisha ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} kumpitia Link ya Sherehe!`,
+                sender: "SYSTEM (MWENGENI ONLINE)",
+                text: `✨ ${name} amewasilisha ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} na kujiunga na Group Chat!`,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
             await rdb.ref('messages').push(msg);
 
-            alert(`Asante ${name}! Taarifa zako za ${status === 'PAID' ? 'Mchango' : 'Ahadi'} zimefanikiwa kuwasilishwa kwenye sherehe ya ${eventData.title}.`);
-            location.href = window.location.origin + window.location.pathname;
+            // Mfanye Mgeni awe Current Session User bila kumlazimisha Kujisajili
+            currentUser = { 
+                uid: 'guest-' + Date.now(), 
+                email: `${phone}@guest.com`, 
+                dbData: { name: name, role: 'Mwaalikwa / Mchangiaji', isVIP: true } 
+            };
+
+            alert(`🎉 Hongera ${name}! Taarifa zako zimepokelewa kikamilifu. Sasa unahamishwa moja kwa moja kwenye Group Chat ya ${eventData.title}!`);
+
+            // Mpeleke Mgeni Direct Kwenye Dashboard & Group Chat
+            switchView('dashboard');
+            switchDashTab('chat');
+            initRealtimeListeners();
         }
 
         function renderContributions() {
@@ -1299,7 +1332,22 @@
             `).join('');
         }
 
-        // TUMA KADI YENYE LINK YA TEMPLATE YENYE MAJINA YA MAHARUSI NA MWAALIKWA
+        // LOGIC YA KUTUMA KADI KWA WOTE WALIOCHANGA NA KUTIMIZA VIGEZO (BULK SEND)
+        function sendCardsToAllPaidGuests() {
+            if(cardsList.length === 0) {
+                alert("Hakuna kadi au mwaalikwa aliyekamilisha mchango bado!");
+                return;
+            }
+
+            let sentCount = 0;
+            cardsList.forEach(c => {
+                sendWhatsappTemplateCard(c.key, c.id, c.name, c.phone, c.type);
+                sentCount++;
+            });
+
+            alert(`🚀 Mchakato umeanza! Kadi ${sentCount} zimetumwa kwa waalikwa wote waliochanga!`);
+        }
+
         function sendWhatsappTemplateCard(cardKey, id, name, phone, type) {
             const cardLink = `${window.location.origin}${window.location.pathname}?card_id=${cardKey}`;
             const coupleNames = document.getElementById('card-edit-names').value || 'Juma & Amina';
@@ -1360,7 +1408,7 @@
         function sendSmsThanks(name, phone) {
             const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana kwa ushirikiano na kujumuika nasi!';
             const fullMsg = `Habari ${name}, ${customMsg} (Sherehe: ${eventData.title})`;
-            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(smsText)}`, '_blank');
+            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(fullMsg)}`, '_blank');
         }
 
         async function handleSendGroupMessage(e) {
@@ -1369,8 +1417,10 @@
             const text = textInput.value.trim();
             if(!text || !currentUser) return;
 
+            const senderName = currentUser.dbData ? `${currentUser.dbData.name} (${currentUser.dbData.role || 'Mwaalikwa'})` : 'Mwaalikwa';
+
             const msg = {
-                sender: `${currentUser.dbData.name} (${currentUser.dbData.role})`,
+                sender: senderName,
                 text: text,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
@@ -1397,7 +1447,7 @@
             const eventId = currentUser ? currentUser.uid : 'sherehe-001';
             const shareUrl = `${window.location.origin}${window.location.pathname}?event_id=${eventId}`;
             navigator.clipboard.writeText(shareUrl);
-            alert("🔗 Link ya Mwenyekiti Imekopiwa! Tuma Link hii WhatsApp ili watu wajisajili na kutoa Ahadi au Michango.");
+            alert("🔗 Link ya Mwenyekiti Imekopiwa! Tuma Link hii WhatsApp ili watu wajisajili na kutoa Ahadi au Michango na kuingia kwenye Group Chat!");
         }
 
         function populateScanCardSelect() {
