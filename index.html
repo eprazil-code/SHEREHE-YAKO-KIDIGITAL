@@ -625,7 +625,7 @@
                                 <button type="button" onclick="stopCameraScanner()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase"><i class="fa-solid fa-video-slash mr-1"></i> ZIMA</button>
                             </div>
 
-                            <!-- FILE UPLOAD QR SCANNER BACKUP (Works 100% when camera is blocked) -->
+                            <!-- FILE UPLOAD QR SCANNER BACKUP -->
                             <div class="p-3 bg-slate-900 rounded-2xl border border-gold-500/30 space-y-1.5 text-left">
                                 <label class="block text-[11px] font-bold text-gold-400">📁 Njia Mbadala (Kama Kamera Imezingua): Chagua Picha ya QR Code:</label>
                                 <input type="file" id="qr-file-input" accept="image/*" onchange="scanQrFromFile(event)" class="text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gold-500 file:text-slate-950 hover:file:bg-gold-400 cursor-pointer w-full">
@@ -976,6 +976,7 @@
             });
         }
 
+        // IMPROVED BLOB DOWNLOAD & MODAL BACKUP FOR MOBILE & PC
         function downloadCardAsJpg() {
             const cardWrapper = document.getElementById('guest-card-download-wrapper');
             const guestName = (document.getElementById('gcard-guest-name').innerText || 'kadi').replace(/\s+/g, '_');
@@ -986,13 +987,21 @@
                 allowTaint: true,
                 backgroundColor: '#020617'
             }).then(canvas => {
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `KADI-${guestName.toUpperCase()}.jpg`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                }, 'image/jpeg', 0.98);
+
                 const imgData = canvas.toDataURL('image/jpeg', 0.98);
-                const a = document.createElement('a');
-                a.href = imgData;
-                a.download = `KADI-${guestName.toUpperCase()}.jpg`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                document.getElementById('generated-card-img').src = imgData;
+                document.getElementById('modal-card-image-preview').classList.remove('hidden');
+                document.getElementById('modal-card-image-preview').classList.add('flex');
             }).catch(err => {
                 generateAndShowImageModal();
             });
@@ -1345,12 +1354,12 @@
             });
         }
 
-        // CAMERA SCANNER & FILE FALLBACK
-        function startCameraScanner() {
+        // IMPROVED CAMERA SCANNER WITH EXPLICIT BACK CAMERA TARGETING & ERROR FALLBACK
+        async function startCameraScanner() {
             const feedback = document.getElementById('scan-live-feedback');
             if(html5QrCodeScanner) {
                 try {
-                    html5QrCodeScanner.stop().catch(() => {});
+                    await html5QrCodeScanner.stop();
                 } catch(e) {}
                 html5QrCodeScanner = null;
             }
@@ -1358,48 +1367,65 @@
             const readerElem = document.getElementById('qr-reader');
             if(readerElem) readerElem.innerHTML = '';
 
-            setTimeout(() => {
+            feedback.classList.remove('hidden');
+            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-slate-900 text-gold-400 border border-gold-500/30";
+            feedback.innerText = "Inawasha kamera... Tafadhali ruhusu matumizi ya kamera.";
+
+            setTimeout(async () => {
                 try {
                     html5QrCodeScanner = new Html5Qrcode("qr-reader");
-                    html5QrCodeScanner.start(
-                        { facingMode: "environment" },
-                        { fps: 10, qrbox: { width: 200, height: 200 } },
+                    
+                    let cameraId = { facingMode: "environment" };
+                    try {
+                        const devices = await Html5Qrcode.getCameras();
+                        if (devices && devices.length > 0) {
+                            const backCam = devices.find(d => d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('rear') || d.label.toLowerCase().includes('nyuma'));
+                            cameraId = backCam ? backCam.id : { facingMode: "environment" };
+                        }
+                    } catch(err) {}
+
+                    await html5QrCodeScanner.start(
+                        cameraId,
+                        { fps: 15, qrbox: { width: 220, height: 220 } },
                         onScanSuccess,
                         onScanFailure
-                    ).catch(err => {
-                        if(feedback) {
-                            feedback.classList.remove('hidden');
-                            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-amber-500/20 text-amber-400 border border-amber-500/30";
-                            feedback.innerText = "Kamera imezuiwa na kivinjari au huna HTTPS. Tumia njia ya pili hapa chini (Chagua Picha ya QR Code) kuscan kwa urahisi!";
-                        }
-                    });
-                } catch(e) {
-                    if(feedback) {
+                    );
+                    feedback.classList.add('hidden');
+                } catch(err) {
+                    try {
+                        await html5QrCodeScanner.start(
+                            { facingMode: "environment" },
+                            { fps: 10, qrbox: { width: 200, height: 200 } },
+                            onScanSuccess,
+                            onScanFailure
+                        );
+                        feedback.classList.add('hidden');
+                    } catch(innerErr) {
                         feedback.classList.remove('hidden');
-                        feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
-                        feedback.innerText = "Imeshindikana kuwasha kamera. Tumia kitufe cha kuchagua picha ya QR hapa chini.";
+                        feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-amber-500/20 text-amber-400 border border-amber-500/30";
+                        feedback.innerText = "Kamera imezuiwa au haipatikani. Tumia njia mbadala ya hapa chini ('Chagua Picha ya QR Code') kuscan papo hapo!";
                     }
                 }
             }, 300);
         }
 
-        function stopCameraScanner() {
+        async function stopCameraScanner() {
             if(html5QrCodeScanner) {
-                html5QrCodeScanner.stop().then(() => {
-                    html5QrCodeScanner = null;
-                }).catch(err => console.log(err));
+                try {
+                    await html5QrCodeScanner.stop();
+                } catch(e) {}
+                html5QrCodeScanner = null;
             }
         }
 
-        // SCAN QR CODE FROM IMAGE FILE (100% RELIABLE BACKUP)
         async function scanQrFromFile(e) {
             const file = e.target.files[0];
             const feedback = document.getElementById('scan-live-feedback');
             if(!file) return;
 
             feedback.classList.remove('hidden');
-            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-slate-800 text-gold-400 border border-gold-500/30";
-            feedback.innerText = "Inasoma QR Code kwenye picha...";
+            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-slate-900 text-gold-400 border border-gold-500/30";
+            feedback.innerText = "Inasoma QR Code kutoka kwenye picha...";
 
             try {
                 const tempScanner = new Html5Qrcode("qr-reader");
@@ -1433,12 +1459,12 @@
                 await rdb.ref('scans/' + matchedCard.id).set(scanData);
             } else {
                 feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
-                feedback.innerText = `⚠️ KADI HAITAMBULIKANI AU HAIPO KWENYE Mfumo! (${decodedText})`;
+                feedback.innerText = `⚠️ KADI HAITAMBULIKANI AU HAIPO KWENYE MFUMO! (${decodedText})`;
             }
         }
 
         function onScanFailure(error) {
-            // Scanner inaendelea kusubiri
+            // Scanner inasubiri QR Code
         }
 
         async function saveBudgetRates() {
@@ -1701,7 +1727,7 @@
         function sendSmsThanks(name, phone) {
             const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana kwa ushirikiano na kujumuika nasi!';
             const fullMsg = `Habari ${name}, ${customMsg} (Sherehe: ${eventData.title})`;
-            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(smsText)}`, '_blank');
+            window.open(`sms:+255${phone.replace(/^0/,'')}?body=${encodeURIComponent(fullMsg)}`, '_blank');
         }
 
         async function handleSendGroupMessage(e) {
@@ -1824,7 +1850,7 @@
         async function approveVIP(uid) {
             await rdb.ref('users/' + uid).update({ isVIP: true, status: 'VIP' });
             loadAdminUsers();
-            alert("Amethibitishwa kuwa VIP (Unimited Cards)!");
+            alert("Amethibitishwa kuwa VIP (Unlimited Cards)!");
         }
 
         async function revokeVIP(uid) {
