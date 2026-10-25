@@ -233,7 +233,7 @@
                         <div class="relative">
                             <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none pr-10">
                             <button type="button" onclick="togglePasswordVisibility('login-password', 'login-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
-                                <i id="login-eye" class="fa-solid fa-eye"></i>
+                                <i id="reg-eye" class="fa-solid fa-eye"></i>
                             </button>
                         </div>
                     </div>
@@ -478,7 +478,7 @@
                             <h3 class="text-base font-bold text-white" data-i18n="budget_tab_title">Bajeti Kuu & Auto-Balance Ya Pesa</h3>
                             <p class="text-xs text-slate-400" data-i18n="budget_tab_sub">Weka viwango vya michango na uone salio linalojibalance kiotomatiki</p>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30" data-i18n="chair_only">🔒 Mwenyekiti & Katibu Only</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30" data-i18n="chair_only">🔒 Mwenyekiti, Katibu & Mhasibu Only</span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs text-center">
@@ -1079,6 +1079,7 @@
         let currentLang = 'sw';
         let pendingMediaBase64 = null;
         let pendingMediaType = null;
+        let activeEventOwnerId = null; // Kitambulisho cha Mwenyekiti aliyemiliki Sherehe
 
         // MULTI-LANGUAGE DICTIONARY (SWAHILI & ENGLISH)
         const i18nDictionary = {
@@ -1399,14 +1400,17 @@
 
         async function renderPublicCardView(cardKey) {
             switchView('public-card');
-            rdb.ref('cards/' + cardKey).on('value', async snapshot => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ownerId = urlParams.get('event_id') || 'demo-user';
+
+            rdb.ref(`events/${ownerId}/cards/${cardKey}`).on('value', async snapshot => {
                 if(snapshot.exists()) {
                     const card = snapshot.val();
                     document.getElementById('gcard-guest-name').innerText = card.name;
                     document.getElementById('gcard-card-type').innerText = `${card.type} CARD`;
                     document.getElementById('gcard-id-tag').innerText = card.id;
 
-                    const cfgSnap = await rdb.ref('config').once('value');
+                    const cfgSnap = await rdb.ref(`events/${ownerId}/config`).once('value');
                     if(cfgSnap.exists()) {
                         const cfg = cfgSnap.val();
                         if(cfg.cardTitle) document.getElementById('gcard-event-title').innerText = cfg.cardTitle;
@@ -1466,8 +1470,9 @@
 
         async function setupPublicGuestView(eventId) {
             switchView('public-guest');
+            activeEventOwnerId = eventId;
             
-            rdb.ref('config').on('value', snapshot => {
+            rdb.ref(`events/${eventId}/config`).on('value', snapshot => {
                 if(snapshot.exists()) {
                     const cfg = snapshot.val();
                     if(cfg.budget) eventData.budget = Number(cfg.budget);
@@ -1489,7 +1494,7 @@
                 }
             });
 
-            rdb.ref('contributions').on('value', snapshot => {
+            rdb.ref(`events/${eventId}/contributions`).on('value', snapshot => {
                 contributionsList = [];
                 let totalCollected = 0;
                 let paidCount = 0;
@@ -1573,6 +1578,7 @@
                 if(snapshot.exists()) {
                     const data = snapshot.val();
                     currentUser.dbData = data;
+                    activeEventOwnerId = uid;
                     if(data.title) eventData.title = data.title;
                     if(data.category) eventData.category = data.category;
                     renderDashboard();
@@ -1589,10 +1595,12 @@
                     };
                     await rdb.ref('users/' + uid).set(defaultData);
                     currentUser.dbData = defaultData;
+                    activeEventOwnerId = uid;
                     renderDashboard();
                 }
             } catch(err) {
                 currentUser.dbData = { name: currentUser.email, role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' };
+                activeEventOwnerId = uid;
                 renderDashboard();
             }
         }
@@ -1619,11 +1627,15 @@
                 };
                 await rdb.ref('users/' + res.user.uid).set(userData);
                 
-                // Hifadhi moja kwa moja kwenye config ili isomeke
-                await rdb.ref('config').update({
+                // Kuanzisha Sherehe mpya safi kwa kutumia UID ya Mwenyekiti (Data hazichanganyiki)
+                await rdb.ref(`events/${res.user.uid}/config`).set({
                     title: title,
                     category: cat,
-                    cardTitle: title.toUpperCase()
+                    cardTitle: title.toUpperCase(),
+                    budget: 5000000,
+                    single: 50000,
+                    double: 100000,
+                    committee: 150000
                 });
 
                 alert("Usajili umefanikiwa!");
@@ -1650,6 +1662,7 @@
 
         function startTrialExperience() {
             currentUser = { uid: 'demo-user', email: 'demo@trial.com', dbData: { name: 'Mteja Trial', role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' } };
+            activeEventOwnerId = 'demo-user';
             eventData = { title: 'Sherehe ya Demo', category: 'Corporate Event', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000 };
             renderDashboard();
             switchView('dashboard');
@@ -1717,7 +1730,7 @@
                 if(demoBadge) demoBadge.innerText = "TRIAL DEMO: Limit Of 2 Cards Only";
             }
 
-            // Utekelezaji wa Udhibiti wa Viongozi pekee (Mwenyekiti, Katibu, Mhasibu)
+            // Utekelezaji wa Udhibiti wa Viongozi na Wanakamati/Wajumbe (Full Role vs Limited)
             applyRolePermissions(data.role);
 
             renderBudgetSummary();
@@ -1726,7 +1739,7 @@
             renderThanksTable();
         }
 
-        // KAZI YA KUDHIBITI HAKI ZA WAKATI WA KUTUMA KADI AU KUEDIT BAJETI
+        // KAZI YA KUDHIBITI HAKI ZA WAKATI WA KUTUMA KADI AU KUEDIT BAJETI (Mwenyekiti, Katibu, Mhasibu wanapata full role)
         function applyRolePermissions(role) {
             const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(role);
             
@@ -1737,12 +1750,12 @@
                 if(saveBudgetBtn) {
                     saveBudgetBtn.disabled = true;
                     saveBudgetBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    saveBudgetBtn.innerText = "🔒 Viongozi Pekee Ndio Wanaoweza Kubadili Bajeti";
+                    saveBudgetBtn.innerText = "🔒 Viongozi Wakuu Pekee Ndio Wanaoweza Kubadili Bajeti";
                 }
                 if(sendAllCardsBtn) {
                     sendAllCardsBtn.disabled = true;
                     sendAllCardsBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    sendAllCardsBtn.innerText = "🔒 Viongozi Pekee Wanaoweza Kutuma Kadi Zote";
+                    sendAllCardsBtn.innerText = "🔒 Viongozi Wakuu Pekee Wanaoweza Kutuma Kadi Zote";
                 }
             } else {
                 if(saveBudgetBtn) {
@@ -1812,7 +1825,9 @@
             frame.classList.add(`tpl-style-${num}`);
             if(gFrame) gFrame.classList.add(`tpl-style-${num}`);
 
-            rdb.ref('config').update({ tplStyle: num });
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ tplStyle: num });
+            }
         }
 
         function applyCardTheme(theme) {
@@ -1831,12 +1846,14 @@
             document.getElementById('prev-date').innerText = document.getElementById('card-edit-date').value;
             document.getElementById('prev-msg').innerText = document.getElementById('card-edit-msg').value;
 
-            rdb.ref('config').update({
-                cardTitle: document.getElementById('card-edit-title').value,
-                coupleNames: document.getElementById('card-edit-names').value,
-                eventDate: document.getElementById('card-edit-date').value,
-                cardMsg: document.getElementById('card-edit-msg').value
-            });
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({
+                    cardTitle: document.getElementById('card-edit-title').value,
+                    coupleNames: document.getElementById('card-edit-names').value,
+                    eventDate: document.getElementById('card-edit-date').value,
+                    cardMsg: document.getElementById('card-edit-msg').value
+                });
+            }
         }
 
         function initPreviewMiniQR() {
@@ -1848,7 +1865,9 @@
         }
 
         function initRealtimeListeners() {
-            rdb.ref('config').on('value', snapshot => {
+            if(!activeEventOwnerId) return;
+
+            rdb.ref(`events/${activeEventOwnerId}/config`).on('value', snapshot => {
                 if(snapshot.exists()) {
                     const cfg = snapshot.val();
                     eventData.budget = Number(cfg.budget || 5000000);
@@ -1872,13 +1891,13 @@
                 }
             });
 
-            rdb.ref('messages').on('value', snapshot => {
+            rdb.ref(`events/${activeEventOwnerId}/messages`).on('value', snapshot => {
                 chatMessagesList = [];
                 snapshot.forEach(child => chatMessagesList.push(child.val()));
                 renderGroupChat();
             });
 
-            rdb.ref('contributions').on('value', snapshot => {
+            rdb.ref(`events/${activeEventOwnerId}/contributions`).on('value', snapshot => {
                 contributionsList = [];
                 if(snapshot.exists()) {
                     snapshot.forEach(child => {
@@ -1889,7 +1908,7 @@
                 renderBudgetSummary();
             });
 
-            rdb.ref('cards').on('value', snapshot => {
+            rdb.ref(`events/${activeEventOwnerId}/cards`).on('value', snapshot => {
                 cardsList = [];
                 if(snapshot.exists()) {
                     snapshot.forEach(child => {
@@ -1899,7 +1918,7 @@
                 renderCardsList();
             });
 
-            rdb.ref('scans').on('value', snapshot => {
+            rdb.ref(`events/${activeEventOwnerId}/scans`).on('value', snapshot => {
                 const tbody = document.getElementById('scanned-guests-tbody');
                 const badge = document.getElementById('scanned-count-badge');
                 if(!tbody) return;
@@ -1987,7 +2006,9 @@
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
 
-            await rdb.ref('messages').push(msg);
+            if(activeEventOwnerId) {
+                await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
+            }
             
             textInput.value = '';
             cancelMediaAttachment();
@@ -2059,11 +2080,11 @@
         async function clearScansForCard(cardId) {
             if(!confirm(`Je, unauhakika unataka kusafisha historia na kuifungua Kadi (${cardId}) ili iweze kuthibitishwa tena?`)) return;
             
-            const snapshot = await rdb.ref('scans').once('value');
+            const snapshot = await rdb.ref(`events/${activeEventOwnerId}/scans`).once('value');
             if(snapshot.exists()) {
                 snapshot.forEach(child => {
                     if(child.val().cardId === cardId) {
-                        rdb.ref('scans/' + child.key).remove();
+                        rdb.ref(`events/${activeEventOwnerId}/scans/${child.key}`).remove();
                     }
                 });
             }
@@ -2105,7 +2126,9 @@
                 maxAllowed: maxAllowed
             };
 
-            await rdb.ref('scans').push(scanData);
+            if(activeEventOwnerId) {
+                await rdb.ref(`events/${activeEventOwnerId}/scans`).push(scanData);
+            }
 
             feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
             feedback.innerText = `🎉 CONFIRMATION ${attemptNo}/${maxAllowed} IMEFANIKIWA: ${matchedCard.name} (${matchedCard.id} - ${cardType}) AMEINGIA UKUMBINI!`;
@@ -2167,7 +2190,7 @@
             const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
             const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
             if(!isLeader) {
-                alert("⚠️ Huna ruhusa ya kubadili bajeti. Kazi hii ni ya viongozi wa kamati pekee (Mwenyekiti, Katibu, au Mhasibu).");
+                alert("⚠️ Huna ruhusa ya kubadili bajeti. Kazi hii ni ya Viongozi Wakuu pekee (Mwenyekiti, Katibu, au Mhasibu).");
                 return;
             }
 
@@ -2180,11 +2203,13 @@
             const pAcc = document.getElementById('cfg-phone-acc').value || eventData.phoneAcc;
             const pName = document.getElementById('cfg-phone-name').value || eventData.phoneName;
 
-            await rdb.ref('config').update({ 
-                budget: b, single: s, double: d, committee: c,
-                bankAcc: bAcc, bankName: bName, phoneAcc: pAcc, phoneName: pName,
-                title: eventData.title
-            });
+            if(activeEventOwnerId) {
+                await rdb.ref(`events/${activeEventOwnerId}/config`).update({ 
+                    budget: b, single: s, double: d, committee: c,
+                    bankAcc: bAcc, bankName: bName, phoneAcc: pAcc, phoneName: pName,
+                    title: eventData.title
+                });
+            }
             alert("Taarifa za Malipo na Bajeti zimesasishwa kikamilifu!");
         }
 
@@ -2240,23 +2265,25 @@
                 cardTypeAssigned = 'SINGLE';
             }
 
-            const newContribRef = await rdb.ref('contributions').push({
-                name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
-            });
-
-            if(status === 'PAID') {
-                const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
-                await rdb.ref('cards').push({
-                    id: cardId, name, phone, type: cardTypeAssigned, scanned: false, contribKey: newContribRef.key
+            if(activeEventOwnerId) {
+                const newContribRef = await rdb.ref(`events/${activeEventOwnerId}/contributions`).push({
+                    name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
                 });
-            }
 
-            const msg = {
-                sender: "SYSTEM (MCHANGO MPYA)",
-                text: `🎉 ${name} ametoa ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} (${categoryType} - ${cardTypeAssigned} CARD)!`,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-            await rdb.ref('messages').push(msg);
+                if(status === 'PAID') {
+                    const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+                    await rdb.ref(`events/${activeEventOwnerId}/cards`).push({
+                        id: cardId, name, phone, type: cardTypeAssigned, scanned: false, contribKey: newContribRef.key
+                    });
+                }
+
+                const msg = {
+                    sender: "SYSTEM (MCHANGO MPYA)",
+                    text: `🎉 ${name} ametoa ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} (${categoryType} - ${cardTypeAssigned} CARD)!`,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
+            }
 
             document.getElementById('c-name').value = '';
             document.getElementById('c-phone').value = '';
@@ -2268,7 +2295,7 @@
             const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
             const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
             if(!isLeader) {
-                alert("⚠️ Huna ruhusa ya kubadili hali ya malipo. Kazi hii inaruhusiwa kwa viongozi wa kamati pekee.");
+                alert("⚠️ Huna ruhusa ya kubadili hali ya malipo. Kazi hii inaruhusiwa kwa Viongozi Wakuu wa kamati pekee.");
                 return;
             }
 
@@ -2277,33 +2304,33 @@
 
             if(!confirm(`Je, unathibitisha kubadilisha hali ya mchango wa ${name} kuwa ${actionText}?`)) return;
 
-            await rdb.ref('contributions/' + contribKey).update({ status: newStatus });
+            if(activeEventOwnerId) {
+                await rdb.ref(`events/${activeEventOwnerId}/contributions/${contribKey}`).update({ status: newStatus });
 
-            if(isToPaid) {
-                const existingCard = cardsList.find(c => c.contribKey === contribKey || (c.name === name && c.phone === phone));
-                if(!existingCard) {
-                    const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
-                    await rdb.ref('cards').push({
-                        id: cardId, 
-                        name: name, 
-                        phone: phone, 
-                        type: cardTypeAssigned || 'SINGLE', 
-                        scanned: false, 
-                        contribKey: contribKey
-                    });
+                if(isToPaid) {
+                    const existingCard = cardsList.find(c => c.contribKey === contribKey || (c.name === name && c.phone === phone));
+                    if(!existingCard) {
+                        const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+                        await rdb.ref(`events/${activeEventOwnerId}/cards`).push({
+                            id: cardId, 
+                            name: name, 
+                            phone: phone, 
+                            type: cardTypeAssigned || 'SINGLE', 
+                            scanned: false, 
+                            contribKey: contribKey
+                        });
+                    }
+
+                    const msg = {
+                        sender: "SYSTEM (AHADI IMELIPWA)",
+                        text: `✅ ${name} amelipa ahadi yake kikamilifu (TSh ${Number(amount).toLocaleString()})! Kadi yake ya Digitali sasa ipo tayari.`,
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
                 }
-
-                const msg = {
-                    sender: "SYSTEM (AHADI IMELIPWA)",
-                    text: `✅ ${name} amelipa ahadi yake kikamilifu (TSh ${Number(amount).toLocaleString()})! Kadi yake ya Digitali sasa ipo tayari.`,
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                };
-                await rdb.ref('messages').push(msg);
-
-                alert(`🎉 Hongera! Mchango wa ${name} umebadilishwa kuwa PAID na kadi yake ya ${cardTypeAssigned || 'SINGLE'} imetengenezwa kiotomatiki!`);
-            } else {
-                alert(`Hali ya malipo ya ${name} imebadilishwa kuwa PLEDGE (Ahadi).`);
             }
+
+            alert(isToPaid ? `🎉 Mchango wa ${name} umebadilishwa kuwa PAID na kadi imetengenezwa!` : `Hali ya malipo ya ${name} imebadilishwa kuwa PLEDGE.`);
         }
 
         async function handlePublicGuestSubmit(e) {
@@ -2330,23 +2357,25 @@
                 cardTypeAssigned = 'SINGLE';
             }
 
-            const newContribRef = await rdb.ref('contributions').push({
-                name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
-            });
-
-            if(status === 'PAID') {
-                const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
-                await rdb.ref('cards').push({
-                    id: cardId, name, phone, type: cardTypeAssigned, scanned: false, contribKey: newContribRef.key
+            if(activeEventOwnerId) {
+                const newContribRef = await rdb.ref(`events/${activeEventOwnerId}/contributions`).push({
+                    name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
                 });
-            }
 
-            const msg = {
-                sender: "SYSTEM (MWENGENI ONLINE)",
-                text: `✨ ${name} amewasilisha ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} na kujiunga na Group Chat!`,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-            await rdb.ref('messages').push(msg);
+                if(status === 'PAID') {
+                    const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+                    await rdb.ref(`events/${activeEventOwnerId}/cards`).push({
+                        id: cardId, name, phone, type: cardTypeAssigned, scanned: false, contribKey: newContribRef.key
+                    });
+                }
+
+                const msg = {
+                    sender: "SYSTEM (MWENGENI ONLINE)",
+                    text: `✨ ${name} amewasilisha ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} na kujiunga na Group Chat!`,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
+            }
 
             currentUser = { 
                 uid: 'guest-' + Date.now(), 
@@ -2437,7 +2466,7 @@
             const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
             const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
             if(!isLeader) {
-                alert("⚠️ Viongozi wa kamati pekee ndio wanaoruhusiwa kutuma kadi kwa wote.");
+                alert("⚠️ Viongozi Wakuu pekee ndio wanaoruhusiwa kutuma kadi kwa wote.");
                 return;
             }
 
@@ -2456,7 +2485,8 @@
         }
 
         function sendWhatsappTemplateCard(cardKey, id, name, phone, type) {
-            const cardLink = `${window.location.origin}${window.location.pathname}?card_id=${cardKey}`;
+            const ownerId = activeEventOwnerId || (currentUser ? currentUser.uid : 'demo-user');
+            const cardLink = `${window.location.origin}${window.location.pathname}?event_id=${ownerId}&card_id=${cardKey}`;
             const coupleNames = document.getElementById('card-edit-names').value || eventData.title;
             const cardTitle = document.getElementById('card-edit-title').value || eventData.category;
 
@@ -2475,7 +2505,8 @@
         }
 
         function sendSmsTemplateCard(cardKey, id, name, phone, type) {
-            const cardLink = `${window.location.origin}${window.location.pathname}?card_id=${cardKey}`;
+            const ownerId = activeEventOwnerId || (currentUser ? currentUser.uid : 'demo-user');
+            const cardLink = `${window.location.origin}${window.location.pathname}?event_id=${ownerId}&card_id=${cardKey}`;
             const coupleNames = document.getElementById('card-edit-names').value || eventData.title;
             const smsText = `Habari ${name}, umepokea KADI YA MWALIKO (${type} - ${id}) ya ${coupleNames}. Fungua Link hii: ${cardLink}`;
             const cleanPhone = phone.replace(/[^0-9]/g, '');
@@ -2551,7 +2582,7 @@
             const eventId = currentUser ? currentUser.uid : 'sherehe-001';
             const shareUrl = `${window.location.origin}${window.location.pathname}?event_id=${eventId}`;
             navigator.clipboard.writeText(shareUrl);
-            alert("🔗 Link ya Sherehe imekopiwa! Tuma WhatsApp ili watu waone budget na kuchangia.");
+            alert("🔗 Link ya Sherehe imekopiwa! Tuma WhatsApp ili wageni waone bajeti na kuchangia.");
         }
 
         function openVipModal() {
