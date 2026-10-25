@@ -694,7 +694,7 @@
                     <div class="text-center max-w-md mx-auto space-y-2">
                         <i class="fa-solid fa-qrcode text-gold-400 text-4xl mb-1"></i>
                         <h3 class="text-xl font-extrabold text-white">Live Gate Scanner & Check-in</h3>
-                        <p class="text-xs text-slate-400">Tafuta Mgeni kwa Jina kisha ubonyeze Confirm au Scan Kadi mlangoni!</p>
+                        <p class="text-xs text-slate-400">Tafuta Mgeni mwenye Single au Double Card kisha ubonyeze Confirm ili aonekane kwenye list!</p>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -1201,7 +1201,7 @@
             });
         }
 
-        // BLOB DOWNLOAD & MODAL PREVIEW FOR ALL ANDROID / IOS PHONES
+        // FULLY FIXED BLOB & DATAURL DOWNLOAD FOR ALL PHONES (ANDROID / IOS)
         function downloadCardAsJpg() {
             const cardWrapper = document.getElementById('guest-card-download-wrapper');
             const guestName = (document.getElementById('gcard-guest-name').innerText || 'kadi').replace(/\s+/g, '_');
@@ -1212,18 +1212,17 @@
                 allowTaint: true,
                 backgroundColor: '#020617'
             }).then(canvas => {
-                canvas.toBlob(function(blob) {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `KADI-${guestName.toUpperCase()}.jpg`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    setTimeout(() => URL.revokeObjectURL(url), 1000);
-                }, 'image/jpeg', 0.98);
-
                 const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                
+                // Direct download trigger for Android/iOS webviews
+                const a = document.createElement('a');
+                a.href = imgData;
+                a.download = `KADI-${guestName.toUpperCase()}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Also display in modal for long-press option
                 document.getElementById('generated-card-img').src = imgData;
                 document.getElementById('modal-card-image-preview').classList.remove('hidden');
                 document.getElementById('modal-card-image-preview').classList.add('flex');
@@ -1615,6 +1614,7 @@
             document.getElementById('chat-media-preview-bar').classList.add('hidden');
         }
 
+        // FULLY WORKING WHATSAPP MESSAGE PUSH TO REALTIME DB
         async function handleSendGroupMessage(e) {
             e.preventDefault();
             const textInput = document.getElementById('chat-text-input');
@@ -1623,7 +1623,7 @@
             if(!text && !pendingMediaBase64) return;
             if(!currentUser) return;
 
-            const senderName = currentUser.dbData ? `${currentUser.dbData.name} (${currentUser.dbData.role || 'Mwaalikwa'})` : 'Mwaalikwa';
+            const senderName = currentUser.dbData ? `${currentUser.dbData.name} (${currentUser.dbData.role || 'Mwaalikwa'})` : (currentUser.email || 'Mwaalikwa');
 
             const msg = {
                 sender: senderName,
@@ -1720,7 +1720,7 @@
             feedback.innerText = `🔄 KADI ${cardId} IMESAFISHWA NA KUFUNGUWA KIKAMILIFU! Sasa unaweza kuithibitisha mara moja!`;
         }
 
-        // CONFIRMATION & LIMIT LOGIC (SINGLE = 1, DOUBLE = 2) WITH REALTIME LIST SYNC
+        // RIGID SINGLE & DOUBLE CARD CHECK-IN & CONFIRMATION VALIDATION
         async function processGuestCheckIn(matchedCard, gateName) {
             const feedback = document.getElementById('scan-live-feedback');
             feedback.classList.remove('hidden');
@@ -1728,12 +1728,13 @@
             const cardScans = globalScansList.filter(s => s.cardId === matchedCard.id);
             const existingCount = cardScans.length;
 
-            const maxAllowed = (matchedCard.type && matchedCard.type.toUpperCase() === 'DOUBLE') ? 2 : 1;
+            const cardType = (matchedCard.type || 'SINGLE').toUpperCase();
+            const maxAllowed = (cardType === 'DOUBLE') ? 2 : 1;
 
             if(existingCount >= maxAllowed) {
                 feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30 space-y-2";
                 feedback.innerHTML = `
-                    <div>⚠️ Kadi ya ${matchedCard.name} (${matchedCard.id} - ${matchedCard.type} CARD) imeshakamilisha uthibitisho wote (${existingCount}/${maxAllowed})!</div>
+                    <div>⚠️ Kadi ya ${matchedCard.name} (${matchedCard.id} - ${cardType} CARD) imeshakamilisha uthibitisho wote unaoruhusiwa (${existingCount}/${maxAllowed})!</div>
                     <button type="button" onclick="clearScansForCard('${matchedCard.id}')" class="px-3 py-1.5 rounded-xl bg-gold-500 text-slate-950 font-black text-[11px] uppercase shadow">
                         🔄 SAFISHA NA UNLOCK KADI HII (RESET)
                     </button>
@@ -1756,7 +1757,7 @@
             await rdb.ref('scans').push(scanData);
 
             feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
-            feedback.innerText = `🎉 CONFIRMATION ${attemptNo}/${maxAllowed} IMEFANIKIWA: ${matchedCard.name} (${matchedCard.id})!`;
+            feedback.innerText = `🎉 CONFIRMATION ${attemptNo}/${maxAllowed} IMEFANIKIWA: ${matchedCard.name} (${matchedCard.id} - ${cardType}) AMEINGIA UKUMBINI!`;
         }
 
         async function scanQrFromFile(e) {
@@ -1787,13 +1788,13 @@
             const matchedCard = cardsList.find(c => c.name.toLowerCase().includes(query) || c.id.toLowerCase().includes(query));
 
             if(matchedCard) {
-                const gateName = currentUser ? currentUser.dbData.role : 'Manual Gate';
+                const gateName = currentUser && currentUser.dbData ? currentUser.dbData.role : 'Manual Gate';
                 await processGuestCheckIn(matchedCard, gateName);
                 document.getElementById('manual-search-input').value = '';
             } else {
                 feedback.classList.remove('hidden');
                 feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
-                feedback.innerText = `⚠️ Mgeni "${query}" hajapatikana kwenye orodha ya kadi!`;
+                feedback.innerText = `⚠️ Mgeni "${query}" hajapatikana kwenye orodha ya kadi za Single/Double!`;
             }
         }
 
@@ -1803,7 +1804,7 @@
             feedback.classList.remove('hidden');
 
             if(matchedCard) {
-                const gateName = currentUser ? currentUser.dbData.role : 'Gate Scanner';
+                const gateName = currentUser && currentUser.dbData ? currentUser.dbData.role : 'Gate Scanner';
                 await processGuestCheckIn(matchedCard, gateName);
             } else {
                 feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
