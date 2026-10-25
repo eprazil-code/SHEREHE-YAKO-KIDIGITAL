@@ -54,6 +54,8 @@
         .tpl-style-3 { border-top-width: 12px; border-style: solid; border-radius: 1rem; }
         .tpl-style-4 { border-width: 8px; border-style: double; border-radius: 2rem; }
         .tpl-style-5 { border-left-width: 10px; border-style: solid; border-radius: 1rem; }
+        
+        .whatsapp-bg { background-color: #0b141a; background-image: radial-gradient(circle at center, #111b21 0%, #0b141a 100%); }
     </style>
 </head>
 <body class="font-sans text-slate-100 bg-slate-950 h-full flex flex-col antialiased selection:bg-gold-500 selection:text-slate-950">
@@ -387,9 +389,10 @@
                 </div>
             </div>
 
-            <!-- TAB 2: GROUP CHAT & LIVE SUMMARY -->
+            <!-- TAB 2: FULLSCREEN WHATSAPP GROUP CHAT & LIVE SUMMARY -->
             <div id="pane-chat" class="dash-pane hidden space-y-4">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <!-- LEFT DASHBOARD SUMMARY -->
                     <div class="lg:col-span-4 bg-slate-900 p-4 rounded-3xl border border-slate-800 space-y-3">
                         <h4 class="text-xs font-bold text-gold-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-chart-line"></i> Dashboard ya Wanakamati</h4>
                         <div class="space-y-2 text-xs">
@@ -419,21 +422,55 @@
                         </div>
                     </div>
 
-                    <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-3xl p-4 space-y-3">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
-                            <div>
-                                <h3 class="text-xs font-bold text-white"><i class="fa-brands fa-whatsapp text-emerald-400"></i> Group Chat Ya Sherehe</h3>
-                                <p class="text-[10px] text-slate-400">Wanakamati Na Waalikwa Wote Wanaona Maendeleo & Kuchat Live</p>
+                    <!-- RIGHT FULL WHATSAPP GROUP CHAT INTERFACE -->
+                    <div id="whatsapp-chat-box" class="lg:col-span-8 bg-[#0b141a] border border-slate-800 rounded-3xl flex flex-col justify-between overflow-hidden shadow-2xl min-h-[500px]">
+                        
+                        <!-- CHAT HEADER -->
+                        <div class="bg-[#202c33] p-3 flex justify-between items-center border-b border-slate-800">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full gold-gradient text-slate-950 font-black flex items-center justify-center text-lg shadow">
+                                    <i class="fa-brands fa-whatsapp text-emerald-950 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 id="chat-group-title" class="text-xs font-bold text-white leading-tight">Group Chat Ya Sherehe</h3>
+                                    <p class="text-[10px] text-emerald-400 font-semibold">Online • Wanakamati & Waalikwa</p>
+                                </div>
                             </div>
-                            <button type="button" onclick="copyChairmanEventLink()" class="px-3 py-1 rounded bg-gold-500 text-slate-950 font-bold text-[10px]">📋 Kopi Link Ya Group</button>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="toggleFullscreenChat()" class="text-slate-300 hover:text-white text-xs bg-slate-800 p-2 rounded-xl" title="Expand Fullscreen">
+                                    <i id="fullscreen-chat-icon" class="fa-solid fa-expand"></i>
+                                </button>
+                                <button type="button" onclick="copyChairmanEventLink()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px]">
+                                    📋 Share Link
+                                </button>
+                            </div>
                         </div>
 
-                        <div id="chat-messages-stream" class="h-64 overflow-y-auto p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs"></div>
+                        <!-- MESSAGES STREAM CONTAINER -->
+                        <div id="chat-messages-stream" class="whatsapp-bg flex-1 p-4 overflow-y-auto space-y-3 max-h-[380px]"></div>
 
-                        <form onsubmit="handleSendGroupMessage(event)" class="flex gap-2 text-xs">
-                            <input type="text" id="chat-text-input" placeholder="Andika ujumbe wako kwenye group..." class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
-                            <button type="submit" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-bold">TUMA</button>
-                        </form>
+                        <!-- CHAT INPUT & MEDIA ATTACHMENTS BAR -->
+                        <div class="bg-[#202c33] p-3 border-t border-slate-800 space-y-2">
+                            <div id="chat-media-preview-bar" class="hidden p-2 rounded-xl bg-slate-950 border border-gold-500/40 text-xs flex justify-between items-center text-gold-400">
+                                <span id="chat-media-preview-txt">📎 Media Tayari Kwa Kutumwa</span>
+                                <button type="button" onclick="cancelMediaAttachment()" class="text-rose-400 font-bold px-2">X</button>
+                            </div>
+
+                            <form onsubmit="handleSendGroupMessage(event)" class="flex items-center gap-2 text-xs">
+                                <!-- ATTACH MEDIA BUTTONS -->
+                                <label class="text-slate-400 hover:text-gold-400 cursor-pointer p-2 rounded-full hover:bg-slate-800 transition" title="Tuma Picha / Video">
+                                    <i class="fa-solid fa-paperclip text-lg"></i>
+                                    <input type="file" id="chat-media-file-input" accept="image/*,video/*,audio/*" onchange="previewMediaAttachment(event)" class="hidden">
+                                </label>
+
+                                <input type="text" id="chat-text-input" placeholder="Andika ujumbe wako hapa..." class="flex-1 px-4 py-2.5 rounded-2xl bg-[#2a3942] text-white border-none outline-none text-xs placeholder-slate-400">
+
+                                <button type="submit" class="w-10 h-10 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold flex items-center justify-center shadow transition">
+                                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                                </button>
+                            </form>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -657,7 +694,7 @@
                     <div class="text-center max-w-md mx-auto space-y-2">
                         <i class="fa-solid fa-qrcode text-gold-400 text-4xl mb-1"></i>
                         <h3 class="text-xl font-extrabold text-white">Live Gate Scanner & Check-in</h3>
-                        <p class="text-xs text-slate-400">Tafuta Mgeni (Auto-suggest) au Scan Kadi. Single = 1 Confirm, Double = 2 Confirms!</p>
+                        <p class="text-xs text-slate-400">Tafuta Mgeni kwa Jina kisha ubonyeze Confirm au Scan Kadi mlangoni!</p>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -674,7 +711,7 @@
                                 </label>
                             </div>
 
-                            <!-- OPTION 2: MANUAL SEARCH WITH LIVE AUTO-SUGGESTION -->
+                            <!-- OPTION 2: MANUAL SEARCH WITH LIVE AUTO-SUGGESTION & CONFIRM BUTTON -->
                             <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-3 text-left">
                                 <span class="text-xs font-bold text-gold-400 block"><i class="fa-solid fa-magnifying-glass"></i> Njia ya 2: Tafuta Mgeni kwa Jina (Auto-Suggest)</span>
                                 <p class="text-[11px] text-slate-400">Anza kuandika jina au herufi (mfano: "A"), majina yatajitokeza kiotomatiki:</p>
@@ -995,6 +1032,8 @@
         let chatMessagesList = [];
         let globalScansList = [];
         let currentLang = 'sw';
+        let pendingMediaBase64 = null;
+        let pendingMediaType = null;
 
         const i18nDictionary = {
             sw: {
@@ -1162,7 +1201,7 @@
             });
         }
 
-        // BLOB DOWNLOAD & MODAL PREVIEW
+        // BLOB DOWNLOAD & MODAL PREVIEW FOR ALL ANDROID / IOS PHONES
         function downloadCardAsJpg() {
             const cardWrapper = document.getElementById('guest-card-download-wrapper');
             const guestName = (document.getElementById('gcard-guest-name').innerText || 'kadi').replace(/\s+/g, '_');
@@ -1535,9 +1574,100 @@
                     `).join('');
                 }
 
-                // Synchronize Hall Confirmed Guests to Thank You Table directly
                 renderThanksTable();
             });
+        }
+
+        // FULLSCREEN CHAT TOGGLE
+        function toggleFullscreenChat() {
+            const chatBox = document.getElementById('whatsapp-chat-box');
+            const icon = document.getElementById('fullscreen-chat-icon');
+            
+            if(chatBox.classList.contains('fixed')) {
+                chatBox.className = "lg:col-span-8 bg-[#0b141a] border border-slate-800 rounded-3xl flex flex-col justify-between overflow-hidden shadow-2xl min-h-[500px]";
+                icon.className = "fa-solid fa-expand";
+            } else {
+                chatBox.className = "fixed inset-0 z-50 bg-[#0b141a] flex flex-col justify-between overflow-hidden shadow-2xl h-full w-full rounded-none";
+                icon.className = "fa-solid fa-compress";
+            }
+        }
+
+        // MEDIA PREVIEW ATTACHMENT FOR WHATSAPP CHAT
+        function previewMediaAttachment(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                pendingMediaBase64 = evt.target.result;
+                pendingMediaType = file.type.startsWith('image/') ? 'image' : (file.type.startsWith('video/') ? 'video' : 'audio');
+                
+                document.getElementById('chat-media-preview-txt').innerText = `📎 Media (${pendingMediaType.toUpperCase()}): ${file.name}`;
+                document.getElementById('chat-media-preview-bar').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function cancelMediaAttachment() {
+            pendingMediaBase64 = null;
+            pendingMediaType = null;
+            document.getElementById('chat-media-file-input').value = '';
+            document.getElementById('chat-media-preview-bar').classList.add('hidden');
+        }
+
+        async function handleSendGroupMessage(e) {
+            e.preventDefault();
+            const textInput = document.getElementById('chat-text-input');
+            const text = textInput.value.trim();
+
+            if(!text && !pendingMediaBase64) return;
+            if(!currentUser) return;
+
+            const senderName = currentUser.dbData ? `${currentUser.dbData.name} (${currentUser.dbData.role || 'Mwaalikwa'})` : 'Mwaalikwa';
+
+            const msg = {
+                sender: senderName,
+                text: text || '',
+                mediaUrl: pendingMediaBase64 || null,
+                mediaType: pendingMediaType || null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            await rdb.ref('messages').push(msg);
+            
+            textInput.value = '';
+            cancelMediaAttachment();
+        }
+
+        function renderGroupChat() {
+            const stream = document.getElementById('chat-messages-stream');
+            if(!stream) return;
+
+            stream.innerHTML = chatMessagesList.map(m => {
+                let mediaHtml = '';
+                if(m.mediaUrl) {
+                    if(m.mediaType === 'image') {
+                        mediaHtml = `<img src="${m.mediaUrl}" class="max-w-xs rounded-xl my-1 border border-slate-700 shadow">`;
+                    } else if(m.mediaType === 'video') {
+                        mediaHtml = `<video src="${m.mediaUrl}" controls class="max-w-xs rounded-xl my-1 border border-slate-700 shadow"></video>`;
+                    } else if(m.mediaType === 'audio') {
+                        mediaHtml = `<audio src="${m.mediaUrl}" controls class="w-full my-1"></audio>`;
+                    }
+                }
+
+                return `
+                    <div class="bg-[#202c33] p-3 rounded-2xl border border-slate-800 max-w-md space-y-1 shadow">
+                        <div class="flex justify-between items-center text-[10px] border-b border-slate-800/80 pb-1">
+                            <span class="font-bold text-gold-400">${m.sender}</span>
+                            <span class="text-slate-400 font-mono">${m.time}</span>
+                        </div>
+                        ${mediaHtml}
+                        ${m.text ? `<p class="text-slate-100 text-xs leading-relaxed mt-1">${m.text}</p>` : ''}
+                    </div>
+                `;
+            }).join('') || '<p class="text-slate-500 italic text-center py-6">Hakuna ujumbe kwenye group bado. Kuwa wa kwanza kuandika au kutuma media!</p>';
+
+            stream.scrollTop = stream.scrollHeight;
         }
 
         // LIVE AUTO-SUGGESTION FOR MANUAL SEARCH
@@ -1978,38 +2108,6 @@
             const fullMsg = `Habari ${name}, ${customMsg} (Sherehe: ${eventData.title})`;
             const cleanPhone = phone.replace(/[^0-9]/g, '');
             window.open(`sms:+${cleanPhone}?body=${encodeURIComponent(fullMsg)}`, '_blank');
-        }
-
-        async function handleSendGroupMessage(e) {
-            e.preventDefault();
-            const textInput = document.getElementById('chat-text-input');
-            const text = textInput.value.trim();
-            if(!text || !currentUser) return;
-
-            const senderName = currentUser.dbData ? `${currentUser.dbData.name} (${currentUser.dbData.role || 'Mwaalikwa'})` : 'Mwaalikwa';
-
-            const msg = {
-                sender: senderName,
-                text: text,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-
-            await rdb.ref('messages').push(msg);
-            textInput.value = '';
-        }
-
-        function renderGroupChat() {
-            const stream = document.getElementById('chat-messages-stream');
-            stream.innerHTML = chatMessagesList.map(m => `
-                <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800">
-                    <div class="flex justify-between items-center text-[10px] mb-1">
-                        <span class="font-bold text-gold-400">${m.sender}</span>
-                        <span class="text-slate-500">${m.time}</span>
-                    </div>
-                    <p class="text-slate-200 text-xs">${m.text}</p>
-                </div>
-            `).join('') || '<p class="text-slate-500 italic text-center">Hakuna ujumbe bado.</p>';
-            stream.scrollTop = stream.scrollHeight;
         }
 
         function copyChairmanEventLink() {
