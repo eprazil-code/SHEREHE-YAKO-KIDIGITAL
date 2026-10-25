@@ -749,13 +749,25 @@
             </div>
         </section>
 
-        <!-- VIEW 4: PUBLIC GUEST CONTRIBUTION PAGE (WITH LIVE BUDGET & CONTRIBUTIONS VIEW) -->
+        <!-- VIEW 4: PUBLIC GUEST CONTRIBUTION PAGE (WITH DYNAMIC TITLE & DIRECT CHAT ENTRY FOR EXISTING GUESTS) -->
         <section id="view-public-guest" class="hidden max-w-2xl mx-auto space-y-6 pt-4">
             <div class="bg-slate-900 border-2 border-gold-500/60 p-6 rounded-3xl space-y-6 shadow-2xl">
+                <!-- DYNAMIC HEADER BANNER -->
                 <div class="text-center space-y-2 border-b border-slate-800 pb-4">
-                    <span class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-[10px] font-black uppercase" data-i18n="pub_badge">KARIBU MWALIKO MAALUM</span>
-                    <h2 id="public-event-name" class="text-2xl font-black text-white gold-text">Sherehe ya Harusi</h2>
+                    <span id="pub-badge-txt" class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-[10px] font-black uppercase">KARIBU MWALIKO MAALUM</span>
+                    <h2 id="public-event-heading" class="text-2xl font-black text-white gold-text">KARIBU HARUSI YA JUMA & AMINA</h2>
                     <p class="text-xs text-slate-300" data-i18n="pub_desc">Tazama bajeti, michango, na uweke taarifa zako kutoa mchango au ahadi ili ujiunge kwenye Group Chat!</p>
+                </div>
+
+                <!-- QUICK ACCESS FOR ALREADY CONTRIBUTED GUESTS -->
+                <div class="p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 space-y-3">
+                    <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wide"><i class="fa-solid fa-circle-check"></i> Ulishawahi Kuchangia Au Kuahidi? Ingia Moja kwa Moja:</h4>
+                    <div class="flex gap-2">
+                        <input type="text" id="quick-guest-identifier" placeholder="Weka Namba ya Simu au Jina lako..." class="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs outline-none">
+                        <button type="button" onclick="directEnterGroupChat()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase shadow">
+                            INGIA CHAT 🚀
+                        </button>
+                    </div>
                 </div>
 
                 <!-- LIVE BUDGET & SUMMARY FOR PUBLIC GUEST -->
@@ -1462,12 +1474,17 @@
                     if(cfg.phoneAcc) eventData.phoneAcc = cfg.phoneAcc;
                     if(cfg.phoneName) eventData.phoneName = cfg.phoneName;
                     if(cfg.title) eventData.title = cfg.title;
+                    if(cfg.category) eventData.category = cfg.category;
 
                     document.getElementById('pub-bank-acc').innerText = eventData.bankAcc;
                     document.getElementById('pub-bank-name').innerText = eventData.bankName;
                     document.getElementById('pub-phone-acc').innerText = eventData.phoneAcc;
                     document.getElementById('pub-phone-name').innerText = eventData.phoneName;
-                    document.getElementById('public-event-name').innerText = eventData.title;
+                    
+                    // DYNAMIC HEADER TITLE FOR GUEST LINK
+                    const catName = eventData.category || 'Sherehe';
+                    const titleName = eventData.title || 'Yetu';
+                    document.getElementById('public-event-heading').innerText = `KARIBU ${catName.toUpperCase()} YA ${titleName.toUpperCase()}`;
                 }
             });
 
@@ -1510,6 +1527,30 @@
                     }
                 }
             });
+        }
+
+        // DIRECT ENTRY FOR ALREADY CONTRIBUTED GUESTS
+        function directEnterGroupChat() {
+            const inputVal = document.getElementById('quick-guest-identifier').value.trim().toLowerCase();
+            if(!inputVal) {
+                alert("Tafadhali weka namba yako ya simu au jina ulilotumia kuchangia.");
+                return;
+            }
+
+            const found = contributionsList.find(c => c.name.toLowerCase().includes(inputVal) || c.phone.includes(inputVal));
+            if(found) {
+                currentUser = {
+                    uid: 'guest-' + Date.now(),
+                    email: `${found.phone.replace('+','')}@guest.com`,
+                    dbData: { name: found.name, role: 'Mwaalikwa / Mchangiaji', isVIP: true }
+                };
+                alert(`🎉 Karibu tena ${found.name}! Unapelekwa moja kwa moja kwenye Group Chat.`);
+                switchView('dashboard');
+                switchDashTab('chat');
+                initRealtimeListeners();
+            } else {
+                alert("Hatujakuta taarifa zako kwenye orodha ya michango. Tafadhali jaza fomu hapa chini au hakikisha jina/namba ni sahihi.");
+            }
         }
 
         async function fetchUserData(uid) {
@@ -1762,6 +1803,8 @@
                     if(cfg.phoneAcc) eventData.phoneAcc = cfg.phoneAcc;
                     if(cfg.phoneName) eventData.phoneName = cfg.phoneName;
                     if(cfg.tplStyle) selectCardTemplateStyle(cfg.tplStyle);
+                    if(cfg.title) eventData.title = cfg.title;
+                    if(cfg.category) eventData.category = cfg.category;
                     renderBudgetSummary();
                 }
             });
@@ -2157,7 +2200,6 @@
 
             await rdb.ref('contributions/' + contribKey).update({ status: 'PAID' });
 
-            // Generate card for this newly paid pledge
             const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
             await rdb.ref('cards').push({
                 id: cardId, name, phone, type: cardTypeAssigned || 'SINGLE', scanned: false, contribKey: contribKey
@@ -2421,81 +2463,3 @@
             const tx = document.getElementById('vip-tx-code').value;
             if(currentUser && currentUser.uid !== 'demo-user') {
                 await rdb.ref('users/' + currentUser.uid).update({ status: 'PENDING', txCode: tx });
-            }
-            closeVipModal();
-            alert("Malipo yamewasilishwa!");
-        }
-
-        function openVipSuccessModal() {
-            document.getElementById('modal-vip-success').classList.remove('hidden');
-            document.getElementById('modal-vip-success').classList.add('flex');
-        }
-        function closeVipSuccessModal() {
-            document.getElementById('modal-vip-success').classList.add('hidden');
-            document.getElementById('modal-vip-success').classList.remove('flex');
-        }
-
-        function openAdminModal() {
-            document.getElementById('modal-admin').classList.remove('hidden');
-            document.getElementById('modal-admin').classList.add('flex');
-        }
-        function closeAdminModal() {
-            document.getElementById('modal-admin').classList.add('hidden');
-            document.getElementById('modal-admin').classList.remove('flex');
-        }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            document.getElementById('admin-login-box').classList.add('hidden');
-            document.getElementById('admin-panel-box').classList.remove('hidden');
-            loadAdminUsers();
-        }
-
-        async function loadAdminUsers() {
-            const snapshot = await rdb.ref('users').once('value');
-            const list = document.getElementById('adm-users-list');
-            let users = [];
-            snapshot.forEach(child => {
-                users.push({ id: child.key, ...child.val() });
-            });
-
-            document.getElementById('adm-count-total').innerText = users.length;
-            document.getElementById('adm-count-clicked').innerText = users.filter(u => u.status === 'PENDING').length;
-            document.getElementById('adm-count-vip').innerText = users.filter(u => u.isVIP).length;
-
-            list.innerHTML = users.map(u => `
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1 text-xs">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <span class="font-bold text-white block">${u.name} (${u.phone})</span>
-                            <span class="text-[10px] text-slate-400 font-mono">${u.email}</span>
-                        </div>
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.isVIP ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'}">
-                            ${u.isVIP ? 'VIP ACTIVE' : u.status}
-                        </span>
-                    </div>
-                    <div class="footer flex justify-between items-center pt-1 border-t border-slate-900 text-[10px]">
-                        <span class="text-gold-400 font-mono">Muamala: ${u.txCode || 'Hakuna'}</span>
-                        <div>
-                            ${!u.isVIP ? `<button type="button" onclick="approveVIP('${u.id}')" class="px-2 py-1 rounded bg-gold-500 text-slate-950 font-bold">APPROVE VIP</button>` : 
-                                         `<button type="button" onclick="revokeVIP('${u.id}')" class="px-2 py-1 rounded bg-rose-600 text-white font-bold">TOA VIP</button>`}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function approveVIP(uid) {
-            await rdb.ref('users/' + uid).update({ isVIP: true, status: 'VIP' });
-            loadAdminUsers();
-            alert("Amethibitishwa kuwa VIP!");
-        }
-
-        async function revokeVIP(uid) {
-            await rdb.ref('users/' + uid).update({ isVIP: false, status: 'TRIAL' });
-            loadAdminUsers();
-            alert("VIP imeondolewa.");
-        }
-    </script>
-</body>
-</html>
