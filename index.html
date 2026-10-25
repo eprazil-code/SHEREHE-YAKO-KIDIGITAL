@@ -2431,35 +2431,4 @@
         function sendWhatsappThanks(name, phone) {
             const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana!';
             const fullMsg = `Habari Ndugu *${name}*,\n\n${customMsg}\n\nKutoka kwa Kamati ya: *${eventData.title}* 🎉`;
-            const cleanPhone = phone.replace(/[^0-9]/g, '');
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(fullMsg)}`, '_blank');
-        }
-
-        function sendSmsThanks(name, phone) {
-            const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana!';
-            const fullMsg = `Habari ${name}, ${customMsg} (Sherehe: ${eventData.title})`;
-            const cleanPhone = phone.replace(/[^0-9]/g, '');
-            window.open(`sms:+${cleanPhone}?body=${encodeURIComponent(fullMsg)}`, '_blank');
-        }
-
-        function copyChairmanEventLink() {
-            const eventId = currentUser ? currentUser.uid : 'sherehe-001';
-            const shareUrl = `${window.location.origin}${window.location.pathname}?event_id=${eventId}`;
-            navigator.clipboard.writeText(shareUrl);
-            alert("🔗 Link ya Sherehe imekopiwa! Tuma WhatsApp ili watu waone budget na kuchangia.");
-        }
-
-        function openVipModal() {
-            document.getElementById('modal-vip').classList.remove('hidden');
-            document.getElementById('modal-vip').classList.add('flex');
-        }
-        function closeVipModal() {
-            document.getElementById('modal-vip').classList.add('hidden');
-            document.getElementById('modal-vip').classList.remove('flex');
-        }
-
-        async function handleSubmitVipProof(e) {
-            e.preventDefault();
-            const tx = document.getElementById('vip-tx-code').value;
-            if(currentUser && currentUser.uid !== 'demo-user') {
-                await rdb.ref('users/' + currentUser.uid).update({ status: 'PENDING', txCode: tx });
+            const cleanPhone = phone.replace(/
