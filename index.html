@@ -536,7 +536,7 @@
                 </div>
             </div>
 
-            <!-- TAB 4: MICHANGO NA AHADI (WITH EDIT PLEDGE TO PAID ACTION) -->
+            <!-- TAB 4: MICHANGO NA AHADI (WITH STATUS EDIT & QUICK PAID TOGGLE) -->
             <div id="pane-contributions" class="dash-pane hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
@@ -592,7 +592,7 @@
                                         <th class="p-2.5" data-i18n="th_name_num">Jina & Namba</th>
                                         <th class="p-2.5" data-i18n="th_group">Kundi</th>
                                         <th class="p-2.5" data-i18n="th_amount">Kiasi (TSh)</th>
-                                        <th class="p-2.5 text-right" data-i18n="th_status_action">Hali / Badili</th>
+                                        <th class="p-2.5 text-right" data-i18n="th_status_action">Hali / Badili Malipo</th>
                                     </tr>
                                 </thead>
                                 <tbody id="contrib-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -749,7 +749,7 @@
             </div>
         </section>
 
-        <!-- VIEW 4: PUBLIC GUEST CONTRIBUTION PAGE (WITH DYNAMIC TITLE & DIRECT CHAT ENTRY FOR EXISTING GUESTS) -->
+        <!-- VIEW 4: PUBLIC GUEST CONTRIBUTION PAGE -->
         <section id="view-public-guest" class="hidden max-w-2xl mx-auto space-y-6 pt-4">
             <div class="bg-slate-900 border-2 border-gold-500/60 p-6 rounded-3xl space-y-6 shadow-2xl">
                 <!-- DYNAMIC HEADER BANNER -->
@@ -1160,7 +1160,7 @@
                 th_name_num: "Jina & Namba",
                 th_group: "Kundi",
                 th_amount: "Kiasi (TSh)",
-                th_status_action: "Hali / Badili",
+                th_status_action: "Hali / Badili Malipo",
                 digital_cards_title: "Kadi Za Digital Zilizotengenezwa Kiotomatiki",
                 btn_send_all_cards: "🚀 TUMA KADI KWA WOTE WALIOCHANGA (PAID)",
                 th_id_card: "ID / Kadi",
@@ -2194,24 +2194,43 @@
             alert(`Mchango umehifadhiwa kikamilifu! Kadi imewekwa: ${cardTypeAssigned} Card`);
         }
 
-        async function upgradePledgeToPaid(contribKey, name, phone, amount, categoryType, cardTypeAssigned) {
-            if(!confirm(`Je, unathibitisha kwamba ${name} amelipa ahadi yake ya TSh ${Number(amount).toLocaleString()}?`)) return;
+        // KAZI YA KUBADILISHA HALI YA MALIPO YA MCHANGO/AHADI KWA VIONGOZI (TOGGLE/UPGRADE TO PAID)
+        async function changeContributionStatus(contribKey, newStatus, name, phone, amount, categoryType, cardTypeAssigned) {
+            const isToPaid = newStatus === 'PAID';
+            const actionText = isToPaid ? "imelipwa (PAID)" : "ahadi (PLEDGE)";
 
-            await rdb.ref('contributions/' + contribKey).update({ status: 'PAID' });
+            if(!confirm(`Je, unathibitisha kubadilisha hali ya mchango wa ${name} kuwa ${actionText}?`)) return;
 
-            const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
-            await rdb.ref('cards').push({
-                id: cardId, name, phone, type: cardTypeAssigned || 'SINGLE', scanned: false, contribKey: contribKey
-            });
+            // 1. Update status on Firebase
+            await rdb.ref('contributions/' + contribKey).update({ status: newStatus });
 
-            const msg = {
-                sender: "SYSTEM (AHADI IMELIPWA)",
-                text: `✅ ${name} amelipa ahadi yake kikamilifu! Kadi ya ${cardTypeAssigned || 'SINGLE'} imetengenezwa.`,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-            await rdb.ref('messages').push(msg);
+            if(isToPaid) {
+                // Check if card already exists for this contribution
+                const existingCard = cardsList.find(c => c.contribKey === contribKey || (c.name === name && c.phone === phone));
+                if(!existingCard) {
+                    const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+                    await rdb.ref('cards').push({
+                        id: cardId, 
+                        name: name, 
+                        phone: phone, 
+                        type: cardTypeAssigned || 'SINGLE', 
+                        scanned: false, 
+                        contribKey: contribKey
+                    });
+                }
 
-            alert(`Ahadi ya ${name} imebadilishwa kuwa Mchango uliolipwa (PAID) na kadi imetengenezwa!`);
+                // Announce in chat
+                const msg = {
+                    sender: "SYSTEM (AHADI IMELIPWA)",
+                    text: `✅ ${name} amelipa ahadi yake kikamilifu (TSh ${Number(amount).toLocaleString()})! Kadi yake ya Digitali sasa ipo tayari.`,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                await rdb.ref('messages').push(msg);
+
+                alert(`🎉 Hongera! Mchango wa ${name} umebadilishwa kuwa PAID na kadi yake ya ${cardTypeAssigned || 'SINGLE'} imetengenezwa kiotomatiki!`);
+            } else {
+                alert(`Hali ya malipo ya ${name} imebadilishwa kuwa PLEDGE (Ahadi).`);
+            }
         }
 
         async function handlePublicGuestSubmit(e) {
@@ -2298,11 +2317,13 @@
                     <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 font-bold text-[10px]">${c.categoryType || 'SINGLE'} (${c.cardTypeAssigned || 'SINGLE'})</span></td>
                     <td class="p-2.5 font-bold text-emerald-400">TSh ${Number(c.amount || 0).toLocaleString()}</td>
                     <td class="p-2.5 text-right flex items-center justify-end gap-2">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.status === 'PAID' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
-                            ${c.status === 'PAID' ? '✅ Imelipwa' : '⏳ Ahadi'}
-                        </span>
+                        <!-- SELECT DROPDOWN OR QUICK BUTTON TO CHANGE STATUS -->
+                        <select onchange="changeContributionStatus('${c.key}', this.value, '${c.name.replace(/'/g, "\\'")}', '${c.phone}', ${c.amount}, '${c.categoryType}', '${c.cardTypeAssigned}')" class="px-2 py-1 rounded-lg bg-slate-950 border border-slate-700 text-white font-bold text-[10px] outline-none">
+                            <option value="PAID" ${c.status === 'PAID' ? 'selected' : ''}>✅ Imelipwa (Paid)</option>
+                            <option value="PLEDGE" ${c.status === 'PLEDGE' ? 'selected' : ''}>⏳ Ahadi (Pledge)</option>
+                        </select>
                         ${c.status === 'PLEDGE' ? `
-                            <button type="button" onclick="upgradePledgeToPaid('${c.key}', '${c.name.replace(/'/g, "\\'")}', '${c.phone}', ${c.amount}, '${c.categoryType}', '${c.cardTypeAssigned}')" class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[9px] shadow" title="Badili Ahadi kwenda Imelipwa">
+                            <button type="button" onclick="changeContributionStatus('${c.key}', 'PAID', '${c.name.replace(/'/g, "\\'")}', '${c.phone}', ${c.amount}, '${c.categoryType}', '${c.cardTypeAssigned}')" class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[9px] shadow" title="Weka Awe Amelipa Moja kwa Moja">
                                 🔄 Maliza (Paid)
                             </button>
                         ` : ''}
