@@ -202,11 +202,11 @@
                     </div>
                     <div id="custom-cat-box" class="hidden">
                         <label data-i18n="lbl_custom_cat" class="block font-semibold text-gold-400 mb-1">Andika Aina Yako ya Sherehe (Custom Event)</label>
-                        <input type="text" id="reg-custom-cat" placeholder="Mfano: Sherehe ya Jubilei" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-white outline-none">
+                        <input type="text" id="reg-custom-cat" placeholder="Mfano: Corporate Event / Jubilei" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-white outline-none">
                     </div>
                     <div>
                         <label data-i18n="lbl_event_title" class="block font-semibold text-slate-300 mb-1">Jina la Sherehe Yako</label>
-                        <input type="text" id="reg-event-title" required placeholder="Mfano: Harusi ya Juma & Amina" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                        <input type="text" id="reg-event-title" required placeholder="Mfano: Harusi ya Juma & Amina au Corporate Gala" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
 
                     <button type="submit" data-i18n="btn_reg_submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition mt-2">
@@ -341,7 +341,7 @@
                                 <input type="text" id="card-edit-title" oninput="updateLiveCard()" value="HARUSI YA WAPENDANAO" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_couple_names">Majina ya Wahusika (Maharusi)</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_couple_names">Majina ya Wahusika / Wageni</label>
                                 <input type="text" id="card-edit-names" oninput="updateLiveCard()" value="Juma & Amina" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
@@ -531,7 +531,7 @@
                             <input type="number" id="cfg-double" placeholder="Double Rate (TSh)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
                             <input type="number" id="cfg-committee" placeholder="Kamati Rate (TSh)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
                         </div>
-                        <button type="button" onclick="saveBudgetRates()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs uppercase" data-i18n="btn_save_budget">HIFADHI TAARIFA ZA MALIPO NA BAJETI</button>
+                        <button type="button" id="btn-save-budget-action" onclick="saveBudgetRates()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs uppercase" data-i18n="btn_save_budget">HIFADHI TAARIFA ZA MALIPO NA BAJETI</button>
                     </div>
                 </div>
             </div>
@@ -611,7 +611,7 @@
                             <span id="demo-limit-badge" class="text-[10px] bg-slate-800 text-gold-400 border border-gold-500/30 px-2.5 py-0.5 rounded-full font-bold">VIP: Unlimited Cards</span>
                         </div>
                         
-                        <button type="button" onclick="sendCardsToAllPaidGuests()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition shadow-lg" data-i18n="btn_send_all_cards">
+                        <button type="button" id="btn-send-all-cards-action" onclick="sendCardsToAllPaidGuests()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition shadow-lg" data-i18n="btn_send_all_cards">
                             🚀 TUMA KADI KWA WOTE WALIOCHANGA (PAID)
                         </button>
                     </div>
@@ -755,7 +755,7 @@
                 <!-- DYNAMIC HEADER BANNER -->
                 <div class="text-center space-y-2 border-b border-slate-800 pb-4">
                     <span id="pub-badge-txt" class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-[10px] font-black uppercase">KARIBU MWALIKO MAALUM</span>
-                    <h2 id="public-event-heading" class="text-2xl font-black text-white gold-text">KARIBU HARUSI YA JUMA & AMINA</h2>
+                    <h2 id="public-event-heading" class="text-2xl font-black text-white gold-text">KARIBU SHEREHE YETU</h2>
                     <p class="text-xs text-slate-300" data-i18n="pub_desc">Tazama bajeti, michango, na uweke taarifa zako kutoa mchango au ahadi ili ujiunge kwenye Group Chat!</p>
                 </div>
 
@@ -874,7 +874,7 @@
                         <i class="fa-solid fa-crown text-gold-400 text-2xl"></i>
                     </div>
                     <div>
-                        <span id="gcard-event-title" class="text-xs font-black uppercase text-gold-400 tracking-widest block">HARUSI YA WAPENDANAO</span>
+                        <span id="gcard-event-title" class="text-xs font-black uppercase text-gold-400 tracking-widest block">SHEREHE YAKO</span>
                         <h2 id="gcard-couple-names" class="text-3xl font-serif font-bold text-white mt-1">Juma & Amina</h2>
                     </div>
 
@@ -1057,8 +1057,8 @@
 
         let currentUser = null;
         let eventData = { 
-            title: 'Harusi ya Juma & Amina', 
-            category: 'Harusi', 
+            title: 'Sherehe Yangu', 
+            category: 'Sherehe', 
             budget: 5000000, 
             rateSingle: 50000, 
             rateDouble: 100000, 
@@ -1067,9 +1067,9 @@
             bankName: 'JUMA MKWAWA',
             phoneAcc: '0755123456 (M-PESA)',
             phoneName: 'JUMA MKWAWA',
-            cardTitle: 'HARUSI YA WAPENDANAO',
-            coupleNames: 'Juma & Amina',
-            eventDate: '12 Desemba 2026 - Mlimani City',
+            cardTitle: 'MWALIKO RASMI',
+            coupleNames: 'Mhusika Mkuu',
+            eventDate: '12 Desemba 2026 - Dar es Salaam',
             cardMsg: 'Tunayo furaha kubwa kukualika katika sherehe yetu...'
         };
         let contributionsList = [];
@@ -1123,7 +1123,7 @@
                 lbl_layout_style: "2. Chagua Layout Template Style (Template 1-5):",
                 lbl_theme_colors: "3. Chagua Theme Ya Rangi Za Kadi:",
                 lbl_card_title: "Kichwa cha Kadi",
-                lbl_couple_names: "Majina ya Wahusika (Maharusi)",
+                lbl_couple_names: "Majina ya Wahusika / Wageni",
                 lbl_date_venue: "Tarehe & Eneo",
                 lbl_invite_msg: "Ujumbe Mfupi wa Mwaliko",
                 guest_of_honor: "Mgeni Rasmi: Mwaliko Maalum (VIP)",
@@ -1137,7 +1137,7 @@
                 btn_copy_link: "KOPI LINK YA SHEREHE",
                 budget_tab_title: "Bajeti Kuu & Auto-Balance Ya Pesa",
                 budget_tab_sub: "Weka viwango vya michango na uone salio linalojibalance kiotomatiki",
-                chair_only: "🔒 Mwenyekiti, Katibu & Mwekahazina Only",
+                chair_only: "🔒 Mwenyekiti, Katibu & Mhasibu Only",
                 collected_paid: "Iliyopatikana (Paid)",
                 deficit_balance: "Salio Bado (Deficit)",
                 single_rate: "Kiwango Cha Single",
@@ -1485,11 +1485,10 @@
                     
                     const catName = eventData.category || 'Sherehe';
                     const titleName = eventData.title || 'Yetu';
-                    document.getElementById('public-event-heading').innerText = `KARIBU ${catName.toUpperCase()} YA ${titleName.toUpperCase()}`;
+                    document.getElementById('public-event-heading').innerText = `KARIBU ${catName.toUpperCase()} - ${titleName.toUpperCase()}`;
                 }
             });
 
-            // KUHAKIKISHA CONTRIBUTIONS ZINASOMWA NA KUPIGWA KWENYE contributionsList GLOBAL
             rdb.ref('contributions').on('value', snapshot => {
                 contributionsList = [];
                 let totalCollected = 0;
@@ -1531,7 +1530,6 @@
             });
         }
 
-        // BORESHO KUBWA: KUKUBALI NAMBA NA JINA BILA KUGOMA KAMWE
         function directEnterGroupChat() {
             const rawInput = document.getElementById('quick-guest-identifier').value.trim();
             if(!rawInput) {
@@ -1584,7 +1582,7 @@
                         email: currentUser.email,
                         phone: '+255700000000',
                         role: 'Mwenyekiti',
-                        category: 'Harusi',
+                        category: 'Sherehe',
                         title: 'Sherehe Yangu',
                         isVIP: false,
                         status: 'TRIAL'
@@ -1620,6 +1618,14 @@
                     isVIP: false, status: 'TRIAL'
                 };
                 await rdb.ref('users/' + res.user.uid).set(userData);
+                
+                // Hifadhi moja kwa moja kwenye config ili isomeke
+                await rdb.ref('config').update({
+                    title: title,
+                    category: cat,
+                    cardTitle: title.toUpperCase()
+                });
+
                 alert("Usajili umefanikiwa!");
             } catch(err) {
                 alert("Kosa: " + err.message);
@@ -1644,7 +1650,7 @@
 
         function startTrialExperience() {
             currentUser = { uid: 'demo-user', email: 'demo@trial.com', dbData: { name: 'Mteja Trial', role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' } };
-            eventData = { title: 'Harusi ya Demo', category: 'Harusi', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000 };
+            eventData = { title: 'Sherehe ya Demo', category: 'Corporate Event', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000 };
             renderDashboard();
             switchView('dashboard');
             initRealtimeListeners();
@@ -1711,10 +1717,45 @@
                 if(demoBadge) demoBadge.innerText = "TRIAL DEMO: Limit Of 2 Cards Only";
             }
 
+            // Utekelezaji wa Udhibiti wa Viongozi pekee (Mwenyekiti, Katibu, Mhasibu)
+            applyRolePermissions(data.role);
+
             renderBudgetSummary();
             renderContributions();
             renderCardsList();
             renderThanksTable();
+        }
+
+        // KAZI YA KUDHIBITI HAKI ZA WAKATI WA KUTUMA KADI AU KUEDIT BAJETI
+        function applyRolePermissions(role) {
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(role);
+            
+            const saveBudgetBtn = document.getElementById('btn-save-budget-action');
+            const sendAllCardsBtn = document.getElementById('btn-send-all-cards-action');
+
+            if(!isLeader) {
+                if(saveBudgetBtn) {
+                    saveBudgetBtn.disabled = true;
+                    saveBudgetBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    saveBudgetBtn.innerText = "🔒 Viongozi Pekee Ndio Wanaoweza Kubadili Bajeti";
+                }
+                if(sendAllCardsBtn) {
+                    sendAllCardsBtn.disabled = true;
+                    sendAllCardsBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    sendAllCardsBtn.innerText = "🔒 Viongozi Pekee Wanaoweza Kutuma Kadi Zote";
+                }
+            } else {
+                if(saveBudgetBtn) {
+                    saveBudgetBtn.disabled = false;
+                    saveBudgetBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    saveBudgetBtn.innerText = "HIFADHI TAARIFA ZA MALIPO NA BAJETI";
+                }
+                if(sendAllCardsBtn) {
+                    sendAllCardsBtn.disabled = false;
+                    sendAllCardsBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    sendAllCardsBtn.innerText = "🚀 TUMA KADI KWA WOTE WALIOCHANGA (PAID)";
+                }
+            }
         }
 
         function switchDashTab(tabName) {
@@ -1819,8 +1860,14 @@
                     if(cfg.phoneAcc) eventData.phoneAcc = cfg.phoneAcc;
                     if(cfg.phoneName) eventData.phoneName = cfg.phoneName;
                     if(cfg.tplStyle) selectCardTemplateStyle(cfg.tplStyle);
-                    if(cfg.title) eventData.title = cfg.title;
-                    if(cfg.category) eventData.category = cfg.category;
+                    if(cfg.title) {
+                        eventData.title = cfg.title;
+                        document.getElementById('dash-event-title').innerText = cfg.title;
+                    }
+                    if(cfg.category) {
+                        eventData.category = cfg.category;
+                        document.getElementById('dash-event-type').innerText = cfg.category;
+                    }
                     renderBudgetSummary();
                 }
             });
@@ -2117,6 +2164,13 @@
         }
 
         async function saveBudgetRates() {
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+            if(!isLeader) {
+                alert("⚠️ Huna ruhusa ya kubadili bajeti. Kazi hii ni ya viongozi wa kamati pekee (Mwenyekiti, Katibu, au Mhasibu).");
+                return;
+            }
+
             const b = Number(document.getElementById('cfg-budget').value) || eventData.budget;
             const s = Number(document.getElementById('cfg-single').value) || eventData.rateSingle;
             const d = Number(document.getElementById('cfg-double').value) || eventData.rateDouble;
@@ -2211,6 +2265,13 @@
         }
 
         async function changeContributionStatus(contribKey, newStatus, name, phone, amount, categoryType, cardTypeAssigned) {
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+            if(!isLeader) {
+                alert("⚠️ Huna ruhusa ya kubadili hali ya malipo. Kazi hii inaruhusiwa kwa viongozi wa kamati pekee.");
+                return;
+            }
+
             const isToPaid = newStatus === 'PAID';
             const actionText = isToPaid ? "imelipwa (PAID)" : "ahadi (PLEDGE)";
 
@@ -2323,17 +2384,20 @@
                 badge.innerText = `Waliotoa: ${paidCount} | Waliouahidi: ${pledgeCount}`;
             }
 
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+
             tbody.innerHTML = contributionsList.map(c => `
                 <tr class="hover:bg-slate-800/40">
                     <td class="p-2.5 font-bold text-white">${c.name} <br><span class="text-[10px] text-slate-400 font-mono">${c.phone}</span></td>
                     <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 font-bold text-[10px]">${c.categoryType || 'SINGLE'} (${c.cardTypeAssigned || 'SINGLE'})</span></td>
                     <td class="p-2.5 font-bold text-emerald-400">TSh ${Number(c.amount || 0).toLocaleString()}</td>
                     <td class="p-2.5 text-right flex items-center justify-end gap-2">
-                        <select onchange="changeContributionStatus('${c.key}', this.value, '${c.name.replace(/'/g, "\\'")}', '${c.phone}', ${c.amount}, '${c.categoryType}', '${c.cardTypeAssigned}')" class="px-2 py-1 rounded-lg bg-slate-950 border border-slate-700 text-white font-bold text-[10px] outline-none">
+                        <select ${!isLeader ? 'disabled' : ''} onchange="changeContributionStatus('${c.key}', this.value, '${c.name.replace(/'/g, "\\'")}', '${c.phone}', ${c.amount}, '${c.categoryType}', '${c.cardTypeAssigned}')" class="px-2 py-1 rounded-lg bg-slate-950 border border-slate-700 text-white font-bold text-[10px] outline-none ${!isLeader ? 'opacity-60 cursor-not-allowed' : ''}">
                             <option value="PAID" ${c.status === 'PAID' ? 'selected' : ''}>✅ Imelipwa (Paid)</option>
                             <option value="PLEDGE" ${c.status === 'PLEDGE' ? 'selected' : ''}>⏳ Ahadi (Pledge)</option>
                         </select>
-                        ${c.status === 'PLEDGE' ? `
+                        ${isLeader && c.status === 'PLEDGE' ? `
                             <button type="button" onclick="changeContributionStatus('${c.key}', 'PAID', '${c.name.replace(/'/g, "\\'")}', '${c.phone}', ${c.amount}, '${c.categoryType}', '${c.cardTypeAssigned}')" class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[9px] shadow" title="Weka Awe Amelipa Moja kwa Moja">
                                 🔄 Maliza (Paid)
                             </button>
@@ -2352,6 +2416,9 @@
                 return;
             }
 
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+
             tbody.innerHTML = cardsList.map(c => `
                 <tr class="hover:bg-slate-800/40">
                     <td class="p-2.5 font-mono text-gold-400 font-bold text-[10px]">${c.id}</td>
@@ -2359,14 +2426,21 @@
                     <td class="p-2.5 font-mono text-slate-400">${c.phone}</td>
                     <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 text-[10px] font-bold">${c.type} CARD</span></td>
                     <td class="p-2.5 text-right flex justify-end gap-1">
-                        <button type="button" onclick="sendWhatsappTemplateCard('${c.key}', '${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] shadow"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
-                        <button type="button" onclick="sendSmsTemplateCard('${c.key}', '${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[10px] shadow"><i class="fa-solid fa-comment-sms"></i> SMS</button>
+                        <button type="button" ${!isLeader ? 'disabled' : ''} onclick="sendWhatsappTemplateCard('${c.key}', '${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2.5 py-1 rounded-lg ${isLeader ? 'bg-emerald-600 hover:bg-emerald-500 cursor-pointer' : 'bg-slate-700 opacity-50 cursor-not-allowed'} text-white font-bold text-[10px] shadow"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                        <button type="button" ${!isLeader ? 'disabled' : ''} onclick="sendSmsTemplateCard('${c.key}', '${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2.5 py-1 rounded-lg ${isLeader ? 'bg-indigo-600 hover:bg-indigo-500 cursor-pointer' : 'bg-slate-700 opacity-50 cursor-not-allowed'} text-white font-bold text-[10px] shadow"><i class="fa-solid fa-comment-sms"></i> SMS</button>
                     </td>
                 </tr>
             `).join('');
         }
 
         function sendCardsToAllPaidGuests() {
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+            if(!isLeader) {
+                alert("⚠️ Viongozi wa kamati pekee ndio wanaoruhusiwa kutuma kadi kwa wote.");
+                return;
+            }
+
             if(cardsList.length === 0) {
                 alert("Hakuna kadi bado!");
                 return;
@@ -2383,13 +2457,13 @@
 
         function sendWhatsappTemplateCard(cardKey, id, name, phone, type) {
             const cardLink = `${window.location.origin}${window.location.pathname}?card_id=${cardKey}`;
-            const coupleNames = document.getElementById('card-edit-names').value || 'Juma & Amina';
-            const cardTitle = document.getElementById('card-edit-title').value || 'HARUSI YA WAPENDANAO';
+            const coupleNames = document.getElementById('card-edit-names').value || eventData.title;
+            const cardTitle = document.getElementById('card-edit-title').value || eventData.category;
 
             const cardMessage = `👑 *KADI YA MWALIKO MAALUM DIGITAL (${type} CARD)* 👑\n\n` +
                                 `Ndugu: *${name}*\n` +
                                 `Unakaribishwa Kwenye: *${cardTitle}*\n` +
-                                `Maharusi/Wahusika: *${coupleNames}*\n` +
+                                `Wahusika/Taasisi: *${coupleNames}*\n` +
                                 `Namba ya Kadi: *${id}*\n\n` +
                                 `👇 *BOFYA LINK HII CHINI KUONA NA KUDOWNLOAD KADI YAKO (JPG):* 👇\n` +
                                 `${cardLink}\n\n` +
@@ -2402,7 +2476,7 @@
 
         function sendSmsTemplateCard(cardKey, id, name, phone, type) {
             const cardLink = `${window.location.origin}${window.location.pathname}?card_id=${cardKey}`;
-            const coupleNames = document.getElementById('card-edit-names').value || 'Juma & Amina';
+            const coupleNames = document.getElementById('card-edit-names').value || eventData.title;
             const smsText = `Habari ${name}, umepokea KADI YA MWALIKO (${type} - ${id}) ya ${coupleNames}. Fungua Link hii: ${cardLink}`;
             const cleanPhone = phone.replace(/[^0-9]/g, '');
             window.open(`sms:+${cleanPhone}?body=${encodeURIComponent(smsText)}`, '_blank');
