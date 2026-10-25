@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="hidden md:flex items-center gap-3 text-[11px] font-bold bg-slate-950 px-3 py-1.5 rounded-xl border border-gold-500/30">
-                    <span class="text-slate-400"><i class="fa-solid fa-headset text-gold-400 mr-1"></i> Msaada:</span>
+                    <span class="text-slate-400"><i class="fa-solid fa-headset text-gold-400 mr-1"></i> <span data-i18n="support">Msaada</span>:</span>
                     <a href="tel:0657576696" class="text-gold-400 hover:underline">0657576696</a>
                     <span class="text-slate-700">|</span>
                     <a href="tel:0755154363" class="text-gold-400 hover:underline">0755154363</a>
@@ -111,25 +111,25 @@
                 </div>
 
                 <div class="space-y-2">
-                    <h1 class="text-2xl font-black text-white gold-text uppercase tracking-tight">
+                    <h1 data-i18n="splash_title" class="text-2xl font-black text-white gold-text uppercase tracking-tight">
                         KARIBU SHEREHE YAKO KIDIGITAL
                     </h1>
-                    <p class="text-xs text-slate-400 italic">"Panga • Shiriki • Sherehe Pamoja"</p>
+                    <p data-i18n="splash_sub" class="text-xs text-slate-400 italic">"Panga • Shiriki • Sherehe Pamoja"</p>
                 </div>
 
                 <div class="p-3 rounded-2xl bg-slate-950/90 border border-gold-500/30 text-[11px] text-slate-300 space-y-1 w-full text-center">
-                    <span class="text-gold-400 font-bold block"><i class="fa-solid fa-phone"></i> Huduma kwa Wateja:</span>
+                    <span data-i18n="cust_care" class="text-gold-400 font-bold block"><i class="fa-solid fa-phone"></i> Huduma kwa Wateja:</span>
                     <p class="text-[11px] font-mono font-bold text-white">0657 576 696 | 0755 154 363</p>
                 </div>
 
                 <div class="w-full space-y-2.5 pt-2">
-                    <button type="button" onclick="goToAuth('register')" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 shadow-lg shadow-gold-500/25 transition uppercase">
+                    <button type="button" onclick="goToAuth('register')" data-i18n="btn_register" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 shadow-lg shadow-gold-500/25 transition uppercase">
                         REGISTER (JISAJILI)
                     </button>
-                    <button type="button" onclick="goToAuth('login')" class="w-full py-3 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold text-xs hover:bg-slate-700 transition uppercase">
+                    <button type="button" onclick="goToAuth('login')" data-i18n="btn_signin" class="w-full py-3 rounded-xl bg-slate-800 border border-slate-700 text-white font-bold text-xs hover:bg-slate-700 transition uppercase">
                         SIGN IN (INGIA)
                     </button>
-                    <button type="button" onclick="startTrialExperience()" class="w-full py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-gold-400 font-bold text-xs hover:bg-slate-900 transition">
+                    <button type="button" onclick="startTrialExperience()" data-i18n="btn_trial" class="w-full py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-gold-400 font-bold text-xs hover:bg-slate-900 transition">
                         ⚡ JARIBU TRIAL DEMO NOW
                     </button>
                 </div>
@@ -142,21 +142,21 @@
         <section id="view-auth" class="hidden max-w-md mx-auto space-y-6 pt-4">
             <div id="form-register" class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 shadow-xl">
                 <div class="text-center space-y-1">
-                    <h2 class="text-xl font-bold text-white">Jisajili Akaunti Mpya</h2>
-                    <p class="text-xs text-slate-400">Weka taarifa zako na nenosiri kuanza</p>
+                    <h2 data-i18n="reg_heading" class="text-xl font-bold text-white">Jisajili Akaunti Mpya</h2>
+                    <p data-i18n="reg_sub" class="text-xs text-slate-400">Weka taarifa zako na nenosiri kuanza</p>
                 </div>
 
                 <form onsubmit="handleRegistration(event)" class="space-y-3 text-xs">
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Majina Yako Kamili</label>
+                        <label data-i18n="lbl_fullname" class="block font-semibold text-slate-300 mb-1">Majina Yako Kamili</label>
                         <input type="text" id="reg-name" required placeholder="Mfano: Juma Mkwawa" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Barua Pepe (Email)</label>
+                        <label data-i18n="lbl_email" class="block font-semibold text-slate-300 mb-1">Barua Pepe (Email)</label>
                         <input type="email" id="reg-username" required placeholder="juma@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
+                        <label data-i18n="lbl_pass" class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
                         <div class="relative">
                             <input type="password" id="reg-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none pr-10">
                             <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
@@ -165,7 +165,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Namba ya WhatsApp</label>
+                        <label data-i18n="lbl_whatsapp" class="block font-semibold text-slate-300 mb-1">Namba ya WhatsApp</label>
                         <div class="flex gap-2">
                             <select id="reg-country-code" class="w-28 px-2 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-gold-400 font-bold outline-none text-xs">
                                 <option value="255">🇹ℤ +255</option>
@@ -181,7 +181,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Nafasi Yako Kwenye Sherehe</label>
+                        <label data-i18n="lbl_role" class="block font-semibold text-slate-300 mb-1">Nafasi Yako Kwenye Sherehe</label>
                         <select id="reg-role" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             <option value="Mwenyekiti">Mwenyekiti wa Kamati</option>
                             <option value="Katibu">Katibu wa Kamati</option>
@@ -190,7 +190,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Aina ya Sherehe</label>
+                        <label data-i18n="lbl_event_type" class="block font-semibold text-slate-300 mb-1">Aina ya Sherehe</label>
                         <select id="reg-category" onchange="toggleCustomCategory(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             <option value="Harusi / Wedding">Harusi / Wedding</option>
                             <option value="Send-off">Send-off</option>
@@ -201,35 +201,35 @@
                         </select>
                     </div>
                     <div id="custom-cat-box" class="hidden">
-                        <label class="block font-semibold text-gold-400 mb-1">Andika Aina Yako ya Sherehe (Custom Event)</label>
+                        <label data-i18n="lbl_custom_cat" class="block font-semibold text-gold-400 mb-1">Andika Aina Yako ya Sherehe (Custom Event)</label>
                         <input type="text" id="reg-custom-cat" placeholder="Mfano: Sherehe ya Jubilei" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-gold-500/50 text-white outline-none">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Jina la Sherehe Yako</label>
+                        <label data-i18n="lbl_event_title" class="block font-semibold text-slate-300 mb-1">Jina la Sherehe Yako</label>
                         <input type="text" id="reg-event-title" required placeholder="Mfano: Harusi ya Juma & Amina" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
 
-                    <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition mt-2">
+                    <button type="submit" data-i18n="btn_reg_submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition mt-2">
                         JISAJILI & FUNGUA SHEREHE
                     </button>
                 </form>
                 <p class="text-center text-xs text-slate-400 pt-2">
-                    <span>Tayari una akaunti?</span> <button type="button" onclick="toggleAuthMode('login')" class="text-gold-400 font-bold underline">Ingia Hapa</button>
+                    <span data-i18n="has_acc">Tayari una akaunti?</span> <button type="button" onclick="toggleAuthMode('login')" data-i18n="btn_signin_link" class="text-gold-400 font-bold underline">Ingia Hapa</button>
                 </p>
             </div>
 
             <div id="form-login" class="hidden bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4 shadow-xl">
                 <div class="text-center space-y-1">
-                    <h2 class="text-xl font-bold text-white">Ingia Kwenye Sherehe Yako</h2>
-                    <p class="text-xs text-slate-400">Weka Email na Password yako</p>
+                    <h2 data-i18n="login_heading" class="text-xl font-bold text-white">Ingia Kwenye Sherehe Yako</h2>
+                    <p data-i18n="login_sub" class="text-xs text-slate-400">Weka Email na Password yako</p>
                 </div>
                 <form onsubmit="handleLogin(event)" class="space-y-3 text-xs">
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Email</label>
+                        <label data-i18n="lbl_email" class="block font-semibold text-slate-300 mb-1">Email</label>
                         <input type="email" id="login-username" required placeholder="juma@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
                     <div>
-                        <label class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
+                        <label data-i18n="lbl_pass" class="block font-semibold text-slate-300 mb-1">Neno la Siri (Password)</label>
                         <div class="relative">
                             <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none pr-10">
                             <button type="button" onclick="togglePasswordVisibility('login-password', 'login-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
@@ -238,14 +238,14 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <button type="button" onclick="handlePasswordReset()" class="text-[11px] text-gold-400 hover:underline font-semibold">Umesahau Password? Reseti Hapa</button>
+                        <button type="button" onclick="handlePasswordReset()" data-i18n="forgot_pass" class="text-[11px] text-gold-400 hover:underline font-semibold">Umesahau Password? Reseti Hapa</button>
                     </div>
-                    <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition">
+                    <button type="submit" data-i18n="btn_login_submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition">
                         INGIA KWENYE DASHBOARD
                     </button>
                 </form>
                 <p class="text-center text-xs text-slate-400 pt-2">
-                    <span>Huna akaunti bado?</span> <button type="button" onclick="toggleAuthMode('register')" class="text-gold-400 font-bold underline">Jisajili Hapa</button>
+                    <span data-i18n="no_acc">Huna akaunti bado?</span> <button type="button" onclick="toggleAuthMode('register')" data-i18n="btn_reg_link" class="text-gold-400 font-bold underline">Jisajili Hapa</button>
                 </p>
             </div>
         </section>
@@ -259,7 +259,7 @@
                         <span id="dash-vip-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-800 text-slate-400 border border-slate-700">⚪ TRIAL MODE</span>
                     </div>
                     <h1 id="dash-event-title" class="text-2xl font-extrabold text-white mt-1">Harusi ya Juma & Amina</h1>
-                    <p class="text-xs text-slate-400 mt-0.5">Mwenyeji: <strong id="dash-user-name" class="text-slate-200">Juma Mkwawa</strong> (<span id="dash-user-role" class="text-gold-400">Mwenyekiti</span>)</p>
+                    <p class="text-xs text-slate-400 mt-0.5"><span data-i18n="host">Mwenyeji</span>: <strong id="dash-user-name" class="text-slate-200">Juma Mkwawa</strong> (<span id="dash-user-role" class="text-gold-400">Mwenyekiti</span>)</p>
                 </div>
                 
                 <div class="flex items-center gap-2">
@@ -272,25 +272,25 @@
             <!-- TAB NAVIGATION MENU -->
             <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800 scrollbar-none text-xs font-bold">
                 <button type="button" onclick="switchDashTab('templates')" id="tab-btn-templates" class="dash-tab active px-4 py-2.5 rounded-xl bg-slate-900 text-gold-400 border border-gold-500/40 whitespace-nowrap">
-                    <i class="fa-solid fa-paint-brush"></i> Card Templates & Editor
+                    <i class="fa-solid fa-paint-brush"></i> <span data-i18n="tab_templates">Card Templates & Editor</span>
                 </button>
                 <button type="button" onclick="switchDashTab('chat')" id="tab-btn-chat" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-brands fa-whatsapp text-emerald-400"></i> Group Chat & Live Summary
+                    <i class="fa-brands fa-whatsapp text-emerald-400"></i> <span data-i18n="tab_chat">Group Chat & Live Summary</span>
                 </button>
                 <button type="button" onclick="switchDashTab('budget')" id="tab-btn-budget" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-calculator"></i> Bajeti Ya Sherehe & Payments
+                    <i class="fa-solid fa-calculator"></i> <span data-i18n="tab_budget">Bajeti Ya Sherehe & Payments</span>
                 </button>
                 <button type="button" onclick="switchDashTab('contributions')" id="tab-btn-contributions" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-wallet"></i> Michango & Ahadi Za Watu
+                    <i class="fa-solid fa-wallet"></i> <span data-i18n="tab_contributions">Michango & Ahadi Za Watu</span>
                 </button>
                 <button type="button" onclick="switchDashTab('cards')" id="tab-btn-cards" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-address-card"></i> Kadi Za Digital (Single/Double)
+                    <i class="fa-solid fa-address-card"></i> <span data-i18n="tab_cards">Kadi Za Digital (Single/Double)</span>
                 </button>
                 <button type="button" onclick="switchDashTab('thanks')" id="tab-btn-thanks" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-heart text-rose-400"></i> Ujumbe Wa Shukrani
+                    <i class="fa-solid fa-heart text-rose-400"></i> <span data-i18n="tab_thanks">Ujumbe Wa Shukrani</span>
                 </button>
                 <button type="button" onclick="switchDashTab('scanner')" id="tab-btn-scanner" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap flex items-center gap-1">
-                    <i class="fa-solid fa-qrcode text-gold-400"></i> Live Scan Mlangoni
+                    <i class="fa-solid fa-qrcode text-gold-400"></i> <span data-i18n="tab_scanner">Live Scan Mlangoni</span>
                 </button>
             </div>
 
@@ -299,12 +299,12 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <h3 class="text-sm font-bold text-white">Card Designer & Color Templates</h3>
-                            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Inaonekana Kwenye Trial</span>
+                            <h3 class="text-sm font-bold text-white" data-i18n="card_designer_title">Card Designer & Color Templates</h3>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold" data-i18n="visible_trial">Inaonekana Kwenye Trial</span>
                         </div>
                         
                         <div class="p-3 rounded-2xl bg-slate-950 border border-gold-500/40 space-y-2">
-                            <label class="block text-xs font-bold text-gold-400">1. Chagua Aina Ya Kadi Unayotengeneza:</label>
+                            <label class="block text-xs font-bold text-gold-400" data-i18n="lbl_card_purpose">1. Chagua Aina Ya Kadi Unayotengeneza:</label>
                             <div class="grid grid-cols-3 gap-1.5 text-[11px]">
                                 <button type="button" onclick="selectCardPurpose('COMMITTEE')" id="btn-card-committee" class="p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700">👑 Wanakamati</button>
                                 <button type="button" onclick="selectCardPurpose('CONTRIBUTION')" id="btn-card-contribution" class="p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700">💳 Mchango / Ahadi</button>
@@ -313,7 +313,7 @@
                         </div>
 
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
-                            <label class="block text-xs font-bold text-slate-200">2. Chagua Layout Template Style (Template 1-5):</label>
+                            <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">2. Chagua Layout Template Style (Template 1-5):</label>
                             <div class="grid grid-cols-5 gap-1 text-[11px]">
                                 <button type="button" onclick="selectCardTemplateStyle(1)" id="btn-tpl-1" class="p-2 rounded-lg gold-gradient text-slate-950 font-black text-center">T1</button>
                                 <button type="button" onclick="selectCardTemplateStyle(2)" id="btn-tpl-2" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T2</button>
@@ -324,7 +324,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-2">3. Chagua Theme Ya Rangi Za Kadi:</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2" data-i18n="lbl_theme_colors">3. Chagua Theme Ya Rangi Za Kadi:</label>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                 <button type="button" onclick="applyCardTheme('gold')" class="p-2.5 rounded-xl bg-slate-950 border border-gold-500/60 text-xs font-bold text-gold-400">✨ Gold Royalty</button>
                                 <button type="button" onclick="applyCardTheme('silver')" class="p-2.5 rounded-xl bg-slate-950 border border-slate-400/60 text-xs font-bold text-slate-300">🥈 Silver Elegance</button>
@@ -337,19 +337,19 @@
 
                         <div class="space-y-3 text-xs">
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Kichwa cha Kadi</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_card_title">Kichwa cha Kadi</label>
                                 <input type="text" id="card-edit-title" oninput="updateLiveCard()" value="HARUSI YA WAPENDANAO" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Majina ya Wahusika (Maharusi)</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_couple_names">Majina ya Wahusika (Maharusi)</label>
                                 <input type="text" id="card-edit-names" oninput="updateLiveCard()" value="Juma & Amina" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Tarehe & Eneo</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_date_venue">Tarehe & Eneo</label>
                                 <input type="text" id="card-edit-date" oninput="updateLiveCard()" value="12 Desemba 2026 - Mlimani City" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Ujumbe Mfupi wa Mwaliko</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_invite_msg">Ujumbe Mfupi wa Mwaliko</label>
                                 <textarea id="card-edit-msg" oninput="updateLiveCard()" rows="2" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">Tunayo furaha kubwa kukualika katika sherehe yetu...</textarea>
                             </div>
                         </div>
@@ -369,7 +369,7 @@
                             <div class="space-y-2 bg-slate-900/80 p-3 rounded-2xl border border-gold-500/30 text-xs text-left relative z-10 flex items-center justify-between">
                                 <div>
                                     <p class="text-gold-400 font-bold" id="prev-date">12 Desemba 2026 - Mlimani City</p>
-                                    <p class="text-[10px] text-slate-400">Mgeni Rasmi: Mwaliko Maalum (VIP)</p>
+                                    <p class="text-[10px] text-slate-400" data-i18n="guest_of_honor">Mgeni Rasmi: Mwaliko Maalum (VIP)</p>
                                 </div>
                                 <div class="bg-white p-1 rounded-lg">
                                     <div id="preview-mini-qr"></div>
@@ -378,7 +378,7 @@
 
                             <div class="flex justify-between items-center text-[9px] text-slate-500 font-bold uppercase tracking-widest relative z-10 border-t border-slate-800 pt-2">
                                 <span>ID #001</span>
-                                <span>Sherehe Yako Kidigital</span>
+                                <span data-i18n="brand_footer">Sherehe Yako Kidigital</span>
                             </div>
                         </div>
                     </div>
@@ -390,29 +390,29 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
                     <!-- LEFT DASHBOARD SUMMARY -->
                     <div class="lg:col-span-4 bg-slate-900 p-4 rounded-3xl border border-slate-800 space-y-3">
-                        <h4 class="text-xs font-bold text-gold-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-chart-line"></i> Dashboard ya Wanakamati</h4>
+                        <h4 class="text-xs font-bold text-gold-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-chart-line"></i> <span data-i18n="committee_dashboard">Dashboard ya Wanakamati</span></h4>
                         <div class="space-y-2 text-xs">
                             <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                                <span class="text-slate-400 block text-[10px]">Bajeti Kuu:</span>
+                                <span class="text-slate-400 block text-[10px]" data-i18n="main_budget">Bajeti Kuu:</span>
                                 <span id="chat-summary-budget" class="font-black text-gold-400 text-sm">TSh 0</span>
                             </div>
                             <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                                <span class="text-slate-400 block text-[10px]">Michango Iliyopokelewa:</span>
+                                <span class="text-slate-400 block text-[10px]" data-i18n="collected_funds">Michango Iliyopokelewa:</span>
                                 <span id="chat-summary-collected" class="font-black text-emerald-400 text-sm">TSh 0</span>
                             </div>
                             <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                                <span class="text-slate-400 block text-[10px]">Salio Linalohitajika (Deficit):</span>
+                                <span class="text-slate-400 block text-[10px]" data-i18n="deficit_funds">Salio Linalohitajika (Deficit):</span>
                                 <span id="chat-summary-deficit" class="font-black text-rose-400 text-sm">TSh 0</span>
                             </div>
                             <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                                <span class="text-slate-400 block text-[10px]">Jumla ya Ahadi Bado:</span>
+                                <span class="text-slate-400 block text-[10px]" data-i18n="pledges_funds">Jumla ya Ahadi Bado:</span>
                                 <span id="chat-summary-pledges" class="font-black text-amber-400 text-sm">TSh 0</span>
                             </div>
                         </div>
 
                         <div class="p-3 rounded-2xl bg-slate-950 border border-gold-500/30 space-y-2">
-                            <span class="text-[10px] font-bold text-gold-400 block">🔗 LINK YA SHARE SHEREHE:</span>
-                            <button type="button" onclick="copyChairmanEventLink()" class="w-full py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs uppercase">
+                            <span class="text-[10px] font-bold text-gold-400 block" data-i18n="share_link_title">🔗 LINK YA SHARE SHEREHE:</span>
+                            <button type="button" onclick="copyChairmanEventLink()" class="w-full py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs uppercase" data-i18n="btn_copy_link">
                                 KOPI LINK YA SHREHE
                             </button>
                         </div>
@@ -475,52 +475,52 @@
                 <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                         <div>
-                            <h3 class="text-base font-bold text-white">Bajeti Kuu & Auto-Balance Ya Pesa</h3>
-                            <p class="text-xs text-slate-400">Weka viwango vya michango na uone salio linalojibalance kiotomatiki</p>
+                            <h3 class="text-base font-bold text-white" data-i18n="budget_tab_title">Bajeti Kuu & Auto-Balance Ya Pesa</h3>
+                            <p class="text-xs text-slate-400" data-i18n="budget_tab_sub">Weka viwango vya michango na uone salio linalojibalance kiotomatiki</p>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">🔒 Mwenyekiti Only</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30" data-i18n="chair_only">🔒 Mwenyekiti & Katibu Only</span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs text-center">
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
-                            <span class="text-slate-400 block text-[10px]">Bajeti Kuu</span>
+                            <span class="text-slate-400 block text-[10px]" data-i18n="main_budget">Bajeti Kuu</span>
                             <span id="budget-total-display" class="text-sm font-black text-gold-400">TSh 5,000,000</span>
                         </div>
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
-                            <span class="text-slate-400 block text-[10px]">Iliyopatikana (Paid)</span>
+                            <span class="text-slate-400 block text-[10px]" data-i18n="collected_paid">Iliyopatikana (Paid)</span>
                             <span id="budget-collected-display" class="text-sm font-black text-emerald-400">TSh 0</span>
                         </div>
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
-                            <span class="text-slate-400 block text-[10px]">Salio Bado (Deficit)</span>
+                            <span class="text-slate-400 block text-[10px]" data-i18n="deficit_balance">Salio Bado (Deficit)</span>
                             <span id="budget-deficit-display" class="text-sm font-black text-rose-400">TSh 5,000,000</span>
                         </div>
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
-                            <span class="text-slate-400 block text-[10px]">Kiwango Cha Single</span>
+                            <span class="text-slate-400 block text-[10px]" data-i18n="single_rate">Kiwango Cha Single</span>
                             <span id="rate-single-display" class="text-sm font-black text-white">TSh 50,000</span>
                         </div>
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
-                            <span class="text-slate-400 block text-[10px]">Kiwango Cha Double</span>
+                            <span class="text-slate-400 block text-[10px]" data-i18n="double_rate">Kiwango Cha Double</span>
                             <span id="rate-double-display" class="text-sm font-black text-white">TSh 100,000</span>
                         </div>
                     </div>
 
                     <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                        <h4 class="text-xs font-bold text-gold-400">Seta Taarifa Za Benki Na Simu Za Kuchangia:</h4>
+                        <h4 class="text-xs font-bold text-gold-400" data-i18n="bank_details_title">Seta Taarifa Za Benki Na Simu Za Kuchangia:</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                             <div class="space-y-1">
-                                <label class="text-slate-300 font-semibold">Benki / Bank Name & Account Number:</label>
+                                <label class="text-slate-300 font-semibold" data-i18n="lbl_bank">Benki / Bank Name & Account Number:</label>
                                 <input type="text" id="cfg-bank" placeholder="Mfano: CRDB Bank - 015012345678" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
                             </div>
                             <div class="space-y-1">
-                                <label class="text-slate-300 font-semibold">Jina La Account Ya Benki:</label>
+                                <label class="text-slate-300 font-semibold" data-i18n="lbl_bank_name">Jina La Account Ya Benki:</label>
                                 <input type="text" id="cfg-bank-name" placeholder="Mfano: JUMA MKWAWA" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
                             </div>
                             <div class="space-y-1">
-                                <label class="text-slate-300 font-semibold">Namba Ya Simu Ya Kuchangia (M-Pesa/Tigo Pesa):</label>
+                                <label class="text-slate-300 font-semibold" data-i18n="lbl_phone_acc">Namba Ya Simu Ya Kuchangia (M-Pesa/Tigo Pesa):</label>
                                 <input type="text" id="cfg-phone-acc" placeholder="Mfano: 0755123456 (M-PESA)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
                             </div>
                             <div class="space-y-1">
-                                <label class="text-slate-300 font-semibold">Jina Linalosoma Kwenye Simu:</label>
+                                <label class="text-slate-300 font-semibold" data-i18n="lbl_phone_name">Jina Linalosoma Kwenye Simu:</label>
                                 <input type="text" id="cfg-phone-name" placeholder="Mfano: JUMA MKWAWA" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
                             </div>
                         </div>
@@ -531,23 +531,23 @@
                             <input type="number" id="cfg-double" placeholder="Double Rate (TSh)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
                             <input type="number" id="cfg-committee" placeholder="Kamati Rate (TSh)" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white outline-none">
                         </div>
-                        <button type="button" onclick="saveBudgetRates()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs uppercase">HIFADHI TAARIFA ZA MALIPO NA BAJETI</button>
+                        <button type="button" onclick="saveBudgetRates()" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs uppercase" data-i18n="btn_save_budget">HIFADHI TAARIFA ZA MALIPO NA BAJETI</button>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 4: MICHANGO NA AHADI -->
+            <!-- TAB 4: MICHANGO NA AHADI (WITH EDIT PLEDGE TO PAID ACTION) -->
             <div id="pane-contributions" class="dash-pane hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
-                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Rekodi Mchango / Ahadi</h4>
+                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2" data-i18n="rec_contrib_title">Rekodi Mchango / Ahadi</h4>
                         <form onsubmit="handleAddContribution(event)" class="space-y-3 text-xs">
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Jina la Mchangiaji</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_contributor_name">Jina la Mchangiaji</label>
                                 <input type="text" id="c-name" required placeholder="Amina Hassan" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Namba ya Simu / WhatsApp</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_whatsapp_num">Namba ya Simu / WhatsApp</label>
                                 <div class="flex gap-2">
                                     <select id="c-country-code" class="w-24 px-1 py-2 rounded-xl bg-slate-950 border border-slate-800 text-gold-400 font-bold outline-none text-xs">
                                         <option value="255">🇹ℤ +255</option>
@@ -563,30 +563,36 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Aina ya Malipo</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_payment_status">Aina ya Malipo</label>
                                 <select id="c-status" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
-                                    <option value="PAID">Mchango Uliolipwa (Cash / Bank)</option>
-                                    <option value="PLEDGE">Ahadi Bado Hajaidhinisha</option>
+                                    <option value="PAID" data-i18n="opt_paid">Mchango Uliolipwa (Cash / Bank)</option>
+                                    <option value="PLEDGE" data-i18n="opt_pledge">Ahadi Bado Hajaidhinisha</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Kiasi (TSh)</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_amount">Kiasi (TSh)</label>
                                 <input type="number" id="c-amount" required placeholder="50000" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
-                            <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs">HIFADHI MCHANGO</button>
+                            <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-slate-950 font-bold text-xs" data-i18n="btn_save_contrib">HIFADHI MCHANGO</button>
                         </form>
                     </div>
 
                     <div class="lg:col-span-7 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
-                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Orodha ya Michango na Ahadi Za Watu</h4>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
+                            <h4 class="text-sm font-bold text-white" data-i18n="contrib_list_title">Orodha ya Michango na Ahadi Za Watu</h4>
+                            <!-- COUNTER SUMMARY TAG -->
+                            <div id="contrib-counter-badge" class="px-3 py-1 rounded-xl bg-slate-950 border border-gold-500/30 text-gold-400 font-bold text-[11px]">
+                                Waliotoa: 0 | Waliouahidi: 0
+                            </div>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
                                 <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
                                     <tr>
-                                        <th class="p-2.5">Jina & Namba</th>
-                                        <th class="p-2.5">Kundi (Automatic)</th>
-                                        <th class="p-2.5">Kiasi (TSh)</th>
-                                        <th class="p-2.5">Hali ya Mchango</th>
+                                        <th class="p-2.5" data-i18n="th_name_num">Jina & Namba</th>
+                                        <th class="p-2.5" data-i18n="th_group">Kundi</th>
+                                        <th class="p-2.5" data-i18n="th_amount">Kiasi (TSh)</th>
+                                        <th class="p-2.5 text-right" data-i18n="th_status_action">Hali / Badili</th>
                                     </tr>
                                 </thead>
                                 <tbody id="contrib-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -601,11 +607,11 @@
                 <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
                         <div>
-                            <h3 class="text-sm font-bold text-white">Kadi Za Digital Zilizotengenezwa Kiotomatiki</h3>
+                            <h3 class="text-sm font-bold text-white" data-i18n="digital_cards_title">Kadi Za Digital Zilizotengenezwa Kiotomatiki</h3>
                             <span id="demo-limit-badge" class="text-[10px] bg-slate-800 text-gold-400 border border-gold-500/30 px-2.5 py-0.5 rounded-full font-bold">VIP: Unlimited Cards</span>
                         </div>
                         
-                        <button type="button" onclick="sendCardsToAllPaidGuests()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition shadow-lg">
+                        <button type="button" onclick="sendCardsToAllPaidGuests()" class="px-4 py-2 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition shadow-lg" data-i18n="btn_send_all_cards">
                             🚀 TUMA KADI KWA WOTE WALIOCHANGA (PAID)
                         </button>
                     </div>
@@ -614,11 +620,11 @@
                         <table class="w-full text-left text-xs">
                             <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
                                 <tr>
-                                    <th class="p-2.5">ID / Kadi</th>
-                                    <th class="p-2.5">Mwaalikwa</th>
-                                    <th class="p-2.5">Namba</th>
-                                    <th class="p-2.5">Aina</th>
-                                    <th class="p-2.5 text-right">Tuma Template Card</th>
+                                    <th class="p-2.5" data-i18n="th_id_card">ID / Kadi</th>
+                                    <th class="p-2.5" data-i18n="th_guest">Mwaalikwa</th>
+                                    <th class="p-2.5" data-i18n="th_number">Namba</th>
+                                    <th class="p-2.5" data-i18n="th_type">Aina</th>
+                                    <th class="p-2.5 text-right" data-i18n="th_action">Tuma Template Card</th>
                                 </tr>
                             </thead>
                             <tbody id="cards-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -632,16 +638,16 @@
                 <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 space-y-4">
                     <div class="border-b border-slate-800 pb-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
                         <div>
-                            <h3 class="text-base font-bold text-white"><i class="fa-solid fa-heart text-rose-500"></i> Ujumbe Wa Shukrani (Walioingia Ukumbini)</h3>
-                            <p class="text-xs text-slate-400">Orodha hii inachukua waalikwa waliothibitishwa kuingia Ukumbini pekee!</p>
+                            <h3 class="text-base font-bold text-white"><i class="fa-solid fa-heart text-rose-500"></i> <span data-i18n="thanks_tab_title">Ujumbe Wa Shukrani (Walioingia Ukumbini)</span></h3>
+                            <p class="text-xs text-slate-400" data-i18n="thanks_tab_sub">Orodha hii inachukua waalikwa waliothibitishwa kuingia Ukumbini pekee!</p>
                         </div>
-                        <button type="button" onclick="sendMultiThanksWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase shadow flex items-center gap-1.5">
+                        <button type="button" onclick="sendMultiThanksWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase shadow flex items-center gap-1.5" data-i18n="btn_send_all_thanks">
                             <i class="fa-brands fa-whatsapp text-sm"></i> TUMA SHUKRANI KWA WOTE WALIOINGIA
                         </button>
                     </div>
 
                     <div class="space-y-3">
-                        <label class="block text-xs font-bold text-gold-400">Chagua Au Bonyeza Template Ya Ujumbe:</label>
+                        <label class="block text-xs font-bold text-gold-400" data-i18n="lbl_select_thanks_tpl">Chagua Au Bonyeza Template Ya Ujumbe:</label>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div onclick="selectThanksTemplate(1)" class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 hover:border-gold-500/60 cursor-pointer transition space-y-1">
                                 <span class="text-xs font-bold text-white block">Template 1: Rasmi & Ya Heshima</span>
@@ -659,20 +665,20 @@
                     </div>
 
                     <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-                        <label class="block text-xs font-bold text-slate-200">Andika Au Hariri Ujumbe Wako Wa Shukrani Hapa:</label>
+                        <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_edit_thanks">Andika Au Hariri Ujumbe Wako Wa Shukrani Hapa:</label>
                         <textarea id="thanks-custom-input" rows="3" placeholder="Andika au badilisha maneno yako binafsi ya shukrani..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white outline-none"></textarea>
                     </div>
 
                     <div class="space-y-3 pt-2">
-                        <h4 class="text-xs font-bold text-white border-b border-slate-800 pb-2">Orodha ya Waliothibitishwa Ukumbini:</h4>
+                        <h4 class="text-xs font-bold text-white border-b border-slate-800 pb-2" data-i18n="confirmed_guests_list">Orodha ya Waliothibitishwa Ukumbini:</h4>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
                                 <thead class="bg-slate-950 text-slate-400 uppercase text-[10px]">
                                     <tr>
-                                        <th class="p-2.5">Mgeni / Kadi</th>
-                                        <th class="p-2.5">Namba ya Simu</th>
-                                        <th class="p-2.5">Muda wa Kuingia</th>
-                                        <th class="p-2.5 text-right">Tuma Moja Kwa Moja</th>
+                                        <th class="p-2.5" data-i18n="th_guest_card">Mgeni / Kadi</th>
+                                        <th class="p-2.5" data-i18n="th_phone">Namba ya Simu</th>
+                                        <th class="p-2.5" data-i18n="th_time">Muda wa Kuingia</th>
+                                        <th class="p-2.5 text-right" data-i18n="th_send_direct">Tuma Moja Kwa Moja</th>
                                     </tr>
                                 </thead>
                                 <tbody id="thanks-table-body" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -687,29 +693,29 @@
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-6">
                     <div class="text-center max-w-md mx-auto space-y-2">
                         <i class="fa-solid fa-qrcode text-gold-400 text-4xl mb-1"></i>
-                        <h3 class="text-xl font-extrabold text-white">Live Gate Scanner & Check-in</h3>
-                        <p class="text-xs text-slate-400">Tafuta Mgeni mwenye Single au Double Card kisha ubonyeze Confirm ili aonekane kwenye list!</p>
+                        <h3 class="text-xl font-extrabold text-white" data-i18n="scanner_title">Live Gate Scanner & Check-in</h3>
+                        <p class="text-xs text-slate-400" data-i18n="scanner_sub">Tafuta Mgeni mwenye Single au Double Card kisha ubonyeze Confirm ili aonekane kwenye list!</p>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                         <div class="lg:col-span-6 bg-slate-950 border-2 border-gold-500/50 p-4 rounded-3xl space-y-4 text-center">
                             
                             <div class="p-4 bg-slate-900 rounded-2xl border border-gold-500/40 space-y-2 text-left">
-                                <span class="text-xs font-bold text-gold-400 block"><i class="fa-solid fa-camera-retro"></i> Njia ya 1: Piga Picha ya QR (Native Camera)</span>
-                                <p class="text-[11px] text-slate-400">Piga picha ya kadi ya mgeni, mfumo utaikagua kulingana na Single au Double card.</p>
+                                <span class="text-xs font-bold text-gold-400 block" data-i18n="scanner_method_1"><i class="fa-solid fa-camera-retro"></i> Njia ya 1: Piga Picha ya QR (Native Camera)</span>
+                                <p class="text-[11px] text-slate-400" data-i18n="scanner_method_1_desc">Piga picha ya kadi ya mgeni, mfumo utaikagua kulingana na Single au Double card.</p>
                                 <label class="block w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs text-center uppercase shadow cursor-pointer hover:brightness-110">
-                                    <i class="fa-solid fa-camera mr-1"></i> PIGA PICHA YA QR CODE YA MGENI
+                                    <i class="fa-solid fa-camera mr-1"></i> <span data-i18n="btn_snap_qr">PIGA PICHA YA QR CODE YA MGENI</span>
                                     <input type="file" accept="image/*" capture="environment" onchange="scanQrFromFile(event)" class="hidden">
                                 </label>
                             </div>
 
                             <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-3 text-left">
-                                <span class="text-xs font-bold text-gold-400 block"><i class="fa-solid fa-magnifying-glass"></i> Njia ya 2: Tafuta Mgeni kwa Jina (Auto-Suggest)</span>
-                                <p class="text-[11px] text-slate-400">Anza kuandika jina au herufi (mfano: "A"), majina yatajitokeza kiotomatiki:</p>
+                                <span class="text-xs font-bold text-gold-400 block" data-i18n="scanner_method_2"><i class="fa-solid fa-magnifying-glass"></i> Njia ya 2: Tafuta Mgeni kwa Jina (Auto-Suggest)</span>
+                                <p class="text-[11px] text-slate-400" data-i18n="scanner_method_2_desc">Anza kuandika jina au herufi (mfano: "A"), majina yatajitokeza kiotomatiki:</p>
                                 <div class="relative">
                                     <div class="flex gap-2">
                                         <input type="text" id="manual-search-input" oninput="filterManualSearchGuests(this.value)" placeholder="Anza kuandika jina la mgeni..." class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs outline-none">
-                                        <button type="button" onclick="manualCheckInGuest()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase">CONFIRM</button>
+                                        <button type="button" onclick="manualCheckInGuest()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase" data-i18n="btn_confirm">CONFIRM</button>
                                     </div>
                                     <div id="manual-search-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-slate-950 border border-gold-500/40 rounded-xl shadow-2xl max-h-44 overflow-y-auto z-20 text-xs divide-y divide-slate-800"></div>
                                 </div>
@@ -720,7 +726,7 @@
 
                         <div class="lg:col-span-6 bg-slate-950 border border-slate-800 p-4 rounded-3xl space-y-3">
                             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                                <h4 class="text-xs font-bold text-white"><i class="fa-solid fa-users-viewfinder text-gold-400 mr-1"></i> Waalikwa Waliothibitishwa (Confirmed)</h4>
+                                <h4 class="text-xs font-bold text-white"><i class="fa-solid fa-users-viewfinder text-gold-400 mr-1"></i> <span data-i18n="confirmed_guests_title">Waalikwa Waliothibitishwa (Confirmed)</span></h4>
                                 <span id="scanned-count-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">0 WALIOINGIA</span>
                             </div>
 
@@ -728,10 +734,10 @@
                                 <table class="w-full text-left text-xs">
                                     <thead class="bg-slate-900 text-slate-400 uppercase text-[9px]">
                                         <tr>
-                                            <th class="p-2">Mgeni / Hatua</th>
-                                            <th class="p-2">Kadi ID</th>
-                                            <th class="p-2">Geti / Muda</th>
-                                            <th class="p-2 text-right">Hali</th>
+                                            <th class="p-2" data-i18n="th_guest_step">Mgeni / Hatua</th>
+                                            <th class="p-2" data-i18n="th_card_id">Kadi ID</th>
+                                            <th class="p-2" data-i18n="th_gate_time">Geti / Muda</th>
+                                            <th class="p-2 text-right" data-i18n="th_status">Hali</th>
                                         </tr>
                                     </thead>
                                     <tbody id="scanned-guests-tbody" class="divide-y divide-slate-800 text-slate-200"></tbody>
@@ -747,37 +753,40 @@
         <section id="view-public-guest" class="hidden max-w-2xl mx-auto space-y-6 pt-4">
             <div class="bg-slate-900 border-2 border-gold-500/60 p-6 rounded-3xl space-y-6 shadow-2xl">
                 <div class="text-center space-y-2 border-b border-slate-800 pb-4">
-                    <span class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-[10px] font-black uppercase">KARIBU MWALIKO MAALUM</span>
+                    <span class="px-3 py-1 rounded-full bg-gold-500/20 text-gold-400 text-[10px] font-black uppercase" data-i18n="pub_badge">KARIBU MWALIKO MAALUM</span>
                     <h2 id="public-event-name" class="text-2xl font-black text-white gold-text">Sherehe ya Harusi</h2>
-                    <p class="text-xs text-slate-300">Tazama bajeti, michango, na uweke taarifa zako kutoa mchango au ahadi ili ujiunge kwenye Group Chat!</p>
+                    <p class="text-xs text-slate-300" data-i18n="pub_desc">Tazama bajeti, michango, na uweke taarifa zako kutoa mchango au ahadi ili ujiunge kwenye Group Chat!</p>
                 </div>
 
                 <!-- LIVE BUDGET & SUMMARY FOR PUBLIC GUEST -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-center">
                     <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
-                        <span class="text-slate-400 block text-[10px]">Bajeti Kuu:</span>
+                        <span class="text-slate-400 block text-[10px]" data-i18n="main_budget">Bajeti Kuu:</span>
                         <span id="pub-sum-budget" class="font-black text-gold-400 text-sm">TSh 0</span>
                     </div>
                     <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
-                        <span class="text-slate-400 block text-[10px]">Iliyopatikana (Paid):</span>
+                        <span class="text-slate-400 block text-[10px]" data-i18n="collected_paid">Iliyopatikana (Paid):</span>
                         <span id="pub-sum-collected" class="font-black text-emerald-400 text-sm">TSh 0</span>
                     </div>
                     <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800">
-                        <span class="text-slate-400 block text-[10px]">Salio Linalohitajika:</span>
+                        <span class="text-slate-400 block text-[10px]" data-i18n="deficit_balance">Salio Linalohitajika:</span>
                         <span id="pub-sum-deficit" class="font-black text-rose-400 text-sm">TSh 0</span>
                     </div>
                 </div>
 
                 <!-- PUBLIC CONTRIBUTIONS & PLEDGES TABLE -->
                 <div class="space-y-2">
-                    <h4 class="text-xs font-bold text-gold-400">Orodha ya Watu Waliochanga na Kuahidi:</h4>
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-xs font-bold text-gold-400" data-i18n="pub_contrib_list">Orodha ya Watu Waliochanga na Kuahidi:</h4>
+                        <span id="pub-counter-badge" class="text-[10px] text-slate-300 font-bold">Waliotoa: 0 | Waliouahidi: 0</span>
+                    </div>
                     <div class="overflow-x-auto max-h-48 bg-slate-950 border border-slate-800 rounded-2xl p-2">
                         <table class="w-full text-left text-xs">
                             <thead class="text-slate-400 uppercase text-[9px] border-b border-slate-800">
                                 <tr>
-                                    <th class="p-2">Jina</th>
-                                    <th class="p-2">Kiasi (TSh)</th>
-                                    <th class="p-2">Hali</th>
+                                    <th class="p-2" data-i18n="th_name">Jina</th>
+                                    <th class="p-2" data-i18n="th_amount">Kiasi (TSh)</th>
+                                    <th class="p-2" data-i18n="th_status">Hali</th>
                                 </tr>
                             </thead>
                             <tbody id="pub-contrib-tbody" class="divide-y divide-slate-900 text-slate-200"></tbody>
@@ -786,7 +795,7 @@
                 </div>
 
                 <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
-                    <h4 class="font-bold text-gold-400 text-center uppercase tracking-wider mb-1">💳 Namba Za Kuchangia Pesa:</h4>
+                    <h4 class="font-bold text-gold-400 text-center uppercase tracking-wider mb-1" data-i18n="pub_bank_title">💳 Namba Za Kuchangia Pesa:</h4>
                     <div class="flex justify-between border-b border-slate-900 pb-1">
                         <span class="text-slate-400">Benki:</span>
                         <span id="pub-bank-acc" class="font-bold text-white">CRDB: 0150...</span>
@@ -807,11 +816,11 @@
 
                 <form onsubmit="handlePublicGuestSubmit(event)" class="space-y-3 text-xs">
                     <div>
-                        <label class="block text-slate-300 font-semibold mb-1">Majina Yako Kamili</label>
+                        <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_fullname">Majina Yako Kamili</label>
                         <input type="text" id="pub-guest-name" required placeholder="Mfano: Hassan Ali" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
                     <div>
-                        <label class="block text-slate-300 font-semibold mb-1">Namba ya WhatsApp / Simu</label>
+                        <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_whatsapp">Namba ya WhatsApp / Simu</label>
                         <div class="flex gap-2">
                             <select id="pub-country-code" class="w-28 px-2 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-gold-400 font-bold outline-none text-xs">
                                 <option value="255">🇹ℤ +255</option>
@@ -827,18 +836,18 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-slate-300 font-semibold mb-1">Unatoa Mchango au Ahadi?</label>
+                        <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_contrib_or_pledge">Unatoa Mchango au Ahadi?</label>
                         <select id="pub-guest-status" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
-                            <option value="PAID">Nimelipa Cash / Benki (Mchango)</option>
-                            <option value="PLEDGE">Natoa Ahadi (Ntalipa Baadaye)</option>
+                            <option value="PAID" data-i18n="opt_paid">Nimelipa Cash / Benki (Mchango)</option>
+                            <option value="PLEDGE" data-i18n="opt_pledge">Natoa Ahadi (Ntalipa Baadaye)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-slate-300 font-semibold mb-1">Kiasi Unachotoa / Unachoahidi (TSh)</label>
+                        <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_amount_pledged">Kiasi Unachotoa / Unachoahidi (TSh)</label>
                         <input type="number" id="pub-guest-amount" required placeholder="50000" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
 
-                    <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs uppercase shadow-lg">
+                    <button type="submit" data-i18n="btn_submit_chat" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs uppercase shadow-lg">
                         WASILISHA & INGIA KWENYE GROUP CHAT 🚀
                     </button>
                 </form>
@@ -858,7 +867,7 @@
                     </div>
 
                     <div class="p-3 rounded-2xl bg-slate-900/90 border border-gold-500/40 text-center space-y-1">
-                        <span class="text-[10px] text-slate-400 uppercase font-bold block">KADI HII NI MAALUM KWA AJILI YA:</span>
+                        <span class="text-[10px] text-slate-400 uppercase font-bold block" data-i18n="card_special_for">KADI HII NI MAALUM KWA AJILI YA:</span>
                         <h3 id="gcard-guest-name" class="text-lg font-black text-white gold-text">Ndugu Mwaalikwa</h3>
                         <span id="gcard-card-type" class="inline-block px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-gold-500 text-slate-950">DOUBLE CARD</span>
                     </div>
@@ -869,7 +878,7 @@
                 <div class="space-y-3 bg-slate-900/90 p-4 rounded-2xl border border-gold-500/30 text-xs text-center relative z-10">
                     <div>
                         <p class="text-gold-400 font-bold text-sm" id="gcard-event-date">12 Desemba 2026 - Mlimani City</p>
-                        <p class="text-[10px] text-slate-400 mt-0.5">Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5" data-i18n="card_qr_instr">Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe</p>
                     </div>
                     <div class="bg-white p-2 rounded-xl inline-block mx-auto shadow-md">
                         <div id="gcard-main-qr"></div>
@@ -878,16 +887,16 @@
 
                 <div class="flex justify-between items-center text-[10px] text-slate-500 font-bold uppercase tracking-widest relative z-10 border-t border-slate-800 pt-3 mt-2">
                     <span id="gcard-id-tag" class="text-gold-400">ID #001</span>
-                    <span>Sherehe Yako Kidigital</span>
+                    <span data-i18n="brand_footer">Sherehe Yako Kidigital</span>
                 </div>
             </div>
 
             <!-- DUAL DOWNLOAD BUTTONS -->
             <div class="w-full max-w-xs space-y-2">
-                <button type="button" onclick="downloadCardAsJpg()" class="w-full py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs uppercase shadow-xl hover:brightness-110 transition flex items-center justify-center gap-2">
+                <button type="button" onclick="downloadCardAsJpg()" class="w-full py-3 rounded-2xl gold-gradient text-slate-950 font-black text-xs uppercase shadow-xl hover:brightness-110 transition flex items-center justify-center gap-2" data-i18n="btn_download_direct">
                     <i class="fa-solid fa-download text-base"></i> 1. DOWNLOAD DIRECT (JPG/PNG)
                 </button>
-                <button type="button" onclick="generateAndShowImageModal()" class="w-full py-2.5 rounded-2xl bg-slate-800 border border-gold-500/50 text-gold-400 font-bold text-xs uppercase hover:bg-slate-700 transition flex items-center justify-center gap-2">
+                <button type="button" onclick="generateAndShowImageModal()" class="w-full py-2.5 rounded-2xl bg-slate-800 border border-gold-500/50 text-gold-400 font-bold text-xs uppercase hover:bg-slate-700 transition flex items-center justify-center gap-2" data-i18n="btn_open_img">
                     <i class="fa-solid fa-image text-base"></i> 2. KUFUNGUA PICHA & KU-SAVE
                 </button>
             </div>
@@ -895,16 +904,16 @@
             <!-- IMAGE MODAL FOR LONG-PRESS SAVE -->
             <div id="modal-card-image-preview" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md hidden flex-col items-center justify-center p-4 space-y-3">
                 <div class="flex justify-between items-center w-full max-w-xs text-white">
-                    <span class="text-xs font-bold text-gold-400">🖼️ Picha Ya Kadi Imetengenezwa:</span>
+                    <span class="text-xs font-bold text-gold-400" data-i18n="img_modal_title">🖼️ Picha Ya Kadi Imetengenezwa:</span>
                     <button type="button" onclick="closeImageModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <div class="p-2 bg-slate-900 border border-gold-500/50 rounded-2xl shadow-2xl max-w-xs w-full text-center">
                     <img id="generated-card-img" src="" alt="Kadi Picha" class="w-full rounded-xl border border-slate-800 shadow">
                 </div>
-                <p class="text-[11px] text-slate-300 italic text-center max-w-xs">
+                <p class="text-[11px] text-slate-300 italic text-center max-w-xs" data-i18n="img_modal_instr">
                     💡 Kandamiza picha hiyo hapo juu (Long-press) kisha uchague **"Save Image"** au **"Download Image"** kuhifadhi kwenye Gallery yako!
                 </p>
-                <button type="button" onclick="closeImageModal()" class="px-6 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold">FUNGA</button>
+                <button type="button" onclick="closeImageModal()" class="px-6 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold" data-i18n="btn_close">FUNGA</button>
             </div>
         </section>
 
@@ -1057,6 +1066,271 @@
         let pendingMediaBase64 = null;
         let pendingMediaType = null;
 
+        // MULTI-LANGUAGE DICTIONARY (SWAHILI & ENGLISH)
+        const i18nDictionary = {
+            sw: {
+                support: "Msaada",
+                splash_title: "KARIBU SHEREHE YAKO KIDIGITAL",
+                splash_sub: '"Panga • Shiriki • Sherehe Pamoja"',
+                cust_care: "Huduma kwa Wateja:",
+                btn_register: "REGISTER (JISAJILI)",
+                btn_signin: "SIGN IN (INGIA)",
+                btn_trial: "⚡ JARIBU TRIAL DEMO NOW",
+                reg_heading: "Jisajili Akaunti Mpya",
+                reg_sub: "Weka taarifa zako na nenosiri kuanza",
+                lbl_fullname: "Majina Yako Kamili",
+                lbl_email: "Barua Pepe (Email)",
+                lbl_pass: "Neno la Siri (Password)",
+                lbl_whatsapp: "Namba ya WhatsApp",
+                lbl_role: "Nafasi Yako Kwenye Sherehe",
+                lbl_event_type: "Aina ya Sherehe",
+                lbl_custom_cat: "Andika Aina Yako ya Sherehe (Custom Event)",
+                lbl_event_title: "Jina la Sherehe Yako",
+                btn_reg_submit: "JISAJILI & FUNGUA SHEREHE",
+                has_acc: "Tayari una akaunti?",
+                btn_signin_link: "Ingia Hapa",
+                login_heading: "Ingia Kwenye Sherehe Yako",
+                login_sub: "Weka Email na Password yako",
+                forgot_pass: "Umesahau Password? Reseti Hapa",
+                btn_login_submit: "INGIA KWENYE DASHBOARD",
+                no_acc: "Huna akaunti bado?",
+                btn_reg_link: "Jisajili Hapa",
+                host: "Mwenyeji",
+                tab_templates: "Card Templates & Editor",
+                tab_chat: "Group Chat & Live Summary",
+                tab_budget: "Bajeti Ya Sherehe & Payments",
+                tab_contributions: "Michango & Ahadi Za Watu",
+                tab_cards: "Kadi Za Digital (Single/Double)",
+                tab_thanks: "Ujumbe Wa Shukrani",
+                tab_scanner: "Live Scan Mlangoni",
+                card_designer_title: "Card Designer & Color Templates",
+                visible_trial: "Inaonekana Kwenye Trial",
+                lbl_card_purpose: "1. Chagua Aina Ya Kadi Unayotengeneza:",
+                lbl_layout_style: "2. Chagua Layout Template Style (Template 1-5):",
+                lbl_theme_colors: "3. Chagua Theme Ya Rangi Za Kadi:",
+                lbl_card_title: "Kichwa cha Kadi",
+                lbl_couple_names: "Majina ya Wahusika (Maharusi)",
+                lbl_date_venue: "Tarehe & Eneo",
+                lbl_invite_msg: "Ujumbe Mfupi wa Mwaliko",
+                guest_of_honor: "Mgeni Rasmi: Mwaliko Maalum (VIP)",
+                brand_footer: "Sherehe Yako Kidigital",
+                committee_dashboard: "Dashboard ya Wanakamati",
+                main_budget: "Bajeti Kuu:",
+                collected_funds: "Michango Iliyopokelewa:",
+                deficit_funds: "Salio Linalohitajika (Deficit):",
+                pledges_funds: "Jumla ya Ahadi Bado:",
+                share_link_title: "🔗 LINK YA SHARE SHEREHE:",
+                btn_copy_link: "KOPI LINK YA SHEREHE",
+                budget_tab_title: "Bajeti Kuu & Auto-Balance Ya Pesa",
+                budget_tab_sub: "Weka viwango vya michango na uone salio linalojibalance kiotomatiki",
+                chair_only: "🔒 Mwenyekiti, Katibu & Mwekahazina Only",
+                collected_paid: "Iliyopatikana (Paid)",
+                deficit_balance: "Salio Bado (Deficit)",
+                single_rate: "Kiwango Cha Single",
+                double_rate: "Kiwango Cha Double",
+                bank_details_title: "Seta Taarifa Za Benki Na Simu Za Kuchangia:",
+                lbl_bank: "Benki / Bank Name & Account Number:",
+                lbl_bank_name: "Jina La Account Ya Benki:",
+                lbl_phone_acc: "Namba Ya Simu Ya Kuchangia (M-Pesa/Tigo Pesa):",
+                lbl_phone_name: "Jina Linalosoma Kwenye Simu:",
+                btn_save_budget: "HIFADHI TAARIFA ZA MALIPO NA BAJETI",
+                rec_contrib_title: "Rekodi Mchango / Ahadi",
+                lbl_contributor_name: "Jina la Mchangiaji",
+                lbl_whatsapp_num: "Namba ya Simu / WhatsApp",
+                lbl_payment_status: "Aina ya Malipo",
+                opt_paid: "Mchango Uliolipwa (Cash / Bank)",
+                opt_pledge: "Ahadi Bado Hajaidhinisha",
+                lbl_amount: "Kiasi (TSh)",
+                btn_save_contrib: "HIFADHI MCHANGO",
+                contrib_list_title: "Orodha ya Michango na Ahadi Za Watu",
+                th_name_num: "Jina & Namba",
+                th_group: "Kundi",
+                th_amount: "Kiasi (TSh)",
+                th_status_action: "Hali / Badili",
+                digital_cards_title: "Kadi Za Digital Zilizotengenezwa Kiotomatiki",
+                btn_send_all_cards: "🚀 TUMA KADI KWA WOTE WALIOCHANGA (PAID)",
+                th_id_card: "ID / Kadi",
+                th_guest: "Mwaalikwa",
+                th_number: "Namba",
+                th_type: "Aina",
+                th_action: "Tuma Template Card",
+                thanks_tab_title: "Ujumbe Wa Shukrani (Walioingia Ukumbini)",
+                thanks_tab_sub: "Orodha hii inachukua waalikwa waliothibitishwa kuingia Ukumbini pekee!",
+                btn_send_all_thanks: "TUMA SHUKRANI KWA WOTE WALIOINGIA",
+                lbl_select_thanks_tpl: "Chagua Au Bonyeza Template Ya Ujumbe:",
+                lbl_edit_thanks: "Andika Au Hariri Ujumbe Wako Wa Shukrani Hapa:",
+                confirmed_guests_list: "Orodha ya Waliothibitishwa Ukumbini:",
+                th_guest_card: "Mgeni / Kadi",
+                th_phone: "Namba ya Simu",
+                th_time: "Muda wa Kuingia",
+                th_send_direct: "Tuma Moja Kwa Moja",
+                scanner_title: "Live Gate Scanner & Check-in",
+                scanner_sub: "Tafuta Mgeni mwenye Single au Double Card kisha ubonyeze Confirm ili aonekane kwenye list!",
+                scanner_method_1: "Njia ya 1: Piga Picha ya QR (Native Camera)",
+                scanner_method_1_desc: "Piga picha ya kadi ya mgeni, mfumo utaikagua kulingana na Single au Double card.",
+                btn_snap_qr: "PIGA PICHA YA QR CODE YA MGENI",
+                scanner_method_2: "Njia ya 2: Tafuta Mgeni kwa Jina (Auto-Suggest)",
+                scanner_method_2_desc: "Anza kuandika jina au herufi (mfano: \"A\"), majina yatajitokeza kiotomatiki:",
+                btn_confirm: "CONFIRM",
+                confirmed_guests_title: "Waalikwa Waliothibitishwa (Confirmed)",
+                th_guest_step: "Mgeni / Hatua",
+                th_card_id: "Kadi ID",
+                th_gate_time: "Geti / Muda",
+                th_status: "Hali",
+                pub_badge: "KARIBU MWALIKO MAALUM",
+                pub_desc: "Tazama bajeti, michango, na uweke taarifa zako kutoa mchango au ahadi ili ujiunge kwenye Group Chat!",
+                pub_contrib_list: "Orodha ya Watu Waliochanga na Kuahidi:",
+                th_name: "Jina",
+                pub_bank_title: "💳 Namba Za Kuchangia Pesa:",
+                lbl_contrib_or_pledge: "Unatoa Mchango au Ahadi?",
+                lbl_amount_pledged: "Kiasi Unachotoa / Unachoahidi (TSh)",
+                btn_submit_chat: "WASILISHA & INGIA KWENYE GROUP CHAT 🚀",
+                card_special_for: "KADI HII NI MAALUM KWA AJILI YA:",
+                card_qr_instr: "Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe",
+                btn_download_direct: "1. DOWNLOAD DIRECT (JPG/PNG)",
+                btn_open_img: "2. KUFUNGUA PICHA & KU-SAVE",
+                img_modal_title: "🖼️ Picha Ya Kadi Imetengenezwa:",
+                img_modal_instr: "💡 Kandamiza picha hiyo hapo juu (Long-press) kisha uchague **\"Save Image\"** au **\"Download Image\"** kuhifadhi kwenye Gallery yako!",
+                btn_close: "FUNGA"
+            },
+            en: {
+                support: "Support",
+                splash_title: "WELCOME TO YOUR DIGITAL EVENT",
+                splash_sub: '"Plan • Share • Celebrate Together"',
+                cust_care: "Customer Support:",
+                btn_register: "REGISTER NOW",
+                btn_signin: "SIGN IN",
+                btn_trial: "⚡ TRY TRIAL DEMO NOW",
+                reg_heading: "Register New Account",
+                reg_sub: "Enter your details and password to start",
+                lbl_fullname: "Full Names",
+                lbl_email: "Email Address",
+                lbl_pass: "Password",
+                lbl_whatsapp: "WhatsApp Number",
+                lbl_role: "Your Role in Event",
+                lbl_event_type: "Event Type",
+                lbl_custom_cat: "Specify Your Event Type",
+                lbl_event_title: "Event Title",
+                btn_reg_submit: "REGISTER & START EVENT",
+                has_acc: "Already have an account?",
+                btn_signin_link: "Sign In Here",
+                login_heading: "Sign In To Your Event",
+                login_sub: "Enter your email and password",
+                forgot_pass: "Forgot Password? Reset Here",
+                btn_login_submit: "ENTER DASHBOARD",
+                no_acc: "Don't have an account?",
+                btn_reg_link: "Register Here",
+                host: "Host",
+                tab_templates: "Card Templates & Editor",
+                tab_chat: "Group Chat & Live Summary",
+                tab_budget: "Event Budget & Payments",
+                tab_contributions: "Contributions & Pledges",
+                tab_cards: "Digital Cards (Single/Double)",
+                tab_thanks: "Thank You Messages",
+                tab_scanner: "Live Gate Check-in",
+                card_designer_title: "Card Designer & Color Templates",
+                visible_trial: "Visible on Trial",
+                lbl_card_purpose: "1. Select Card Purpose:",
+                lbl_layout_style: "2. Select Layout Template Style (Template 1-5):",
+                lbl_theme_colors: "3. Select Card Theme Colors:",
+                lbl_card_title: "Card Title",
+                lbl_couple_names: "Couple / Names",
+                lbl_date_venue: "Date & Venue",
+                lbl_invite_msg: "Invitation Message",
+                guest_of_honor: "Guest of Honor: Special Invite (VIP)",
+                brand_footer: "Digital Event Platform",
+                committee_dashboard: "Committee Dashboard",
+                main_budget: "Main Budget:",
+                collected_funds: "Collected Funds:",
+                deficit_funds: "Deficit (Remaining):",
+                pledges_funds: "Total Pledges:",
+                share_link_title: "🔗 EVENT SHARE LINK:",
+                btn_copy_link: "COPY EVENT LINK",
+                budget_tab_title: "Main Budget & Auto-Balance",
+                budget_tab_sub: "Set contribution rates and view auto-balancing balances",
+                chair_only: "🔒 Chairman, Secretary & Treasurer Only",
+                collected_paid: "Collected (Paid)",
+                deficit_balance: "Deficit (Balance)",
+                single_rate: "Single Rate",
+                double_rate: "Double Rate",
+                bank_details_title: "Set Bank and Mobile Payment Details:",
+                lbl_bank: "Bank Name & Account Number:",
+                lbl_bank_name: "Bank Account Holder Name:",
+                lbl_phone_acc: "Mobile Collection Number (M-Pesa/Tigo Pesa):",
+                lbl_phone_name: "Mobile Account Name:",
+                btn_save_budget: "SAVE PAYMENT & BUDGET DETAILS",
+                rec_contrib_title: "Record Contribution / Pledge",
+                lbl_contributor_name: "Contributor Name",
+                lbl_whatsapp_num: "Phone / WhatsApp Number",
+                lbl_payment_status: "Payment Status",
+                opt_paid: "Paid Contribution (Cash / Bank)",
+                opt_pledge: "Pledge (Pending)",
+                lbl_amount: "Amount (TSh)",
+                btn_save_contrib: "SAVE CONTRIBUTION",
+                contrib_list_title: "Contributions & Pledges List",
+                th_name_num: "Name & Phone",
+                th_group: "Group",
+                th_amount: "Amount (TSh)",
+                th_status_action: "Status / Action",
+                digital_cards_title: "Automatically Generated Digital Cards",
+                btn_send_all_cards: "🚀 SEND CARDS TO ALL PAID GUESTS",
+                th_id_card: "ID / Card",
+                th_guest: "Guest",
+                th_number: "Phone",
+                th_type: "Type",
+                th_action: "Send Template Card",
+                thanks_tab_title: "Thank You Messages (Hall Checked-in Guests)",
+                thanks_tab_sub: "This list pulls confirmed guests who checked into the hall!",
+                btn_send_all_thanks: "SEND THANKS TO ALL CHECKED-IN",
+                lbl_select_thanks_tpl: "Select or Click Message Template:",
+                lbl_edit_thanks: "Write or Edit Your Thank You Message:",
+                confirmed_guests_list: "Confirmed Hall Guests List:",
+                th_guest_card: "Guest / Card",
+                th_phone: "Phone Number",
+                th_time: "Check-in Time",
+                th_send_direct: "Send Directly",
+                scanner_title: "Live Gate Scanner & Check-in",
+                scanner_sub: "Search Single or Double card guest then click Confirm to record arrival!",
+                scanner_method_1: "Method 1: Scan QR Photo (Native Camera)",
+                scanner_method_1_desc: "Snap guest card photo, system verifies Single or Double card rules.",
+                btn_snap_qr: "SNAP GUEST QR CODE PHOTO",
+                scanner_method_2: "Method 2: Search Guest by Name (Auto-Suggest)",
+                scanner_method_2_desc: "Start typing name or letters (e.g., \"A\"), matching names will appear:",
+                btn_confirm: "CONFIRM",
+                confirmed_guests_title: "Confirmed Guests",
+                th_guest_step: "Guest / Step",
+                th_card_id: "Card ID",
+                th_gate_time: "Gate / Time",
+                th_status: "Status",
+                pub_badge: "WELCOME SPECIAL INVITE",
+                pub_desc: "View budget, contributions, and submit your contribution or pledge to join the Group Chat!",
+                pub_contrib_list: "Contributors & Pledges List:",
+                th_name: "Name",
+                pub_bank_title: "💳 Contribution Account Details:",
+                lbl_contrib_or_pledge: "Contribution or Pledge?",
+                lbl_amount_pledged: "Amount Pledged / Paid (TSh)",
+                btn_submit_chat: "SUBMIT & JOIN GROUP CHAT 🚀",
+                card_special_for: "THIS CARD IS ISSUED SPECIALLY FOR:",
+                card_qr_instr: "Please present this QR Code at the gate on event day",
+                btn_download_direct: "1. DOWNLOAD DIRECT (JPG/PNG)",
+                btn_open_img: "2. OPEN IMAGE & SAVE",
+                img_modal_title: "🖼️ Generated Card Image:",
+                img_modal_instr: "💡 Long-press the image above and select **\"Save Image\"** or **\"Download Image\"** to save to your Gallery!",
+                btn_close: "CLOSE"
+            }
+        };
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const dict = i18nDictionary[lang];
+            document.querySelectorAll('[data-i18n]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n');
+                if(dict[key]) {
+                    elem.innerText = dict[key];
+                }
+            });
+        }
+
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const eventIdParam = urlParams.get('event_id');
@@ -1179,7 +1453,6 @@
         async function setupPublicGuestView(eventId) {
             switchView('public-guest');
             
-            // Listen to event config & contributions for public view
             rdb.ref('config').on('value', snapshot => {
                 if(snapshot.exists()) {
                     const cfg = snapshot.val();
@@ -1201,12 +1474,18 @@
             rdb.ref('contributions').on('value', snapshot => {
                 let publicContribList = [];
                 let totalCollected = 0;
+                let paidCount = 0;
+                let pledgeCount = 0;
+
                 if(snapshot.exists()) {
                     snapshot.forEach(child => {
                         const item = child.val();
                         publicContribList.push(item);
                         if(item.status === 'PAID') {
                             totalCollected += Number(item.amount || 0);
+                            paidCount++;
+                        } else {
+                            pledgeCount++;
                         }
                     });
                 }
@@ -1214,6 +1493,7 @@
                 document.getElementById('pub-sum-budget').innerText = `TSh ${eventData.budget.toLocaleString()}`;
                 document.getElementById('pub-sum-collected').innerText = `TSh ${totalCollected.toLocaleString()}`;
                 document.getElementById('pub-sum-deficit').innerText = `TSh ${deficit.toLocaleString()}`;
+                document.getElementById('pub-counter-badge').innerText = `Waliotoa: ${paidCount} | Waliouahidi: ${pledgeCount}`;
 
                 const tbody = document.getElementById('pub-contrib-tbody');
                 if(tbody) {
@@ -1847,14 +2127,14 @@
                 cardTypeAssigned = 'SINGLE';
             }
 
-            await rdb.ref('contributions').push({
+            const newContribRef = await rdb.ref('contributions').push({
                 name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
             });
 
             if(status === 'PAID') {
                 const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
                 await rdb.ref('cards').push({
-                    id: cardId, name, phone, type: cardTypeAssigned, scanned: false
+                    id: cardId, name, phone, type: cardTypeAssigned, scanned: false, contribKey: newContribRef.key
                 });
             }
 
@@ -1869,6 +2149,28 @@
             document.getElementById('c-phone').value = '';
             document.getElementById('c-amount').value = '';
             alert(`Mchango umehifadhiwa kikamilifu! Kadi imewekwa: ${cardTypeAssigned} Card`);
+        }
+
+        // FUNCTION TO UPDATE PLEDGE TO PAID BY CHAIRMAN / SECRETARY
+        async function upgradePledgeToPaid(contribKey, name, phone, amount, categoryType, cardTypeAssigned) {
+            if(!confirm(`Je, unathibitisha kwamba ${name} amelipa ahadi yake ya TSh ${Number(amount).toLocaleString()}?`)) return;
+
+            await rdb.ref('contributions/' + contribKey).update({ status: 'PAID' });
+
+            // Generate card for this newly paid pledge
+            const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+            await rdb.ref('cards').push({
+                id: cardId, name, phone, type: cardTypeAssigned || 'SINGLE', scanned: false, contribKey: contribKey
+            });
+
+            const msg = {
+                sender: "SYSTEM (AHADI IMELIPWA)",
+                text: `✅ ${name} amelipa ahadi yake kikamilifu! Kadi ya ${cardTypeAssigned || 'SINGLE'} imetengenezwa.`,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            await rdb.ref('messages').push(msg);
+
+            alert(`Ahadi ya ${name} imebadilishwa kuwa Mchango uliolipwa (PAID) na kadi imetengenezwa!`);
         }
 
         async function handlePublicGuestSubmit(e) {
@@ -1895,14 +2197,14 @@
                 cardTypeAssigned = 'SINGLE';
             }
 
-            await rdb.ref('contributions').push({
+            const newContribRef = await rdb.ref('contributions').push({
                 name, phone, status, amount, categoryType, cardTypeAssigned, date: new Date().toLocaleDateString()
             });
 
             if(status === 'PAID') {
                 const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
                 await rdb.ref('cards').push({
-                    id: cardId, name, phone, type: cardTypeAssigned, scanned: false
+                    id: cardId, name, phone, type: cardTypeAssigned, scanned: false, contribKey: newContribRef.key
                 });
             }
 
@@ -1928,11 +2230,25 @@
 
         function renderContributions() {
             const tbody = document.getElementById('contrib-table-body');
+            const badge = document.getElementById('contrib-counter-badge');
             if(!tbody) return;
 
             if(contributionsList.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Hakuna mchango au ahadi bado.</td></tr>';
+                if(badge) badge.innerText = "Waliotoa: 0 | Waliouahidi: 0";
                 return;
+            }
+
+            let paidCount = 0;
+            let pledgeCount = 0;
+
+            contributionsList.forEach(c => {
+                if(c.status === 'PAID') paidCount++;
+                else pledgeCount++;
+            });
+
+            if(badge) {
+                badge.innerText = `Waliotoa: ${paidCount} | Waliouahidi: ${pledgeCount}`;
             }
 
             tbody.innerHTML = contributionsList.map(c => `
@@ -1940,7 +2256,16 @@
                     <td class="p-2.5 font-bold text-white">${c.name} <br><span class="text-[10px] text-slate-400 font-mono">${c.phone}</span></td>
                     <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 font-bold text-[10px]">${c.categoryType || 'SINGLE'} (${c.cardTypeAssigned || 'SINGLE'})</span></td>
                     <td class="p-2.5 font-bold text-emerald-400">TSh ${Number(c.amount || 0).toLocaleString()}</td>
-                    <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.status === 'PAID' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${c.status === 'PAID' ? '✅ Imelipwa' : '⏳ Ahadi Bado'}</span></td>
+                    <td class="p-2.5 text-right flex items-center justify-end gap-2">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.status === 'PAID' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
+                            ${c.status === 'PAID' ? '✅ Imelipwa' : '⏳ Ahadi'}
+                        </span>
+                        ${c.status === 'PLEDGE' ? `
+                            <button type="button" onclick="upgradePledgeToPaid('${c.key}', '${c.name.replace(/'/g, "\\'")}', '${c.phone}', ${c.amount}, '${c.categoryType}', '${c.cardTypeAssigned}')" class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[9px] shadow" title="Badili Ahadi kwenda Imelipwa">
+                                🔄 Maliza (Paid)
+                            </button>
+                        ` : ''}
+                    </td>
                 </tr>
             `).join('');
         }
