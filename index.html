@@ -48,11 +48,19 @@
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
+        /* Template Styles 1 to 10 */
         .tpl-style-1 { border-width: 4px; border-style: solid; border-radius: 1.5rem; }
         .tpl-style-2 { border-width: 1px; border-style: dashed; border-radius: 0.5rem; }
         .tpl-style-3 { border-top-width: 12px; border-style: solid; border-radius: 1rem; }
         .tpl-style-4 { border-width: 8px; border-style: double; border-radius: 2rem; }
         .tpl-style-5 { border-left-width: 10px; border-style: solid; border-radius: 1rem; }
+        
+        /* New 5 Unique Templates (T6 - T10) */
+        .tpl-style-6 { border: 3px solid; border-radius: 2.5rem; box-shadow: inset 0 0 15px rgba(234, 179, 8, 0.2); }
+        .tpl-style-7 { border-top: 6px solid; border-bottom: 6px solid; border-radius: 0.75rem; }
+        .tpl-style-8 { border-width: 2px; border-style: solid; border-radius: 3rem; clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%); }
+        .tpl-style-9 { border-left: 14px solid; border-right: 2px solid; border-radius: 1.25rem; }
+        .tpl-style-10 { border: 4px groove; border-radius: 1rem; }
         
         .whatsapp-bg { background-color: #0b141a; background-image: radial-gradient(circle at center, #111b21 0%, #0b141a 100%); }
     </style>
@@ -233,7 +241,7 @@
                         <div class="relative">
                             <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none pr-10">
                             <button type="button" onclick="togglePasswordVisibility('login-password', 'login-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
-                                <i id="reg-eye" class="fa-solid fa-eye"></i>
+                                <i id="login-eye" class="fa-solid fa-eye"></i>
                             </button>
                         </div>
                     </div>
@@ -313,13 +321,18 @@
                         </div>
 
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
-                            <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">2. Chagua Layout Template Style (Template 1-5):</label>
-                            <div class="grid grid-cols-5 gap-1 text-[11px]">
+                            <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">2. Chagua Layout Template Style (Template 1-10):</label>
+                            <div class="grid grid-cols-5 gap-1.5 text-[11px]">
                                 <button type="button" onclick="selectCardTemplateStyle(1)" id="btn-tpl-1" class="p-2 rounded-lg gold-gradient text-slate-950 font-black text-center">T1</button>
                                 <button type="button" onclick="selectCardTemplateStyle(2)" id="btn-tpl-2" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T2</button>
                                 <button type="button" onclick="selectCardTemplateStyle(3)" id="btn-tpl-3" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T3</button>
                                 <button type="button" onclick="selectCardTemplateStyle(4)" id="btn-tpl-4" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T4</button>
                                 <button type="button" onclick="selectCardTemplateStyle(5)" id="btn-tpl-5" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T5</button>
+                                <button type="button" onclick="selectCardTemplateStyle(6)" id="btn-tpl-6" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T6 ✨</button>
+                                <button type="button" onclick="selectCardTemplateStyle(7)" id="btn-tpl-7" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T7 🌟</button>
+                                <button type="button" onclick="selectCardTemplateStyle(8)" id="btn-tpl-8" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T8 👑</button>
+                                <button type="button" onclick="selectCardTemplateStyle(9)" id="btn-tpl-9" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T9 💎</button>
+                                <button type="button" onclick="selectCardTemplateStyle(10)" id="btn-tpl-10" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T10 🚀</button>
                             </div>
                         </div>
 
@@ -346,7 +359,7 @@
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Aina ya Mhusika wa Sherehe (Mfano: Bwana Harusi / Mgeni Mwaliko)</label>
-                                <input type="text" id="card-edit-role-type" oninput="updateLiveCard()" value="Mgeni Mwaliko Maalum" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                <input type="text" id="card-edit-role-type" oninput="updateLiveCard()" value="Mwaliko Maalum" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_date_venue">Tarehe & Eneo</label>
@@ -366,7 +379,7 @@
                                 <div>
                                     <span id="prev-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">HARUSI YA WAPENDANAO</span>
                                     <h2 id="prev-names" class="text-xl font-serif font-bold text-white mt-0.5">Juma & Amina</h2>
-                                    <span id="prev-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mgeni Mwaliko Maalum</span>
+                                    <span id="prev-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mwaliko Maalum</span>
                                 </div>
                                 <p id="prev-msg" class="text-[11px] text-slate-300 italic px-1 leading-snug">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
                             </div>
@@ -374,7 +387,7 @@
                             <div id="preview-bottom-box" class="space-y-1.5 bg-slate-900/90 p-3 rounded-2xl border border-gold-500/30 text-xs text-left relative z-10 flex items-center justify-between">
                                 <div>
                                     <p class="text-gold-400 font-bold text-[11px]" id="prev-date">12 Desemba 2026 - Mlimani City</p>
-                                    <p class="text-[9px] text-slate-400" id="prev-guest-type-label">Mwaliko Maalum (VIP)</p>
+                                    <p class="text-[9px] text-slate-400" id="prev-guest-type-label">Uthibitisho Mlangoni (VIP)</p>
                                 </div>
                                 <div class="bg-white p-1 rounded-lg" id="preview-mini-qr-wrapper">
                                     <div id="preview-mini-qr"></div>
@@ -881,7 +894,7 @@
                     <div>
                         <span id="gcard-event-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">SHEREHE YAKO</span>
                         <h2 id="gcard-couple-names" class="text-2xl font-serif font-bold text-white mt-0.5">Juma & Amina</h2>
-                        <span id="gcard-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mgeni Mwaliko Maalum</span>
+                        <span id="gcard-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mwaliko Maalum</span>
                     </div>
 
                     <div class="p-2.5 rounded-2xl bg-slate-900/90 border border-gold-500/40 text-center space-y-1">
@@ -1075,10 +1088,12 @@
             phoneName: 'JUMA MKWAWA',
             cardTitle: 'MWALIKO RASMI',
             coupleNames: 'Mhusika Mkuu',
-            roleType: 'Mgeni Mwaliko Maalum',
+            roleType: 'Mwaliko Maalum',
             eventDate: '12 Desemba 2026 - Dar es Salaam',
             cardMsg: 'Tunayo furaha kubwa kukualika katika sherehe yetu...',
-            cardPurpose: 'HALL' // 'COMMITTEE', 'CONTRIBUTION', 'HALL'
+            cardPurpose: 'HALL',
+            tplStyle: 1,
+            cardTheme: 'gold'
         };
         let contributionsList = [];
         let cardsList = [];
@@ -1128,13 +1143,13 @@
                 card_designer_title: "Card Designer & Color Templates",
                 visible_trial: "Inaonekana Kwenye Trial",
                 lbl_card_purpose: "1. Chagua Aina Ya Kadi Unayotengeneza:",
-                lbl_layout_style: "2. Chagua Layout Template Style (Template 1-5):",
+                lbl_layout_style: "2. Chagua Layout Template Style (Template 1-10):",
                 lbl_theme_colors: "3. Chagua Theme Ya Rangi Za Kadi:",
                 lbl_card_title: "Kichwa cha Kadi",
                 lbl_couple_names: "Majina ya Wahusika / Wageni",
                 lbl_date_venue: "Tarehe & Eneo",
                 lbl_invite_msg: "Ujumbe Mfupi wa Mwaliko",
-                guest_of_honor: "Mgeni Rasmi: Mwaliko Maalum (VIP)",
+                guest_of_honor: "Uthibitisho Mlangoni (VIP)",
                 brand_footer: "Sherehe Yako Kidigital",
                 committee_dashboard: "Dashboard ya Wanakamati",
                 main_budget: "Bajeti Kuu:",
@@ -1199,7 +1214,7 @@
                 th_card_id: "Kadi ID",
                 th_gate_time: "Geti / Muda",
                 th_status: "Hali",
-                pub_badge: "KARIBU MWALIKO MAALUM",
+                pub_badge: "KADI YA MWALIKO RASMI",
                 pub_desc: "Tazama bajeti, michango, na uweke taarifa zako kutoa mchango au ahadi ili ujiunge kwenye Group Chat!",
                 pub_contrib_list: "Orodha ya Watu Waliochanga na Kuahidi:",
                 th_name: "Jina",
@@ -1253,13 +1268,13 @@
                 card_designer_title: "Card Designer & Color Templates",
                 visible_trial: "Visible on Trial",
                 lbl_card_purpose: "1. Select Card Purpose:",
-                lbl_layout_style: "2. Select Layout Template Style (Template 1-5):",
+                lbl_layout_style: "2. Select Layout Template Style (Template 1-10):",
                 lbl_theme_colors: "3. Select Card Theme Colors:",
                 lbl_card_title: "Card Title",
                 lbl_couple_names: "Couple / Names",
                 lbl_date_venue: "Date & Venue",
                 lbl_invite_msg: "Invitation Message",
-                guest_of_honor: "Guest of Honor: Special Invite (VIP)",
+                guest_of_honor: "Gate Verification (VIP)",
                 brand_footer: "Digital Event Platform",
                 committee_dashboard: "Committee Dashboard",
                 main_budget: "Main Budget:",
@@ -1324,7 +1339,7 @@
                 th_card_id: "Card ID",
                 th_gate_time: "Gate / Time",
                 th_status: "Status",
-                pub_badge: "WELCOME SPECIAL INVITE",
+                pub_badge: "OFFICIAL INVITATION CARD",
                 pub_desc: "View budget, contributions, and submit your contribution or pledge to join the Group Chat!",
                 pub_contrib_list: "Contributors & Pledges List:",
                 th_name: "Name",
@@ -1425,8 +1440,16 @@
                         if(cfg.roleType) document.getElementById('gcard-role-type').innerText = cfg.roleType;
                         if(cfg.eventDate) document.getElementById('gcard-event-date').innerText = cfg.eventDate;
                         if(cfg.cardMsg) document.getElementById('gcard-custom-msg').innerText = cfg.cardMsg;
-                        if(cfg.tplStyle) selectCardTemplateStyle(cfg.tplStyle);
-                        if(cfg.cardPurpose) applyPurposeToCardView(cfg.cardPurpose, 'public');
+                        
+                        if(cfg.tplStyle) {
+                            applyTemplateStyleToElement(cfg.tplStyle, document.getElementById('guest-card-download-wrapper'));
+                        }
+                        if(cfg.cardTheme) {
+                            applyCardThemeToElement(cfg.cardTheme, document.getElementById('guest-card-download-wrapper'));
+                        }
+                        if(cfg.cardPurpose) {
+                            applyPurposeToCardView(cfg.cardPurpose, 'public');
+                        }
                     }
 
                     const qrBox = document.getElementById('gcard-main-qr');
@@ -1646,7 +1669,9 @@
                     single: 50000,
                     double: 100000,
                     committee: 150000,
-                    cardPurpose: 'HALL'
+                    cardPurpose: 'HALL',
+                    tplStyle: 1,
+                    cardTheme: 'gold'
                 });
 
                 alert("Usajili umefanikiwa!");
@@ -1674,7 +1699,7 @@
         function startTrialExperience() {
             currentUser = { uid: 'demo-user', email: 'demo@trial.com', dbData: { name: 'Mteja Trial', role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' } };
             activeEventOwnerId = 'demo-user';
-            eventData = { title: 'Sherehe ya Demo', category: 'Corporate Event', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000, cardPurpose: 'HALL' };
+            eventData = { title: 'Sherehe ya Demo', category: 'Corporate Event', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000, cardPurpose: 'HALL', tplStyle: 1, cardTheme: 'gold' };
             renderDashboard();
             switchView('dashboard');
             initRealtimeListeners();
@@ -1824,51 +1849,64 @@
         function applyPurposeToCardView(type, mode) {
             const qrWrapper = mode === 'public' ? document.getElementById('gcard-main-qr-wrapper') : document.getElementById('preview-mini-qr-wrapper');
             const noticeLabel = mode === 'public' ? document.getElementById('gcard-qr-notice') : document.getElementById('prev-guest-type-label');
-            const bottomBox = mode === 'public' ? document.getElementById('gcard-bottom-wrapper') : document.getElementById('preview-bottom-box');
 
             if(type === 'COMMITTEE' || type === 'CONTRIBUTION') {
                 if(qrWrapper) qrWrapper.style.display = 'none';
                 if(noticeLabel) noticeLabel.innerText = type === 'COMMITTEE' ? 'Wanakamati Maalum' : 'Mchangiaji Rasmi';
             } else {
                 if(qrWrapper) qrWrapper.style.display = 'block';
-                if(noticeLabel) noticeLabel.innerText = mode === 'public' ? 'Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe' : 'Mgeni Rasmi: Mwaliko Maalum (VIP)';
+                if(noticeLabel) noticeLabel.innerText = mode === 'public' ? 'Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe' : 'Uthibitisho Mlangoni (VIP)';
             }
         }
 
         function selectCardTemplateStyle(num) {
-            for(let i=1; i<=5; i++) {
+            for(let i=1; i<=10; i++) {
                 const btn = document.getElementById(`btn-tpl-${i}`);
-                if(btn) btn.className = "p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center";
+                if(btn) {
+                    if(i <= 5) {
+                        btn.className = "p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center";
+                    } else {
+                        btn.className = "p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center";
+                    }
+                }
             }
             const activeBtn = document.getElementById(`btn-tpl-${num}`);
             if(activeBtn) activeBtn.className = "p-2 rounded-lg gold-gradient text-slate-950 font-black text-center";
 
             const frame = document.getElementById('live-card-frame');
-            const gFrame = document.getElementById('guest-card-download-wrapper');
+            applyTemplateStyleToElement(num, frame);
 
-            const styleClasses = ['tpl-style-1', 'tpl-style-2', 'tpl-style-3', 'tpl-style-4', 'tpl-style-5'];
-            
-            styleClasses.forEach(cls => {
-                frame.classList.remove(cls);
-                if(gFrame) gFrame.classList.remove(cls);
-            });
-
-            frame.classList.add(`tpl-style-${num}`);
-            if(gFrame) gFrame.classList.add(`tpl-style-${num}`);
-
+            eventData.tplStyle = num;
             if(activeEventOwnerId) {
                 rdb.ref(`events/${activeEventOwnerId}/config`).update({ tplStyle: num });
             }
         }
 
+        function applyTemplateStyleToElement(num, el) {
+            if(!el) return;
+            const styleClasses = ['tpl-style-1', 'tpl-style-2', 'tpl-style-3', 'tpl-style-4', 'tpl-style-5', 'tpl-style-6', 'tpl-style-7', 'tpl-style-8', 'tpl-style-9', 'tpl-style-10'];
+            styleClasses.forEach(cls => el.classList.remove(cls));
+            el.classList.add(`tpl-style-${num}`);
+        }
+
         function applyCardTheme(theme) {
             const frame = document.getElementById('live-card-frame');
-            if(theme === 'gold') { frame.style.backgroundColor = '#020617'; frame.style.borderColor = '#eab308'; }
-            if(theme === 'silver') { frame.style.backgroundColor = '#0f172a'; frame.style.borderColor = '#cbd5e1'; }
-            if(theme === 'emerald') { frame.style.backgroundColor = '#022c22'; frame.style.borderColor = '#10b981'; }
-            if(theme === 'purple') { frame.style.backgroundColor = '#1e1b4b'; frame.style.borderColor = '#6366f1'; }
-            if(theme === 'rose') { frame.style.backgroundColor = '#4c0519'; frame.style.borderColor = '#f43f5e'; }
-            if(theme === 'ruby') { frame.style.backgroundColor = '#450a0a'; frame.style.borderColor = '#ef4444'; }
+            applyCardThemeToElement(theme, frame);
+
+            eventData.cardTheme = theme;
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ cardTheme: theme });
+            }
+        }
+
+        function applyCardThemeToElement(theme, el) {
+            if(!el) return;
+            if(theme === 'gold') { el.style.backgroundColor = '#020617'; el.style.borderColor = '#eab308'; }
+            if(theme === 'silver') { el.style.backgroundColor = '#0f172a'; el.style.borderColor = '#cbd5e1'; }
+            if(theme === 'emerald') { el.style.backgroundColor = '#022c22'; el.style.borderColor = '#10b981'; }
+            if(theme === 'purple') { el.style.backgroundColor = '#1e1b4b'; el.style.borderColor = '#6366f1'; }
+            if(theme === 'rose') { el.style.backgroundColor = '#4c0519'; el.style.borderColor = '#f43f5e'; }
+            if(theme === 'ruby') { el.style.backgroundColor = '#450a0a'; el.style.borderColor = '#ef4444'; }
         }
 
         function updateLiveCard() {
@@ -1917,7 +1955,15 @@
                     if(cfg.bankName) eventData.bankName = cfg.bankName;
                     if(cfg.phoneAcc) eventData.phoneAcc = cfg.phoneAcc;
                     if(cfg.phoneName) eventData.phoneName = cfg.phoneName;
-                    if(cfg.tplStyle) selectCardTemplateStyle(cfg.tplStyle);
+                    
+                    if(cfg.tplStyle) {
+                        eventData.tplStyle = cfg.tplStyle;
+                        selectCardTemplateStyle(cfg.tplStyle);
+                    }
+                    if(cfg.cardTheme) {
+                        eventData.cardTheme = cfg.cardTheme;
+                        applyCardTheme(cfg.cardTheme);
+                    }
                     if(cfg.cardPurpose) {
                         eventData.cardPurpose = cfg.cardPurpose;
                         applyPurposeToCardView(cfg.cardPurpose, 'dashboard');
@@ -2533,7 +2579,7 @@
             const coupleNames = document.getElementById('card-edit-names').value || eventData.title;
             const cardTitle = document.getElementById('card-edit-title').value || eventData.category;
 
-            const cardMessage = `👑 *KADI YA MWALIKO MAALUM DIGITAL (${type} CARD)* 👑\n\n` +
+            const cardMessage = `👑 *KADI YA MWALIKO RASMI (${type} CARD)* 👑\n\n` +
                                 `Ndugu: *${name}*\n` +
                                 `Unakaribishwa Kwenye: *${cardTitle}*\n` +
                                 `Wahusika/Taasisi: *${coupleNames}*\n` +
