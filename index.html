@@ -43,7 +43,7 @@
         .gold-gradient { background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%); }
         .gold-text { background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .gold-frame { border: 4px solid #eab308; box-shadow: 0 0 25px rgba(234, 179, 8, 0.3); }
-        .card-preview { aspect-ratio: 9/16; max-width: 340px; }
+        .card-preview { width: 100%; max-width: 380px; min-height: 580px; margin: 0 auto; }
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -345,6 +345,10 @@
                                 <input type="text" id="card-edit-names" oninput="updateLiveCard()" value="Juma & Amina" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Aina ya Mhusika wa Sherehe (Mfano: Bwana Harusi / Mgeni Mwaliko)</label>
+                                <input type="text" id="card-edit-role-type" oninput="updateLiveCard()" value="Mgeni Mwaliko Maalum" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div>
                                 <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_date_venue">Tarehe & Eneo</label>
                                 <input type="text" id="card-edit-date" oninput="updateLiveCard()" value="12 Desemba 2026 - Mlimani City" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
@@ -355,29 +359,30 @@
                         </div>
                     </div>
 
-                    <div class="lg:col-span-7 flex flex-col items-center justify-center">
-                        <div id="live-card-frame" class="card-preview tpl-style-1 w-full rounded-3xl p-6 bg-slate-950 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden">
-                            <div class="space-y-4 relative z-10">
-                                <div class="w-12 h-12 rounded-full mx-auto border border-gold-500 flex items-center justify-center"><i class="fa-solid fa-sparkles text-gold-400 text-lg"></i></div>
+                    <div class="lg:col-span-7 flex flex-col items-center justify-center p-2">
+                        <div id="live-card-frame" class="card-preview tpl-style-1 rounded-3xl p-5 bg-slate-950 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden">
+                            <div class="space-y-3 relative z-10">
+                                <div class="w-10 h-10 rounded-full mx-auto border border-gold-500 flex items-center justify-center"><i class="fa-solid fa-sparkles text-gold-400 text-sm"></i></div>
                                 <div>
                                     <span id="prev-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">HARUSI YA WAPENDANAO</span>
-                                    <h2 id="prev-names" class="text-2xl font-serif font-bold text-white mt-1">Juma & Amina</h2>
+                                    <h2 id="prev-names" class="text-xl font-serif font-bold text-white mt-0.5">Juma & Amina</h2>
+                                    <span id="prev-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mgeni Mwaliko Maalum</span>
                                 </div>
-                                <p id="prev-msg" class="text-xs text-slate-300 italic px-2">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
+                                <p id="prev-msg" class="text-[11px] text-slate-300 italic px-1 leading-snug">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
                             </div>
 
-                            <div class="space-y-2 bg-slate-900/80 p-3 rounded-2xl border border-gold-500/30 text-xs text-left relative z-10 flex items-center justify-between">
+                            <div id="preview-bottom-box" class="space-y-1.5 bg-slate-900/90 p-3 rounded-2xl border border-gold-500/30 text-xs text-left relative z-10 flex items-center justify-between">
                                 <div>
-                                    <p class="text-gold-400 font-bold" id="prev-date">12 Desemba 2026 - Mlimani City</p>
-                                    <p class="text-[10px] text-slate-400" data-i18n="guest_of_honor">Mgeni Rasmi: Mwaliko Maalum (VIP)</p>
+                                    <p class="text-gold-400 font-bold text-[11px]" id="prev-date">12 Desemba 2026 - Mlimani City</p>
+                                    <p class="text-[9px] text-slate-400" id="prev-guest-type-label">Mwaliko Maalum (VIP)</p>
                                 </div>
-                                <div class="bg-white p-1 rounded-lg">
+                                <div class="bg-white p-1 rounded-lg" id="preview-mini-qr-wrapper">
                                     <div id="preview-mini-qr"></div>
                                 </div>
                             </div>
 
                             <div class="flex justify-between items-center text-[9px] text-slate-500 font-bold uppercase tracking-widest relative z-10 border-t border-slate-800 pt-2">
-                                <span>ID #001</span>
+                                <span id="preview-id-tag">ID #001</span>
                                 <span data-i18n="brand_footer">Sherehe Yako Kidigital</span>
                             </div>
                         </div>
@@ -868,36 +873,37 @@
 
         <!-- VIEW 5: PUBLIC CARD DISPLAY WITH BLOB DOWNLOAD & DUAL MODAL -->
         <section id="view-public-card" class="hidden flex flex-col items-center justify-center min-h-[80vh] p-4 space-y-4">
-            <div id="guest-card-download-wrapper" class="card-preview tpl-style-1 w-full rounded-3xl p-6 bg-slate-950 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden my-auto">
-                <div class="space-y-4 relative z-10">
-                    <div class="w-14 h-14 rounded-full mx-auto border-2 border-gold-500 flex items-center justify-center bg-slate-900 shadow-lg">
-                        <i class="fa-solid fa-crown text-gold-400 text-2xl"></i>
+            <div id="guest-card-download-wrapper" class="card-preview tpl-style-1 rounded-3xl p-5 bg-slate-950 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden my-auto">
+                <div class="space-y-3 relative z-10">
+                    <div class="w-12 h-12 rounded-full mx-auto border-2 border-gold-500 flex items-center justify-center bg-slate-900 shadow-lg">
+                        <i class="fa-solid fa-crown text-gold-400 text-lg"></i>
                     </div>
                     <div>
-                        <span id="gcard-event-title" class="text-xs font-black uppercase text-gold-400 tracking-widest block">SHEREHE YAKO</span>
-                        <h2 id="gcard-couple-names" class="text-3xl font-serif font-bold text-white mt-1">Juma & Amina</h2>
+                        <span id="gcard-event-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">SHEREHE YAKO</span>
+                        <h2 id="gcard-couple-names" class="text-2xl font-serif font-bold text-white mt-0.5">Juma & Amina</h2>
+                        <span id="gcard-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mgeni Mwaliko Maalum</span>
                     </div>
 
-                    <div class="p-3 rounded-2xl bg-slate-900/90 border border-gold-500/40 text-center space-y-1">
-                        <span class="text-[10px] text-slate-400 uppercase font-bold block" data-i18n="card_special_for">KADI HII NI MAALUM KWA AJILI YA:</span>
-                        <h3 id="gcard-guest-name" class="text-lg font-black text-white gold-text">Ndugu Mwaalikwa</h3>
-                        <span id="gcard-card-type" class="inline-block px-3 py-0.5 rounded-full text-[10px] font-black uppercase bg-gold-500 text-slate-950">DOUBLE CARD</span>
+                    <div class="p-2.5 rounded-2xl bg-slate-900/90 border border-gold-500/40 text-center space-y-1">
+                        <span class="text-[9px] text-slate-400 uppercase font-bold block" data-i18n="card_special_for">KADI HII NI MAALUM KWA AJILI YA:</span>
+                        <h3 id="gcard-guest-name" class="text-base font-black text-white gold-text">Ndugu Mwaalikwa</h3>
+                        <span id="gcard-card-type" class="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-gold-500 text-slate-950">DOUBLE CARD</span>
                     </div>
 
-                    <p id="gcard-custom-msg" class="text-xs text-slate-300 italic px-2">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
+                    <p id="gcard-custom-msg" class="text-[11px] text-slate-300 italic px-1 leading-snug">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
                 </div>
 
-                <div class="space-y-3 bg-slate-900/90 p-4 rounded-2xl border border-gold-500/30 text-xs text-center relative z-10">
+                <div id="gcard-bottom-wrapper" class="space-y-2 bg-slate-900/90 p-3 rounded-2xl border border-gold-500/30 text-xs text-center relative z-10">
                     <div>
-                        <p class="text-gold-400 font-bold text-sm" id="gcard-event-date">12 Desemba 2026 - Mlimani City</p>
-                        <p class="text-[10px] text-slate-400 mt-0.5" data-i18n="card_qr_instr">Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe</p>
+                        <p class="text-gold-400 font-bold text-xs" id="gcard-event-date">12 Desemba 2026 - Mlimani City</p>
+                        <p class="text-[9px] text-slate-400 mt-0.5" id="gcard-qr-notice">Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe</p>
                     </div>
-                    <div class="bg-white p-2 rounded-xl inline-block mx-auto shadow-md">
+                    <div class="bg-white p-1.5 rounded-xl inline-block mx-auto shadow-md" id="gcard-main-qr-wrapper">
                         <div id="gcard-main-qr"></div>
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center text-[10px] text-slate-500 font-bold uppercase tracking-widest relative z-10 border-t border-slate-800 pt-3 mt-2">
+                <div class="flex justify-between items-center text-[9px] text-slate-500 font-bold uppercase tracking-widest relative z-10 border-t border-slate-800 pt-2 mt-1">
                     <span id="gcard-id-tag" class="text-gold-400">ID #001</span>
                     <span data-i18n="brand_footer">Sherehe Yako Kidigital</span>
                 </div>
@@ -1069,8 +1075,10 @@
             phoneName: 'JUMA MKWAWA',
             cardTitle: 'MWALIKO RASMI',
             coupleNames: 'Mhusika Mkuu',
+            roleType: 'Mgeni Mwaliko Maalum',
             eventDate: '12 Desemba 2026 - Dar es Salaam',
-            cardMsg: 'Tunayo furaha kubwa kukualika katika sherehe yetu...'
+            cardMsg: 'Tunayo furaha kubwa kukualika katika sherehe yetu...',
+            cardPurpose: 'HALL' // 'COMMITTEE', 'CONTRIBUTION', 'HALL'
         };
         let contributionsList = [];
         let cardsList = [];
@@ -1079,9 +1087,8 @@
         let currentLang = 'sw';
         let pendingMediaBase64 = null;
         let pendingMediaType = null;
-        let activeEventOwnerId = null; // Kitambulisho cha Mwenyekiti aliyemiliki Sherehe
+        let activeEventOwnerId = null;
 
-        // MULTI-LANGUAGE DICTIONARY (SWAHILI & ENGLISH)
         const i18nDictionary = {
             sw: {
                 support: "Msaada",
@@ -1415,14 +1422,18 @@
                         const cfg = cfgSnap.val();
                         if(cfg.cardTitle) document.getElementById('gcard-event-title').innerText = cfg.cardTitle;
                         if(cfg.coupleNames) document.getElementById('gcard-couple-names').innerText = cfg.coupleNames;
+                        if(cfg.roleType) document.getElementById('gcard-role-type').innerText = cfg.roleType;
                         if(cfg.eventDate) document.getElementById('gcard-event-date').innerText = cfg.eventDate;
                         if(cfg.cardMsg) document.getElementById('gcard-custom-msg').innerText = cfg.cardMsg;
                         if(cfg.tplStyle) selectCardTemplateStyle(cfg.tplStyle);
+                        if(cfg.cardPurpose) applyPurposeToCardView(cfg.cardPurpose, 'public');
                     }
 
                     const qrBox = document.getElementById('gcard-main-qr');
                     qrBox.innerHTML = '';
-                    new QRCode(qrBox, { text: `${card.id}-${card.name}`, width: 110, height: 110 });
+                    if(eventData.cardPurpose === 'HALL') {
+                        new QRCode(qrBox, { text: `${card.id}-${card.name}`, width: 100, height: 100 });
+                    }
                 }
             });
         }
@@ -1627,7 +1638,6 @@
                 };
                 await rdb.ref('users/' + res.user.uid).set(userData);
                 
-                // Kuanzisha Sherehe mpya safi kwa kutumia UID ya Mwenyekiti (Data hazichanganyiki)
                 await rdb.ref(`events/${res.user.uid}/config`).set({
                     title: title,
                     category: cat,
@@ -1635,7 +1645,8 @@
                     budget: 5000000,
                     single: 50000,
                     double: 100000,
-                    committee: 150000
+                    committee: 150000,
+                    cardPurpose: 'HALL'
                 });
 
                 alert("Usajili umefanikiwa!");
@@ -1663,7 +1674,7 @@
         function startTrialExperience() {
             currentUser = { uid: 'demo-user', email: 'demo@trial.com', dbData: { name: 'Mteja Trial', role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' } };
             activeEventOwnerId = 'demo-user';
-            eventData = { title: 'Sherehe ya Demo', category: 'Corporate Event', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000 };
+            eventData = { title: 'Sherehe ya Demo', category: 'Corporate Event', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000, cardPurpose: 'HALL' };
             renderDashboard();
             switchView('dashboard');
             initRealtimeListeners();
@@ -1730,7 +1741,6 @@
                 if(demoBadge) demoBadge.innerText = "TRIAL DEMO: Limit Of 2 Cards Only";
             }
 
-            // Utekelezaji wa Udhibiti wa Viongozi na Wanakamati/Wajumbe (Full Role vs Limited)
             applyRolePermissions(data.role);
 
             renderBudgetSummary();
@@ -1739,7 +1749,6 @@
             renderThanksTable();
         }
 
-        // KAZI YA KUDHIBITI HAKI ZA WAKATI WA KUTUMA KADI AU KUEDIT BAJETI (Mwenyekiti, Katibu, Mhasibu wanapata full role)
         function applyRolePermissions(role) {
             const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(role);
             
@@ -1788,6 +1797,8 @@
             btnCont.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
             btnHall.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
 
+            eventData.cardPurpose = type;
+
             if(type === 'COMMITTEE') {
                 btnComm.className = "p-2 rounded-xl gold-gradient text-slate-950 font-black";
                 document.getElementById('card-edit-title').value = "KADI YA MWALIKO WA WANAKAMATI";
@@ -1801,7 +1812,27 @@
                 document.getElementById('card-edit-title').value = "KADI YA MWALIKO WA UKUMBINI";
                 document.getElementById('card-edit-msg').value = "Tunayo furaha kubwa kukualika kujumuika nasi Ukumbini siku ya sherehe yetu.";
             }
+
+            applyPurposeToCardView(type, 'dashboard');
             updateLiveCard();
+
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ cardPurpose: type });
+            }
+        }
+
+        function applyPurposeToCardView(type, mode) {
+            const qrWrapper = mode === 'public' ? document.getElementById('gcard-main-qr-wrapper') : document.getElementById('preview-mini-qr-wrapper');
+            const noticeLabel = mode === 'public' ? document.getElementById('gcard-qr-notice') : document.getElementById('prev-guest-type-label');
+            const bottomBox = mode === 'public' ? document.getElementById('gcard-bottom-wrapper') : document.getElementById('preview-bottom-box');
+
+            if(type === 'COMMITTEE' || type === 'CONTRIBUTION') {
+                if(qrWrapper) qrWrapper.style.display = 'none';
+                if(noticeLabel) noticeLabel.innerText = type === 'COMMITTEE' ? 'Wanakamati Maalum' : 'Mchangiaji Rasmi';
+            } else {
+                if(qrWrapper) qrWrapper.style.display = 'block';
+                if(noticeLabel) noticeLabel.innerText = mode === 'public' ? 'Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe' : 'Mgeni Rasmi: Mwaliko Maalum (VIP)';
+            }
         }
 
         function selectCardTemplateStyle(num) {
@@ -1841,17 +1872,25 @@
         }
 
         function updateLiveCard() {
-            document.getElementById('prev-title').innerText = document.getElementById('card-edit-title').value;
-            document.getElementById('prev-names').innerText = document.getElementById('card-edit-names').value;
-            document.getElementById('prev-date').innerText = document.getElementById('card-edit-date').value;
-            document.getElementById('prev-msg').innerText = document.getElementById('card-edit-msg').value;
+            const titleVal = document.getElementById('card-edit-title').value;
+            const namesVal = document.getElementById('card-edit-names').value;
+            const roleTypeVal = document.getElementById('card-edit-role-type').value;
+            const dateVal = document.getElementById('card-edit-date').value;
+            const msgVal = document.getElementById('card-edit-msg').value;
+
+            document.getElementById('prev-title').innerText = titleVal;
+            document.getElementById('prev-names').innerText = namesVal;
+            document.getElementById('prev-role-type').innerText = roleTypeVal;
+            document.getElementById('prev-date').innerText = dateVal;
+            document.getElementById('prev-msg').innerText = msgVal;
 
             if(activeEventOwnerId) {
                 rdb.ref(`events/${activeEventOwnerId}/config`).update({
-                    cardTitle: document.getElementById('card-edit-title').value,
-                    coupleNames: document.getElementById('card-edit-names').value,
-                    eventDate: document.getElementById('card-edit-date').value,
-                    cardMsg: document.getElementById('card-edit-msg').value
+                    cardTitle: titleVal,
+                    coupleNames: namesVal,
+                    roleType: roleTypeVal,
+                    eventDate: dateVal,
+                    cardMsg: msgVal
                 });
             }
         }
@@ -1860,7 +1899,7 @@
             const qrElem = document.getElementById('preview-mini-qr');
             if(qrElem) {
                 qrElem.innerHTML = '';
-                new QRCode(qrElem, { text: "SHEREHE-FIREBASE-001", width: 40, height: 40 });
+                new QRCode(qrElem, { text: "SHEREHE-FIREBASE-001", width: 45, height: 45 });
             }
         }
 
@@ -1879,6 +1918,10 @@
                     if(cfg.phoneAcc) eventData.phoneAcc = cfg.phoneAcc;
                     if(cfg.phoneName) eventData.phoneName = cfg.phoneName;
                     if(cfg.tplStyle) selectCardTemplateStyle(cfg.tplStyle);
+                    if(cfg.cardPurpose) {
+                        eventData.cardPurpose = cfg.cardPurpose;
+                        applyPurposeToCardView(cfg.cardPurpose, 'dashboard');
+                    }
                     if(cfg.title) {
                         eventData.title = cfg.title;
                         document.getElementById('dash-event-title').innerText = cfg.title;
@@ -2466,7 +2509,7 @@
             const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
             const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
             if(!isLeader) {
-                alert("⚠️ Viongozi Wakuu pekee ndio wanaoruhusiwa kutuma kadi kwa wote.");
+                alert("⚠️ Viongozi Wakuu pekee ndio wanaruhusiwa kutuma kadi kwa wote.");
                 return;
             }
 
