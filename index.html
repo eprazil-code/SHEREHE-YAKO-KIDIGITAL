@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <!-- Google Fonts Kali -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;600;700;800&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Pinyon+Script&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -52,55 +52,54 @@
         .gold-gradient { background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%); }
         .gold-text { background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .gold-frame { border: 4px solid #eab308; box-shadow: 0 0 25px rgba(234, 179, 8, 0.3); }
-        .card-preview { width: 100%; max-width: 420px; min-height: 560px; margin: 0 auto; }
+        .card-preview { width: 100%; max-width: 420px; min-height: 580px; margin: 0 auto; transition: all 0.3s ease; }
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
-        /* Template Styles 1 to 10 */
+        /* Custom Font Utility Classes */
+        .f-great-vibes { font-family: 'Great Vibes', cursive !important; }
+        .f-alex-brush { font-family: 'Alex Brush', cursive !important; }
+        .f-pinyon { font-family: 'Pinyon Script', cursive !important; }
+        .f-cinzel { font-family: 'Cinzel', serif !important; }
+        .f-playfair { font-family: 'Playfair Display', serif !important; }
+        .f-montserrat { font-family: 'Montserrat', sans-serif !important; }
+        .f-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+
+        /* Template Border & Style Enforcers */
         .tpl-style-1 { border-width: 4px; border-style: solid; border-radius: 1.5rem; }
         .tpl-style-2 { border-width: 1px; border-style: dashed; border-radius: 0.5rem; }
         .tpl-style-3 { border-top-width: 12px; border-style: solid; border-radius: 1rem; }
         .tpl-style-4 { border-width: 8px; border-style: double; border-radius: 2rem; }
         .tpl-style-5 { border-left-width: 10px; border-style: solid; border-radius: 1rem; }
-        .tpl-style-6 { border: 3px solid; border-radius: 2.5rem; box-shadow: inset 0 0 15px rgba(234, 179, 8, 0.2); }
+        .tpl-style-6 { border: 3px solid; border-radius: 2.5rem; }
         .tpl-style-7 { border-top: 6px solid; border-bottom: 6px solid; border-radius: 0.75rem; }
         .tpl-style-8 { border-width: 2px; border-style: solid; border-radius: 3rem; clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%); }
         .tpl-style-9 { border-left: 14px solid; border-right: 2px solid; border-radius: 1.25rem; }
         .tpl-style-10 { border: 4px groove; border-radius: 1rem; }
 
-        /* MODERN GLASSMORPHISM & NEON GLOW TEMPLATES (11 to 20) */
-        .tpl-style-11 { background: linear-gradient(135deg, #0f172a 0%, #312e81 100%) !important; border: 2px solid #818cf8 !important; box-shadow: 0 0 25px rgba(129, 140, 248, 0.4) !important; border-radius: 2rem !important; }
-        .tpl-style-12 { background: linear-gradient(135deg, #18181b 0%, #27272a 100%) !important; border: 3px solid #f43f5e !important; box-shadow: 0 0 25px rgba(244, 63, 94, 0.4) !important; border-radius: 1rem !important; }
-        .tpl-style-13 { background: linear-gradient(135deg, #022c22 0%, #065f46 100%) !important; border: 2px dashed #34d399 !important; box-shadow: 0 0 25px rgba(52, 211, 153, 0.4) !important; border-radius: 1.5rem !important; }
-        .tpl-style-14 { background: linear-gradient(135deg, #3b0764 0%, #581c87 100%) !important; border: 3px double #e879f9 !important; box-shadow: 0 0 25px rgba(232, 121, 249, 0.4) !important; border-radius: 2.5rem !important; }
-        .tpl-style-15 { background: linear-gradient(135deg, #451a03 0%, #78350f 100%) !important; border: 2px solid #fbbf24 !important; box-shadow: 0 0 25px rgba(251, 191, 36, 0.4) !important; border-radius: 1rem !important; }
-        .tpl-style-16 { background: linear-gradient(135deg, #082f49 0%, #0369a1 100%) !important; border: 4px solid #38bdf8 !important; box-shadow: 0 0 25px rgba(56, 189, 248, 0.4) !important; border-radius: 2rem !important; }
-        .tpl-style-17 { background: linear-gradient(135deg, #4c0519 0%, #881337 100%) !important; border: 2px dashed #fb7185 !important; box-shadow: 0 0 25px rgba(251, 113, 133, 0.4) !important; border-radius: 1.5rem !important; }
-        .tpl-style-18 { background: linear-gradient(135deg, #172554 0%, #1e3a8a 100%) !important; border: 3px double #60a5fa !important; box-shadow: 0 0 25px rgba(96, 165, 250, 0.4) !important; border-radius: 2rem !important; }
-        .tpl-style-19 { background: linear-gradient(135deg, #022f2e 0%, #134e4a 100%) !important; border: 2px solid #2dd4bf !important; box-shadow: 0 0 25px rgba(45, 212, 191, 0.4) !important; border-radius: 1rem !important; }
-        .tpl-style-20 { background: linear-gradient(135deg, #2e1065 0%, #4c1d95 100%) !important; border: 3px solid #c084fc !important; box-shadow: 0 0 30px rgba(192, 132, 252, 0.5) !important; border-radius: 2.5rem !important; }
+        .tpl-style-11 { border: 2px solid #818cf8 !important; border-radius: 2rem !important; }
+        .tpl-style-12 { border: 3px solid #f43f5e !important; border-radius: 1rem !important; }
+        .tpl-style-13 { border: 2px dashed #34d399 !important; border-radius: 1.5rem !important; }
+        .tpl-style-14 { border: 3px double #e879f9 !important; border-radius: 2.5rem !important; }
+        .tpl-style-15 { border: 2px solid #fbbf24 !important; border-radius: 1rem !important; }
+        .tpl-style-16 { border: 4px solid #38bdf8 !important; border-radius: 2rem !important; }
+        .tpl-style-17 { border: 2px dashed #fb7185 !important; border-radius: 1.5rem !important; }
+        .tpl-style-18 { border: 3px double #60a5fa !important; border-radius: 2rem !important; }
+        .tpl-style-19 { border: 2px solid #2dd4bf !important; border-radius: 1rem !important; }
+        .tpl-style-20 { border: 3px solid #c084fc !important; border-radius: 2.5rem !important; }
 
-        /* ADVANCED SUITE TEMPLATES 21, 22, 23 (EXACT DESIGNS FROM SUITE) */
-        .arch-card-frame {
-            border-top-left-radius: 140px;
-            border-top-right-radius: 140px;
-            background: linear-gradient(180deg, rgba(245, 225, 222, 0.92) 0%, rgba(238, 212, 207, 0.95) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(4px);
-        }
-        .text-gold-gradient {
-            background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #aa7c11 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .bg-emerald-royal {
-            background: radial-gradient(circle at center, #064e3b 0%, #022c22 70%, #011913 100%);
-        }
+        .tpl-style-21 { border-radius: 2rem !important; }
+        .tpl-style-22 { border-radius: 2rem !important; }
+        .tpl-style-23 { border-radius: 2rem !important; }
 
-        .tpl-style-21 { background: #fff9f9 !important; color: #1e293b !important; border: none !important; border-radius: 1.5rem !important; }
-        .tpl-style-22 { background: radial-gradient(circle at center, #064e3b 0%, #022c22 70%, #011913 100%) !important; color: #ecfdf5 !important; border: none !important; border-radius: 1.5rem !important; }
-        .tpl-style-23 { background: #eef4f8 !important; color: #1e3a5f !important; border: none !important; border-radius: 1.5rem !important; }
+        /* ADVANCED ARCH & FLORAL GLASS FRAMES FOR TEMPLATES 21 & 23 */
+        .arch-gold-frame {
+            border-top-left-radius: 150px;
+            border-top-right-radius: 150px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
 
         .whatsapp-bg { background-color: #0b141a; background-image: radial-gradient(circle at center, #111b21 0%, #0b141a 100%); }
     </style>
@@ -363,11 +362,25 @@
                             </div>
                         </div>
 
+                        <!-- FONT SELECTOR -->
+                        <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                            <label class="block text-xs font-bold text-gold-400"><i class="fa-solid fa-font"></i> Chagua Font Kali Ya Kadi:</label>
+                            <select id="card-font-select" onchange="changeCardFont(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs outline-none">
+                                <option value="f-alex-brush" selected>Alex Brush (Royal Script)</option>
+                                <option value="f-great-vibes">Great Vibes (Classic Script)</option>
+                                <option value="f-pinyon">Pinyon Script (Luxury Handscript)</option>
+                                <option value="f-cinzel">Cinzel (Luxury Roman Serif)</option>
+                                <option value="f-playfair">Playfair Display (Modern Serif)</option>
+                                <option value="f-montserrat">Montserrat (Clean Modern)</option>
+                                <option value="f-jakarta">Plus Jakarta Sans (Minimalist)</option>
+                            </select>
+                        </div>
+
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
                             <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">2. Chagua Layout Template Style (Template 1-23):</label>
                             <div class="grid grid-cols-5 gap-1.5 text-[11px] max-h-48 overflow-y-auto pr-1">
                                 <!-- T1 to T10 -->
-                                <button type="button" onclick="selectCardTemplateStyle(1)" id="btn-tpl-1" class="p-2 rounded-lg gold-gradient text-slate-950 font-black text-center">T1</button>
+                                <button type="button" onclick="selectCardTemplateStyle(1)" id="btn-tpl-1" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T1</button>
                                 <button type="button" onclick="selectCardTemplateStyle(2)" id="btn-tpl-2" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T2</button>
                                 <button type="button" onclick="selectCardTemplateStyle(3)" id="btn-tpl-3" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T3</button>
                                 <button type="button" onclick="selectCardTemplateStyle(4)" id="btn-tpl-4" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T4</button>
@@ -388,15 +401,15 @@
                                 <button type="button" onclick="selectCardTemplateStyle(18)" id="btn-tpl-18" class="p-2 rounded-lg bg-blue-950 text-blue-300 font-bold border border-blue-500 text-center">T18</button>
                                 <button type="button" onclick="selectCardTemplateStyle(19)" id="btn-tpl-19" class="p-2 rounded-lg bg-teal-950 text-teal-300 font-bold border border-teal-500 text-center">T19</button>
                                 <button type="button" onclick="selectCardTemplateStyle(20)" id="btn-tpl-20" class="p-2 rounded-lg bg-fuchsia-950 text-fuchsia-300 font-bold border border-fuchsia-500 text-center">T20</button>
-                                <!-- T21 to T23 (EXACT SUITE TEMPLATES) -->
-                                <button type="button" onclick="selectCardTemplateStyle(21)" id="btn-tpl-21" class="p-2 rounded-lg bg-pink-900 text-pink-200 font-bold border border-pink-400 text-center" title="Bridal Shower Paper Flowers">T21</button>
+                                <!-- T21 to T23 (EXACT SUITE TEMPLATES WITH FULL COLOR ADAPTABILITY) -->
+                                <button type="button" onclick="selectCardTemplateStyle(21)" id="btn-tpl-21" class="p-2 rounded-lg bg-pink-900 text-pink-200 font-bold border border-pink-400 text-center" title="Bridal Shower Luxe">T21</button>
                                 <button type="button" onclick="selectCardTemplateStyle(22)" id="btn-tpl-22" class="p-2 rounded-lg bg-emerald-900 text-amber-300 font-bold border border-amber-400 text-center" title="Wedding Emerald & Gold">T22</button>
-                                <button type="button" onclick="selectCardTemplateStyle(23)" id="btn-tpl-23" class="p-2 rounded-lg bg-sky-900 text-sky-200 font-bold border border-sky-400 text-center" title="Send-Off Blue Arch">T23</button>
+                                <button type="button" onclick="selectCardTemplateStyle(23)" id="btn-tpl-23" class="p-2 rounded-lg gold-gradient text-slate-950 font-black text-center" title="Send-Off Arch Royale">T23</button>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-2" data-i18n="lbl_theme_colors">3. Chagua Theme Ya Rangi Za Kadi:</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2" data-i18n="lbl_theme_colors">3. Chagua Theme Ya Rangi Za Kadi (Kadi Yote):</label>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                 <button type="button" onclick="applyCardTheme('gold')" class="p-2.5 rounded-xl bg-slate-950 border border-gold-500/60 text-xs font-bold text-gold-400">✨ Gold Royalty</button>
                                 <button type="button" onclick="applyCardTheme('silver')" class="p-2.5 rounded-xl bg-slate-950 border border-slate-400/60 text-xs font-bold text-slate-300">🥈 Silver Elegance</button>
@@ -407,7 +420,12 @@
                             </div>
                         </div>
 
+                        <!-- EDITING FIELDS (ALL TEXT EDITABLE) -->
                         <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_card_title">Kichwa cha Kadi / Title Text</label>
+                                <input type="text" id="card-edit-title" oninput="updateLiveCard()" placeholder="MWALIKO WA SENDOFF / HARUSI" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Familia / Waalikaji (Host Info)</label>
                                 <input type="text" id="card-edit-host" oninput="updateLiveCard()" placeholder="Familia ya Mr & Mrs Juma Kirumbi" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
@@ -415,10 +433,6 @@
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Mahali pa Waalikaji (Host Location)</label>
                                 <input type="text" id="card-edit-host-loc" oninput="updateLiveCard()" placeholder="wa Kigamboni Dar es Salaam" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_card_title">Kichwa cha Kadi / Event Title</label>
-                                <input type="text" id="card-edit-title" oninput="updateLiveCard()" placeholder="MWALIKO WA SENDOFF / HARUSI" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Jina la Binti / Bibi Harusi</label>
@@ -429,16 +443,20 @@
                                 <input type="text" id="card-edit-groom" oninput="updateLiveCard()" placeholder="Daniel John Lukuwi" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_couple_names">Jina la Mgeni (Guest Name)</label>
+                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_couple_names">Jina la Mgeni (Guest Name Preview)</label>
                                 <input type="text" id="card-edit-names" oninput="updateLiveCard()" placeholder="MR & MRS ECARD HUB" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Aina ya Mhusika wa Sherehe (Card Tag)</label>
+                                <label class="block text-slate-300 font-semibold mb-1">Aina ya Mhusika / Kadi Tag</label>
                                 <input type="text" id="card-edit-role-type" oninput="updateLiveCard()" placeholder="DOUBLE CARD" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_date_venue">Tarehe & Muda</label>
-                                <input type="text" id="card-edit-date" oninput="updateLiveCard()" placeholder="11.06.2026 | Alhamisi Saa 18:00 Jioni" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                <label class="block text-slate-300 font-semibold mb-1">Tarehe ya Sherehe</label>
+                                <input type="text" id="card-edit-date" oninput="updateLiveCard()" placeholder="11.06.2026" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Siku na Muda wa Tukio</label>
+                                <input type="text" id="card-edit-time" oninput="updateLiveCard()" placeholder="Alhamisi | Saa 18:00 Jioni" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Ukumbi (Venue)</label>
@@ -453,54 +471,28 @@
                                 <input type="text" id="card-edit-contacts" oninput="updateLiveCard()" placeholder="0754 586 893 / 0716 298 899" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
-                                <label class="block text-slate-300 font-semibold mb-1">Rangi za Sherehe (Dress Code Swatches)</label>
+                                <label class="block text-slate-300 font-semibold mb-1">Badili Rangi Za Kadi Kwenye Swatches (Ina-apply Kadi Yote):</label>
                                 <div class="grid grid-cols-3 gap-2">
-                                    <input type="color" id="card-color-1" value="#1e3a5f" onchange="updateLiveCard()" class="w-full h-8 rounded-lg bg-slate-950 border border-slate-800 cursor-pointer">
-                                    <input type="color" id="card-color-2" value="#87ceeb" onchange="updateLiveCard()" class="w-full h-8 rounded-lg bg-slate-950 border border-slate-800 cursor-pointer">
-                                    <input type="color" id="card-color-3" value="#ffb6c1" onchange="updateLiveCard()" class="w-full h-8 rounded-lg bg-slate-950 border border-slate-800 cursor-pointer">
+                                    <div class="text-center">
+                                        <span class="text-[10px] text-slate-400 block mb-0.5">Primary (Bg)</span>
+                                        <input type="color" id="card-color-1" value="#0f172a" onchange="updateLiveCard()" class="w-full h-9 rounded-lg bg-slate-950 border border-slate-800 cursor-pointer">
+                                    </div>
+                                    <div class="text-center">
+                                        <span class="text-[10px] text-slate-400 block mb-0.5">Secondary</span>
+                                        <input type="color" id="card-color-2" value="#eab308" onchange="updateLiveCard()" class="w-full h-9 rounded-lg bg-slate-950 border border-slate-800 cursor-pointer">
+                                    </div>
+                                    <div class="text-center">
+                                        <span class="text-[10px] text-slate-400 block mb-0.5">Accent/Text</span>
+                                        <input type="color" id="card-color-3" value="#fef08a" onchange="updateLiveCard()" class="w-full h-9 rounded-lg bg-slate-950 border border-slate-800 cursor-pointer">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="lg:col-span-7 flex flex-col items-center justify-center p-2">
-                        <div id="live-card-frame" class="card-preview tpl-style-1 rounded-3xl p-5 bg-slate-950 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden">
-                            <!-- STANDARD BASE CARD STRUCTURE FOR TEMPLATES 1-20 -->
-                            <div id="standard-card-inner" class="w-full h-full flex flex-col justify-between text-center relative z-10">
-                                <div class="space-y-3">
-                                    <div class="w-10 h-10 rounded-full mx-auto border border-gold-500 flex items-center justify-center"><i class="fa-solid fa-sparkles text-gold-400 text-sm"></i></div>
-                                    <div>
-                                        <span id="prev-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">MWALIKO RASMI</span>
-                                        <h2 id="prev-names" class="text-xl font-serif font-bold text-white mt-0.5">Majina ya Wahusika</h2>
-                                        <span id="prev-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mwaliko Maalum</span>
-                                    </div>
-                                    <p id="prev-msg" class="text-[11px] text-slate-300 italic px-1 leading-snug">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
-                                </div>
-
-                                <div class="my-2 space-y-1">
-                                    <span class="text-[9px] uppercase font-bold tracking-widest opacity-75">Rangi za Sherehe</span>
-                                    <div class="flex justify-center gap-2">
-                                        <span id="swatch-1" class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: #0c4a6e;"></span>
-                                        <span id="swatch-2" class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: #38bdf8;"></span>
-                                        <span id="swatch-3" class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: #f472b6;"></span>
-                                    </div>
-                                </div>
-
-                                <div id="preview-bottom-box" class="space-y-1.5 bg-slate-900/90 p-3 rounded-2xl border border-gold-500/30 text-xs text-left flex items-center justify-between">
-                                    <div>
-                                        <p class="text-gold-400 font-bold text-[11px]" id="prev-date">Tarehe & Eneo</p>
-                                        <p class="text-[9px] text-slate-400" id="prev-guest-type-label">Uthibitisho Mlangoni (VIP)</p>
-                                    </div>
-                                    <div class="bg-white p-1 rounded-lg" id="preview-mini-qr-wrapper">
-                                        <div id="preview-mini-qr"></div>
-                                    </div>
-                                </div>
-
-                                <div class="flex justify-between items-center text-[9px] text-slate-500 font-bold uppercase tracking-widest border-t border-slate-800 pt-2">
-                                    <span id="preview-id-tag">ID #001</span>
-                                    <span data-i18n="brand_footer">Sherehe Yako Kidigital</span>
-                                </div>
-                            </div>
+                        <div id="live-card-frame" class="card-preview tpl-style-23 rounded-3xl p-5 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden">
+                            <!-- LIVE CANVAS -->
                         </div>
                     </div>
                 </div>
@@ -989,52 +981,8 @@
 
         <!-- VIEW 5: PUBLIC CARD DISPLAY WITH BLOB DOWNLOAD & DUAL MODAL -->
         <section id="view-public-card" class="hidden flex flex-col items-center justify-center min-h-[80vh] p-4 space-y-4">
-            <div id="guest-card-download-wrapper" class="card-preview tpl-style-1 rounded-3xl p-5 bg-slate-950 border-gold-500 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden my-auto">
-                <!-- WRAPPER DIRECTLY USES DYNAMIC TEMPLATES 1 TO 23 -->
-                <div id="pub-card-inner" class="w-full h-full flex flex-col justify-between text-center relative z-10">
-                    <div class="space-y-3 relative z-10">
-                        <div class="w-12 h-12 rounded-full mx-auto border-2 border-gold-500 flex items-center justify-center bg-slate-900 shadow-lg">
-                            <i class="fa-solid fa-crown text-gold-400 text-lg"></i>
-                        </div>
-                        <div>
-                            <span id="gcard-event-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">SHEREHE YAKO</span>
-                            <h2 id="gcard-couple-names" class="text-2xl font-serif font-bold text-white mt-0.5">Majina ya Wahusika</h2>
-                            <span id="gcard-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mwaliko Maalum</span>
-                        </div>
-
-                        <div class="p-2.5 rounded-2xl bg-slate-900/90 border border-gold-500/40 text-center space-y-1">
-                            <span class="text-[9px] text-slate-400 uppercase font-bold block" data-i18n="card_special_for">KADI HII NI MAALUM KWA AJILI YA:</span>
-                            <h3 id="gcard-guest-name" class="text-base font-black text-white gold-text">Ndugu Mwaalikwa</h3>
-                            <span id="gcard-card-type" class="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-gold-500 text-slate-950">DOUBLE CARD</span>
-                        </div>
-
-                        <p id="gcard-custom-msg" class="text-[11px] text-slate-300 italic px-1 leading-snug">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
-                    </div>
-
-                    <div class="my-2 space-y-1 relative z-10">
-                        <span class="text-[9px] uppercase font-bold tracking-widest opacity-75">Rangi za Sherehe</span>
-                        <div class="flex justify-center gap-2">
-                            <span id="pub-swatch-1" class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: #0c4a6e;"></span>
-                            <span id="pub-swatch-2" class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: #38bdf8;"></span>
-                            <span id="pub-swatch-3" class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: #f472b6;"></span>
-                        </div>
-                    </div>
-
-                    <div id="gcard-bottom-wrapper" class="space-y-2 bg-slate-900/90 p-3 rounded-2xl border border-gold-500/30 text-xs text-center relative z-10">
-                        <div>
-                            <p class="text-gold-400 font-bold text-xs" id="gcard-event-date">Tarehe & Eneo</p>
-                            <p class="text-[9px] text-slate-400 mt-0.5" id="gcard-qr-notice">Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe</p>
-                        </div>
-                        <div class="bg-white p-1.5 rounded-xl inline-block mx-auto shadow-md" id="gcard-main-qr-wrapper">
-                            <div id="gcard-main-qr"></div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between items-center text-[9px] text-slate-500 font-bold uppercase tracking-widest relative z-10 border-t border-slate-800 pt-2 mt-1">
-                        <span id="gcard-id-tag" class="text-gold-400">ID #001</span>
-                        <span data-i18n="brand_footer">Sherehe Yako Kidigital</span>
-                    </div>
-                </div>
+            <div id="guest-card-download-wrapper" class="card-preview tpl-style-23 rounded-3xl p-5 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden my-auto">
+                <!-- DYNAMICALLY RENDERED IN JS -->
             </div>
 
             <!-- DUAL DOWNLOAD BUTTONS -->
@@ -1216,9 +1164,10 @@
             cardPurpose: 'HALL',
             tplStyle: 23,
             cardTheme: 'gold',
-            color1: '#1e3a5f',
-            color2: '#87ceeb',
-            color3: '#ffb6c1'
+            cardFont: 'f-alex-brush',
+            color1: '#0f172a',
+            color2: '#eab308',
+            color3: '#fef08a'
         };
         let contributionsList = [];
         let cardsList = [];
@@ -1269,7 +1218,7 @@
                 visible_trial: "Inaonekana Kwenye Trial",
                 lbl_card_purpose: "1. Chagua Aina Ya Kadi Unayotengeneza:",
                 lbl_layout_style: "2. Chagua Layout Template Style (Template 1-23):",
-                lbl_theme_colors: "3. Chagua Theme Ya Rangi Za Kadi:",
+                lbl_theme_colors: "3. Chagua Theme Ya Rangi Za Kadi (Kadi Yote):",
                 lbl_card_title: "Kichwa cha Kadi",
                 lbl_couple_names: "Majina ya Wahusika / Wageni",
                 lbl_date_venue: "Tarehe & Eneo",
@@ -1394,7 +1343,7 @@
                 visible_trial: "Visible on Trial",
                 lbl_card_purpose: "1. Select Card Purpose:",
                 lbl_layout_style: "2. Select Layout Template Style (Template 1-23):",
-                lbl_theme_colors: "3. Select Card Theme Colors:",
+                lbl_theme_colors: "3. Select Card Theme Colors (Entire Card):",
                 lbl_card_title: "Card Title",
                 lbl_couple_names: "Couple / Names",
                 lbl_date_venue: "Date & Venue",
@@ -1518,7 +1467,6 @@
                     switchView('splash');
                 }
             });
-            initPreviewMiniQR();
             selectThanksTemplate(1);
         };
 
@@ -1802,9 +1750,10 @@
                     cardPurpose: 'HALL',
                     tplStyle: 23,
                     cardTheme: 'gold',
-                    color1: '#1e3a5f',
-                    color2: '#87ceeb',
-                    color3: '#ffb6c1'
+                    cardFont: 'f-alex-brush',
+                    color1: '#0f172a',
+                    color2: '#eab308',
+                    color3: '#fef08a'
                 });
 
                 alert("Usajili umefanikiwa!");
@@ -1834,8 +1783,8 @@
             activeEventOwnerId = 'demo-user';
             eventData = { 
                 title: 'Sherehe ya Demo', category: 'Send-off', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000, 
-                cardPurpose: 'HALL', tplStyle: 23, cardTheme: 'gold', color1: '#1e3a5f', color2: '#87ceeb', color3: '#ffb6c1',
-                hostName: 'Familia ya Mr & Mrs Juma Kirumbi', hostLoc: 'wa Kigamboni Dar es Salaam', coupleNames: 'MR & MRS ECARD HUB', brideName: 'Hafsa', groomName: 'Daniel John Lukuwi',
+                cardPurpose: 'HALL', tplStyle: 23, cardTheme: 'gold', cardFont: 'f-alex-brush', color1: '#0f172a', color2: '#eab308', color3: '#fef08a',
+                cardTitle: 'Mwaliko wa Sendoff', hostName: 'Familia ya Mr & Mrs Juma Kirumbi', hostLoc: 'wa Kigamboni Dar es Salaam', coupleNames: 'MR & MRS ECARD HUB', brideName: 'Hafsa', groomName: 'Daniel John Lukuwi',
                 eventDate: '11.06.2026', eventTime: 'Alhamisi | Saa 18:00 Jioni', eventVenue: 'NHC House Samora Avenue', cardMsg: 'Navy Blue, Light Blue, Blush Pink', contacts: '0754 586 893 / 0716 298 899'
             };
             renderDashboard();
@@ -1981,6 +1930,15 @@
             }
         }
 
+        function changeCardFont(fontClass) {
+            eventData.cardFont = fontClass;
+            updateLiveCard();
+
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ cardFont: fontClass });
+            }
+        }
+
         function selectCardTemplateStyle(num) {
             for(let i=1; i<=23; i++) {
                 const btn = document.getElementById(`btn-tpl-${i}`);
@@ -2001,187 +1959,245 @@
 
         function applyCardTheme(theme) {
             eventData.cardTheme = theme;
+
+            if(theme === 'gold') {
+                eventData.color1 = '#0f172a'; eventData.color2 = '#eab308'; eventData.color3 = '#fef08a';
+            } else if(theme === 'silver') {
+                eventData.color1 = '#090d16'; eventData.color2 = '#cbd5e1'; eventData.color3 = '#ffffff';
+            } else if(theme === 'emerald') {
+                eventData.color1 = '#022c22'; eventData.color2 = '#34d399'; eventData.color3 = '#fef08a';
+            } else if(theme === 'purple') {
+                eventData.color1 = '#2e1065'; eventData.color2 = '#c084fc'; eventData.color3 = '#f5d0fe';
+            } else if(theme === 'rose') {
+                eventData.color1 = '#4c0519'; eventData.color2 = '#fb7185'; eventData.color3 = '#ffe4e6';
+            } else if(theme === 'ruby') {
+                eventData.color1 = '#450a0a'; eventData.color2 = '#ef4444'; eventData.color3 = '#fef08a';
+            }
+
+            document.getElementById('card-color-1').value = eventData.color1;
+            document.getElementById('card-color-2').value = eventData.color2;
+            document.getElementById('card-color-3').value = eventData.color3;
+
             updateLiveCard();
 
             if(activeEventOwnerId) {
-                rdb.ref(`events/${activeEventOwnerId}/config`).update({ cardTheme: theme });
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ 
+                    cardTheme: theme, color1: eventData.color1, color2: eventData.color2, color3: eventData.color3 
+                });
             }
         }
 
-        /* DYNAMIC RENDERER FOR TEMPLATES 21, 22, 23 & STANDARD */
+        /* DYNAMIC RENDERER FOR ALL TEMPLATES (1 TO 23) - FULL COLOR ADAPTABILITY & STUNNING T21 / T23 */
         function renderDynamicCardHTML(containerEl, cardObj, cfg, mode) {
             if(!containerEl) return;
 
             const tplNum = cfg.tplStyle || 23;
+            const fontClass = cfg.cardFont || 'f-alex-brush';
             const cardType = (cardObj && cardObj.type) ? cardObj.type : (cfg.roleType || 'DOUBLE');
             const guestName = (cardObj && cardObj.name) ? cardObj.name : (cfg.coupleNames || 'MR & MRS ECARD HUB');
             const cardId = (cardObj && cardObj.id) ? cardObj.id : 'ECARD-992026';
 
+            const c1 = cfg.color1 || '#0f172a'; // Background / Primary Base
+            const c2 = cfg.color2 || '#eab308'; // Secondary / Accent / Frame
+            const c3 = cfg.color3 || '#fef08a'; // Highlight / Text Highlight
+
             containerEl.className = `card-preview tpl-style-${tplNum} shadow-2xl relative overflow-hidden my-auto`;
+            containerEl.style.backgroundColor = c1;
+            containerEl.style.borderColor = c2;
+            containerEl.style.color = '#ffffff';
 
             if(tplNum === 23) {
-                // TEMPLATE 23: SEND-OFF (BLUE FLORAL & ARCH) EXACT DESIGNS FROM SUITE
+                // TEMPLATE 23: SEND-OFF ARCH ROYALE (EXQUISITE LUXURY DYNAMIC DESIGN)
                 containerEl.innerHTML = `
-                    <div class="w-full h-full relative bg-[#eef4f8] p-4 flex flex-col justify-between overflow-hidden text-slate-800">
-                        <div class="arch-card-frame w-[88%] mx-auto h-[90%] p-3 flex flex-col items-center justify-between text-center relative z-10">
-                            <div>
-                                <h2 class="font-alex text-2xl text-[#1e3a5f] font-bold">${cfg.cardTitle || 'Mwaliko wa Sendoff'}</h2>
-                                <p class="text-[9.5px] text-slate-600 mt-0.5 leading-tight font-montserrat">
-                                    <span>${cfg.hostName || 'Familia ya Mr & Mrs Juma Kirumbi'}</span><br>
-                                    <span class="text-[8.5px]">${cfg.hostLoc || 'wa Kigamboni Dar es Salaam'}</span><br>
-                                    <span class="italic text-[8.5px] text-slate-500">Inayo furaha kukualika</span>
-                                </p>
+                    <div class="w-full h-full relative p-4 flex flex-col justify-between items-center text-center overflow-hidden" style="background: linear-gradient(180deg, ${c1} 0%, #000000 100%);">
+                        <!-- ARCH FRAME DYNAMIC -->
+                        <div class="arch-gold-frame w-full h-[91%] p-4 flex flex-col items-center justify-between relative z-10 shadow-2xl" style="background: linear-gradient(180deg, ${c2}15 0%, ${c1}cc 100%); border: 3px solid ${c2}; box-shadow: inset 0 0 25px ${c2}33, 0 0 20px ${c2}22;">
+                            
+                            <!-- HEADER -->
+                            <div class="pt-2">
+                                <span class="text-[9px] font-bold uppercase tracking-[0.2em] block" style="color: ${c2};">${cfg.cardTitle || 'MWALIKO WA SENDOFF'}</span>
+                                <h3 class="text-[11px] font-medium leading-snug mt-1 opacity-90" style="color: ${c3};">
+                                    <span class="font-bold block">${cfg.hostName || 'Familia ya Mr & Mrs Juma Kirumbi'}</span>
+                                    <span class="text-[9px] opacity-80">${cfg.hostLoc || 'wa Kigamboni Dar es Salaam'}</span>
+                                </h3>
+                                <p class="text-[9px] italic opacity-80 mt-0.5">Inayo furaha kukualika wewe</p>
                             </div>
-                            <div class="my-1 py-1 border-y border-blue-900/20 w-full">
-                                <p class="font-bold text-xs text-[#1e3a5f] uppercase">${guestName}</p>
-                                <p class="text-[8px] text-slate-600">kwenye sherehe ya send-off party ya Binti yao mpendwa</p>
+
+                            <!-- GUEST NAME BANNER -->
+                            <div class="my-1 py-1.5 px-4 w-full border-y rounded-lg relative" style="background-color: ${c2}15; border-color: ${c2}66;">
+                                <p class="font-bold text-xs uppercase tracking-wide" style="color: ${c3};" id="gcard-guest-name">${guestName}</p>
+                                <p class="text-[8.5px] opacity-80">kwenye sherehe ya Send-Off Party ya Binti yao mpendwa</p>
                             </div>
-                            <div>
-                                <h1 class="font-script text-4xl text-[#1e3a5f] font-extrabold my-0">${cfg.brideName || 'Hafsa'}</h1>
+
+                            <!-- BRIDE NAME -->
+                            <div class="my-0.5">
+                                <h1 class="${fontClass} text-4xl font-extrabold tracking-wide drop-shadow-md" style="color: ${c2};">${cfg.brideName || 'Hafsa'}</h1>
+                                ${cfg.groomName ? `<p class="text-[10px] font-semibold opacity-90 text-white">& ${cfg.groomName}</p>` : ''}
                             </div>
-                            <div class="text-[9px] text-slate-700 space-y-0.5">
-                                <p class="font-alex text-base text-[#1e3a5f] font-semibold">Itakayofanyika siku ya <span class="font-bold">${cfg.eventTime || 'Alhamisi'}</span></p>
-                                <div class="flex items-center justify-center gap-1 font-bold text-slate-800 text-xs">
-                                    <i class="fa-regular fa-calendar-check text-blue-900 text-xs"></i>
+
+                            <!-- DATE & DAY -->
+                            <div class="text-[10px] space-y-1 w-full border-y py-1.5" style="border-color: ${c2}44;">
+                                <p class="${fontClass} text-base font-bold" style="color: ${c3};">Itakayofanyika siku ya <span class="font-bold">${cfg.eventTime || 'Alhamisi'}</span></p>
+                                <div class="inline-flex items-center justify-center gap-2 font-bold text-xs px-3 py-0.5 rounded-full" style="background-color: ${c2}22; border: 1px solid ${c2}; color: ${c2};">
+                                    <i class="fa-regular fa-calendar-check text-xs"></i>
                                     <span>${cfg.eventDate || '11.06.2026'}</span>
                                 </div>
                             </div>
-                            <div>
-                                <span class="font-alex text-base text-[#1e3a5f] block -mb-1">Ukumbi</span>
-                                <p class="font-bold text-xs text-slate-800">${cfg.eventVenue || 'NHC House Samora Avenue'}</p>
+
+                            <!-- VENUE -->
+                            <div class="space-y-0.5">
+                                <span class="${fontClass} text-sm block opacity-80" style="color: ${c3};">Ukumbi wa Sherehe</span>
+                                <p class="font-bold text-xs text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> ${cfg.eventVenue || 'NHC House Samora Avenue'}</p>
                             </div>
-                            <div class="text-[8px] text-slate-600">
-                                <p class="font-medium">Rangi za Sherehe:</p>
-                                <p class="font-semibold text-slate-800">${cfg.cardMsg || 'Navy Blue, Light Blue, Blush Pink'}</p>
-                                <div class="flex justify-center gap-1 mt-1">
-                                    <span class="w-3 h-3 rounded-full border border-white" style="background-color: ${cfg.color1 || '#1e3a5f'}"></span>
-                                    <span class="w-3 h-3 rounded-full border border-white" style="background-color: ${cfg.color2 || '#87ceeb'}"></span>
-                                    <span class="w-3 h-3 rounded-full border border-white" style="background-color: ${cfg.color3 || '#ffb6c1'}"></span>
-                                </div>
+
+                            <!-- DRESS CODE / MSG -->
+                            <div class="text-[8.5px] opacity-90 bg-black/40 p-2 rounded-xl border w-full" style="border-color: ${c2}33;">
+                                <p class="font-semibold text-[8px] uppercase tracking-wider" style="color: ${c2};">Rangi Za Sherehe / Dress Code:</p>
+                                <p class="font-bold text-white mt-0.5">${cfg.cardMsg || 'Navy Blue, Light Blue, Blush Pink'}</p>
                             </div>
                         </div>
-                        <div class="flex justify-between items-end z-20 px-2 pt-1">
-                            <div class="text-[7.5px] text-slate-600 text-left">
-                                <p class="font-bold text-slate-800">Mawasiliano:</p>
-                                <p>${cfg.contacts || '0754 586 893 / 0716 298 899'}</p>
-                                <p class="text-[8px] font-bold text-blue-900 mt-0.5">@ecards_hubtz</p>
+
+                        <!-- FOOTER & QR CODE -->
+                        <div class="w-full flex justify-between items-center z-20 px-2 pt-1">
+                            <div class="text-[8px] text-left opacity-90">
+                                <p class="font-bold" style="color: ${c2};">Mawasiliano:</p>
+                                <p class="text-white">${cfg.contacts || '0754 586 893 / 0716 298 899'}</p>
+                                <p class="text-[8px] font-bold mt-0.5" style="color: ${c3};">@ecards_hubtz</p>
                             </div>
                             <div class="flex flex-col items-center">
-                                <span class="text-[8px] font-bold text-blue-950 uppercase tracking-widest">${cardType}</span>
-                                <div id="${mode}-qr-box" class="bg-white p-1 rounded border border-slate-300 shadow-sm"></div>
+                                <span class="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded mb-0.5" style="background-color: ${c2}; color: ${c1};">${cardType}</span>
+                                <div id="${mode}-qr-box" class="bg-white p-1.5 rounded-lg border shadow-lg" style="border-color: ${c2};"></div>
                             </div>
                         </div>
                     </div>
                 `;
             } else if(tplNum === 21) {
-                // TEMPLATE 21: BRIDAL SHOWER (PINK PAPER FLOWERS) EXACT DESIGNS FROM SUITE
+                // TEMPLATE 21: BRIDAL SHOWER / LUXURY FLORAL GLASS (FULLY DYNAMIC & ELEGANT)
                 containerEl.innerHTML = `
-                    <div class="w-full h-full relative bg-[#fff9f9] p-5 flex flex-col justify-between items-center text-center text-slate-800">
-                        <div class="mt-4 z-10">
-                            <h1 class="font-pinyon text-5xl text-pink-900 font-bold tracking-wide">Bridal</h1>
-                            <p class="font-cinzel text-xs text-slate-600 tracking-[0.3em] font-bold -mt-2">SHOWER</p>
-                        </div>
-                        <div class="z-10 px-4">
-                            <p class="text-[10px] text-slate-500 italic">Please join us to celebrate the bride-to-be</p>
-                            <h2 class="font-script text-4xl text-slate-800 font-bold my-1">${cfg.brideName || 'Doreen'}</h2>
-                        </div>
-                        <div class="bg-pink-50 border border-pink-200 rounded-full px-4 py-1 z-10 my-1">
-                            <p class="text-[9px] text-pink-800 font-semibold"><span>${guestName}</span></p>
-                        </div>
-                        <div class="z-10 border-y border-pink-200 py-1.5 w-full max-w-[280px] flex items-center justify-center gap-3">
-                            <span class="font-cinzel text-[10px] text-slate-600 uppercase font-semibold">${cfg.eventTime || 'SUNDAY'}</span>
-                            <span class="font-cinzel text-lg text-pink-900 font-bold border-x border-pink-300 px-3">${cfg.eventDate || '01 FEB'}</span>
-                        </div>
-                        <div class="z-10 space-y-0.5">
-                            <p class="font-bold text-xs text-slate-800">${cfg.eventVenue || 'Malaika Villa Makongo'}</p>
-                        </div>
-                        <div class="z-10 text-[8.5px] text-slate-600">
-                            <p>Dress Code / Rangi:</p>
-                            <p class="font-semibold text-pink-900">${cfg.cardMsg || 'Shades of Pink and Shades of Nude'}</p>
-                        </div>
-                        <div class="w-full flex justify-between items-end border-t border-pink-100 pt-2 z-10">
-                            <div class="text-[7.5px] text-left text-slate-500">
-                                <p>${cfg.contacts || '0754 586 893 / 0716 298 899'}</p>
-                                <p class="font-bold text-pink-700">@ecards_hubtz</p>
+                    <div class="w-full h-full relative p-5 flex flex-col justify-between items-center text-center overflow-hidden" style="background: radial-gradient(circle at center, ${c1} 0%, #000000 100%);">
+                        <!-- GLASS CONTAINER WITH DYNAMIC GOLD/THEME ACCENTS -->
+                        <div class="w-full h-full rounded-2xl p-4 flex flex-col justify-between items-center relative z-10 border shadow-2xl backdrop-blur-md" style="background-color: rgba(0,0,0,0.35); border-color: ${c2}66;">
+                            
+                            <div class="mt-2">
+                                <span class="text-[9px] font-bold tracking-[0.3em] uppercase block" style="color: ${c2};">${cfg.cardTitle || 'BRIDAL SHOWER'}</span>
+                                <h1 class="${fontClass} text-4xl font-bold tracking-wide mt-0.5" style="color: ${c3};">${cfg.brideName || 'Doreen'}</h1>
+                                <p class="text-[9.5px] italic opacity-80 text-slate-200">Please join us to celebrate the bride-to-be</p>
                             </div>
-                            <div id="${mode}-qr-box" class="bg-white p-1 rounded border border-pink-200"></div>
+
+                            <div class="my-1 py-1.5 px-4 rounded-xl border w-full" style="background-color: ${c2}22; border-color: ${c2};">
+                                <span class="text-[8px] font-bold uppercase tracking-widest block opacity-75" style="color: ${c2};">MWALIKO MAALUM KWA:</span>
+                                <p class="font-bold text-xs text-white uppercase" id="gcard-guest-name">${guestName}</p>
+                            </div>
+
+                            <div class="w-full border-y py-2 space-y-1" style="border-color: ${c2}44;">
+                                <div class="flex items-center justify-center gap-3">
+                                    <span class="font-cinzel text-xs uppercase font-bold" style="color: ${c2};">${cfg.eventTime || 'SUNDAY'}</span>
+                                    <span class="font-cinzel text-xl font-bold border-x px-3" style="border-color: ${c2}; color: ${c3};">${cfg.eventDate || '01 FEB'}</span>
+                                </div>
+                                <p class="font-bold text-xs text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> ${cfg.eventVenue || 'Malaika Villa Makongo'}</p>
+                            </div>
+
+                            <div class="text-[8.5px] space-y-0.5 opacity-90">
+                                <p class="font-semibold text-[8px] uppercase tracking-wider" style="color: ${c2};">Dress Code / Rangi:</p>
+                                <p class="font-bold text-white">${cfg.cardMsg || 'Shades of Pink and Shades of Nude'}</p>
+                            </div>
+
+                            <div class="w-full flex justify-between items-end border-t pt-2" style="border-color: ${c2}44;">
+                                <div class="text-[8px] text-left opacity-90">
+                                    <p class="font-bold" style="color: ${c2};">Mawasiliano:</p>
+                                    <p class="text-white">${cfg.contacts || '0754 586 893 / 0716 298 899'}</p>
+                                    <p class="font-bold" style="color: ${c3};">@ecards_hubtz</p>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded mb-0.5" style="background-color: ${c2}; color: ${c1};">${cardType}</span>
+                                    <div id="${mode}-qr-box" class="bg-white p-1 rounded-lg border" style="border-color: ${c2};"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
             } else if(tplNum === 22) {
-                // TEMPLATE 22: WEDDING (EMERALD GREEN & GOLD) EXACT DESIGNS FROM SUITE
+                // TEMPLATE 22: WEDDING (ROYAL EMERALD & GOLD)
                 const dateParts = (cfg.eventDate || '24.10.2026').split('.');
                 const dateNum = dateParts[0] || '24';
                 containerEl.innerHTML = `
-                    <div class="w-full h-full relative bg-emerald-royal p-5 text-emerald-50 flex flex-col justify-between items-center text-center">
-                        <div class="mt-2 z-10 flex flex-col items-center">
-                            <div class="w-9 h-9 border-2 border-yellow-500/60 rounded-full flex items-center justify-center">
-                                <span class="font-cinzel text-xs font-bold text-gold-gradient">DO</span>
+                    <div class="w-full h-full relative p-5 flex flex-col justify-between items-center text-center overflow-hidden" style="background: radial-gradient(circle at center, ${c1} 0%, #000000 100%);">
+                        <div class="w-full h-full rounded-2xl p-4 flex flex-col justify-between items-center border shadow-2xl" style="border-color: ${c2}66; background-color: rgba(0,0,0,0.3);">
+                            <div class="mt-1 flex flex-col items-center">
+                                <div class="w-9 h-9 border-2 rounded-full flex items-center justify-center shadow" style="border-color: ${c2}; background-color: ${c2}22;">
+                                    <span class="font-cinzel text-xs font-bold" style="color: ${c2};">WED</span>
+                                </div>
+                                <span class="text-[7.5px] font-mono tracking-widest mt-0.5" style="color: ${c3};">##2026</span>
                             </div>
-                            <span class="text-[7.5px] text-yellow-400/80 font-mono tracking-widest mt-0.5">##2026</span>
-                        </div>
-                        <div class="z-10 text-[9px] text-emerald-100/80 leading-snug">
-                            <p>${cfg.hostName || 'Familia ya Mr. John Daniel Lukuwi'}</p>
-                            <p class="text-[8px] text-emerald-300/80">${cfg.hostLoc || 'wa Buza Dar es Salaam'}</p>
-                            <p class="text-[8px] italic text-yellow-300/90 mt-0.5">Wanayofuraha kukualika kwenye sherehe</p>
-                        </div>
-                        <div class="z-10 bg-yellow-500/10 border border-yellow-500/40 rounded px-3 py-0.5 my-0.5">
-                            <p class="text-[8.5px] font-bold text-yellow-300 tracking-wider">${cardType} CARD</p>
-                            <p class="text-[9.5px] font-semibold text-white">${guestName}</p>
-                        </div>
-                        <div class="z-10 my-0.5">
-                            <h2 class="font-alex text-2xl text-gold-gradient font-bold">${cfg.groomName || 'Daniel John Lukuwi'}</h2>
-                            <span class="font-script text-lg text-yellow-400 block -my-1">&</span>
-                            <h2 class="font-alex text-2xl text-gold-gradient font-bold">${cfg.brideName || 'Oliver Godfrey Kisumo'}</h2>
-                        </div>
-                        <div class="z-10 flex items-center justify-center gap-2 border-y border-yellow-500/30 py-1 w-full">
-                            <span class="text-[8.5px] text-emerald-200">${cfg.eventTime || 'Jumamosi'}</span>
-                            <span class="text-2xl font-bold font-cinzel text-yellow-400 border-x border-yellow-500/40 px-3">${dateNum}</span>
-                            <span class="text-[8.5px] text-emerald-200">2026</span>
-                        </div>
-                        <div class="z-10 text-[8.5px] text-emerald-100">
-                            <p class="font-bold text-white"><i class="fa-solid fa-location-dot text-yellow-400 text-[9px]"></i> ${cfg.eventVenue || 'Mrina Hall'}</p>
-                        </div>
-                        <div class="z-10 w-full flex justify-between items-end border-t border-emerald-800/80 pt-1.5">
-                            <div class="text-left text-[7.5px] text-emerald-300/80">
-                                <p>Mawasiliano: <span>${cfg.contacts || '+255764986042'}</span></p>
-                                <p class="text-[8px] font-semibold text-yellow-400">Dress Code: <span>${cfg.cardMsg || 'GOLD NA EMERALD GREEN'}</span></p>
+
+                            <div class="text-[9px] opacity-90 leading-snug">
+                                <p class="font-bold text-white">${cfg.hostName || 'Familia ya Mr. John Daniel Lukuwi'}</p>
+                                <p class="text-[8px] opacity-80">${cfg.hostLoc || 'wa Buza Dar es Salaam'}</p>
+                                <p class="text-[8px] italic mt-0.5" style="color: ${c2};">Wanayofuraha kukualika kwenye sherehe</p>
                             </div>
-                            <div id="${mode}-qr-box" class="bg-white p-1 rounded border border-yellow-400"></div>
+
+                            <div class="rounded-xl px-4 py-1 border w-full" style="background-color: ${c2}22; border-color: ${c2}66;">
+                                <p class="text-[8.5px] font-bold tracking-wider" style="color: ${c2};">${cardType} CARD</p>
+                                <p class="text-[10px] font-bold text-white uppercase" id="gcard-guest-name">${guestName}</p>
+                            </div>
+
+                            <div class="my-0.5">
+                                <h2 class="${fontClass} text-2xl font-bold" style="color: ${c2};">${cfg.groomName || 'Daniel John Lukuwi'}</h2>
+                                <span class="${fontClass} text-lg block -my-1" style="color: ${c3};">&</span>
+                                <h2 class="${fontClass} text-2xl font-bold" style="color: ${c2};">${cfg.brideName || 'Oliver Godfrey Kisumo'}</h2>
+                            </div>
+
+                            <div class="flex items-center justify-center gap-3 border-y py-1.5 w-full" style="border-color: ${c2}44;">
+                                <span class="text-[9px] opacity-90 font-bold" style="color: ${c3};">${cfg.eventTime || 'Jumamosi'}</span>
+                                <span class="text-2xl font-bold font-cinzel border-x px-3" style="border-color: ${c2}; color: ${c2};">${dateNum}</span>
+                                <span class="text-[9px] opacity-90 font-bold" style="color: ${c3};">2026</span>
+                            </div>
+
+                            <div class="text-[8.5px]">
+                                <p class="font-bold text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> ${cfg.eventVenue || 'Mrina Hall'}</p>
+                            </div>
+
+                            <div class="w-full flex justify-between items-end border-t pt-1.5" style="border-color: ${c2}44;">
+                                <div class="text-left text-[7.5px] opacity-80">
+                                    <p class="text-white font-bold">Mawasiliano: <span>${cfg.contacts || '+255764986042'}</span></p>
+                                    <p class="text-[8px] font-bold" style="color: ${c2};">Dress Code: <span>${cfg.cardMsg || 'GOLD NA EMERALD GREEN'}</span></p>
+                                </div>
+                                <div id="${mode}-qr-box" class="bg-white p-1 rounded-lg border" style="border-color: ${c2};"></div>
+                            </div>
                         </div>
                     </div>
                 `;
             } else {
-                // STANDARD TEMPLATES 1 TO 20
+                // STANDARD TEMPLATES 1 TO 20 (ALL DYNAMIC COLORS & FONTS)
                 containerEl.innerHTML = `
-                    <div class="w-full h-full flex flex-col justify-between text-center relative z-10 p-5">
+                    <div class="w-full h-full flex flex-col justify-between text-center relative z-10 p-5 rounded-2xl" style="background: linear-gradient(135deg, ${c1} 0%, #000000 100%);">
                         <div class="space-y-3">
-                            <div class="w-10 h-10 rounded-full mx-auto border border-gold-500 flex items-center justify-center"><i class="fa-solid fa-sparkles text-gold-400 text-sm"></i></div>
+                            <div class="w-10 h-10 rounded-full mx-auto border flex items-center justify-center shadow" style="border-color: ${c2}; background-color: ${c2}22;"><i class="fa-solid fa-sparkles text-sm" style="color: ${c2};"></i></div>
                             <div>
-                                <span class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">${cfg.cardTitle || 'MWALIKO RASMI'}</span>
-                                <h2 class="text-xl font-serif font-bold text-white mt-0.5">${guestName}</h2>
-                                <span class="text-[10px] text-emerald-400 font-bold block mt-0.5">${cardType} CARD</span>
+                                <span class="text-[10px] font-black uppercase tracking-widest block" style="color: ${c2};">${cfg.cardTitle || 'MWALIKO RASMI'}</span>
+                                <h2 class="${fontClass} text-2xl font-bold text-white mt-0.5" id="gcard-guest-name">${guestName}</h2>
+                                <span class="text-[10px] font-bold block mt-0.5" style="color: ${c3};">${cardType} CARD</span>
                             </div>
                             <p class="text-[11px] text-slate-300 italic px-1 leading-snug">${cfg.cardMsg || 'Tunayo furaha kubwa kukualika katika sherehe yetu...'}</p>
                         </div>
                         <div class="my-2 space-y-1">
                             <span class="text-[9px] uppercase font-bold tracking-widest opacity-75">Rangi za Sherehe</span>
                             <div class="flex justify-center gap-2">
-                                <span class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: ${cfg.color1 || '#0c4a6e'};"></span>
-                                <span class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: ${cfg.color2 || '#38bdf8'};"></span>
-                                <span class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: ${cfg.color3 || '#f472b6'};"></span>
+                                <span class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: ${c1};"></span>
+                                <span class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: ${c2};"></span>
+                                <span class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: ${c3};"></span>
                             </div>
                         </div>
-                        <div class="space-y-1.5 bg-slate-900/90 p-3 rounded-2xl border border-gold-500/30 text-xs text-left flex items-center justify-between">
+                        <div class="space-y-1.5 bg-black/50 p-3 rounded-2xl border text-xs text-left flex items-center justify-between" style="border-color: ${c2}44;">
                             <div>
-                                <p class="text-gold-400 font-bold text-[11px]">${cfg.eventDate || 'Tarehe & Eneo'}</p>
+                                <p class="font-bold text-[11px]" style="color: ${c2};">${cfg.eventDate || 'Tarehe & Eneo'}</p>
                                 <p class="text-[9px] text-slate-400">Uthibitisho Mlangoni (VIP)</p>
                             </div>
                             <div class="bg-white p-1 rounded-lg">
                                 <div id="${mode}-qr-box"></div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center text-[9px] text-slate-500 font-bold uppercase tracking-widest border-t border-slate-800 pt-2">
+                        <div class="flex justify-between items-center text-[9px] text-slate-400 font-bold uppercase tracking-widest border-t border-slate-800 pt-2">
                             <span>${cardId}</span>
                             <span>Sherehe Yako Kidigital</span>
                         </div>
@@ -2189,11 +2205,12 @@
                 `;
             }
 
-            // GENERATE DYNAMIC QR CODE
+            // DYNAMICALLY GENERATE SCANNABLE QR CODE
             const qrTarget = document.getElementById(`${mode}-qr-box`);
             if(qrTarget) {
                 qrTarget.innerHTML = '';
-                new QRCode(qrTarget, { text: `${cardId}-${guestName}`, width: 42, height: 42 });
+                const qrContent = `${cardId}|${guestName.replace(/\|/g,'')}`;
+                new QRCode(qrTarget, { text: qrContent, width: 46, height: 46 });
             }
         }
 
@@ -2206,6 +2223,7 @@
             const namesVal = document.getElementById('card-edit-names')?.value;
             const roleTypeVal = document.getElementById('card-edit-role-type')?.value;
             const dateVal = document.getElementById('card-edit-date')?.value;
+            const timeVal = document.getElementById('card-edit-time')?.value;
             const venueVal = document.getElementById('card-edit-venue')?.value;
             const msgVal = document.getElementById('card-edit-msg')?.value;
             const contactsVal = document.getElementById('card-edit-contacts')?.value;
@@ -2214,17 +2232,18 @@
             const c2 = document.getElementById('card-color-2')?.value;
             const c3 = document.getElementById('card-color-3')?.value;
 
-            if(hostVal) eventData.hostName = hostVal;
-            if(hostLocVal) eventData.hostLoc = hostLocVal;
-            if(titleVal) eventData.cardTitle = titleVal;
-            if(brideVal) eventData.brideName = brideVal;
-            if(groomVal) eventData.groomName = groomVal;
-            if(namesVal) eventData.coupleNames = namesVal;
-            if(roleTypeVal) eventData.roleType = roleTypeVal;
-            if(dateVal) eventData.eventDate = dateVal;
-            if(venueVal) eventData.eventVenue = venueVal;
-            if(msgVal) eventData.cardMsg = msgVal;
-            if(contactsVal) eventData.contacts = contactsVal;
+            if(hostVal !== undefined) eventData.hostName = hostVal;
+            if(hostLocVal !== undefined) eventData.hostLoc = hostLocVal;
+            if(titleVal !== undefined) eventData.cardTitle = titleVal;
+            if(brideVal !== undefined) eventData.brideName = brideVal;
+            if(groomVal !== undefined) eventData.groomName = groomVal;
+            if(namesVal !== undefined) eventData.coupleNames = namesVal;
+            if(roleTypeVal !== undefined) eventData.roleType = roleTypeVal;
+            if(dateVal !== undefined) eventData.eventDate = dateVal;
+            if(timeVal !== undefined) eventData.eventTime = timeVal;
+            if(venueVal !== undefined) eventData.eventVenue = venueVal;
+            if(msgVal !== undefined) eventData.cardMsg = msgVal;
+            if(contactsVal !== undefined) eventData.contacts = contactsVal;
 
             if(c1) eventData.color1 = c1;
             if(c2) eventData.color2 = c2;
@@ -2242,21 +2261,19 @@
                     coupleNames: eventData.coupleNames,
                     roleType: eventData.roleType,
                     eventDate: eventData.eventDate,
+                    eventTime: eventData.eventTime,
                     eventVenue: eventData.eventVenue,
                     cardMsg: eventData.cardMsg,
                     contacts: eventData.contacts,
                     color1: eventData.color1,
                     color2: eventData.color2,
                     color3: eventData.color3,
-                    tplStyle: eventData.tplStyle
+                    tplStyle: eventData.tplStyle,
+                    cardFont: eventData.cardFont
                 };
                 rdb.ref(`events/${activeEventOwnerId}/config`).update(configPayload);
                 localStorage.setItem(`sherehe_config_${activeEventOwnerId}`, JSON.stringify(configPayload));
             }
-        }
-
-        function initPreviewMiniQR() {
-            updateLiveCard();
         }
 
         async function clearAllEventData() {
@@ -2305,7 +2322,7 @@
             if(contributionsList.length === 0) {
                 doc.text("Hakuna michango iliyorekodiwa bado.", 14, startY + 10);
             } else {
-                contributionsList.forEach((c, index) => {
+                contributionsList.forEach((c) => {
                     if(startY > 270) {
                         doc.addPage();
                         startY = 20;
@@ -2348,9 +2365,14 @@
                     if(document.getElementById('card-edit-names')) document.getElementById('card-edit-names').value = cfg.coupleNames || '';
                     if(document.getElementById('card-edit-role-type')) document.getElementById('card-edit-role-type').value = cfg.roleType || '';
                     if(document.getElementById('card-edit-date')) document.getElementById('card-edit-date').value = cfg.eventDate || '';
+                    if(document.getElementById('card-edit-time')) document.getElementById('card-edit-time').value = cfg.eventTime || '';
                     if(document.getElementById('card-edit-venue')) document.getElementById('card-edit-venue').value = cfg.eventVenue || '';
                     if(document.getElementById('card-edit-msg')) document.getElementById('card-edit-msg').value = cfg.cardMsg || '';
                     if(document.getElementById('card-edit-contacts')) document.getElementById('card-edit-contacts').value = cfg.contacts || '';
+
+                    if(cfg.cardFont && document.getElementById('card-font-select')) {
+                        document.getElementById('card-font-select').value = cfg.cardFont;
+                    }
 
                     updateLiveCard();
                     renderBudgetSummary();
