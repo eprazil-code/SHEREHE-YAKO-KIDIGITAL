@@ -17,6 +17,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-scanner/1.4.2/qr-scanner.umd.min.js"></script>
     <!-- html2canvas Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF Library for PDF Printing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <!-- FIREBASE SDK CDN (Compat Version) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -48,19 +50,29 @@
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
-        /* Template Styles 1 to 10 */
+        /* Template Styles 1 to 10 (Original) */
         .tpl-style-1 { border-width: 4px; border-style: solid; border-radius: 1.5rem; }
         .tpl-style-2 { border-width: 1px; border-style: dashed; border-radius: 0.5rem; }
         .tpl-style-3 { border-top-width: 12px; border-style: solid; border-radius: 1rem; }
         .tpl-style-4 { border-width: 8px; border-style: double; border-radius: 2rem; }
         .tpl-style-5 { border-left-width: 10px; border-style: solid; border-radius: 1rem; }
-        
-        /* New 5 Unique Templates (T6 - T10) */
         .tpl-style-6 { border: 3px solid; border-radius: 2.5rem; box-shadow: inset 0 0 15px rgba(234, 179, 8, 0.2); }
         .tpl-style-7 { border-top: 6px solid; border-bottom: 6px solid; border-radius: 0.75rem; }
         .tpl-style-8 { border-width: 2px; border-style: solid; border-radius: 3rem; clip-path: polygon(0 0, 100% 0, 100% 95%, 95% 100%, 0 100%); }
         .tpl-style-9 { border-left: 14px solid; border-right: 2px solid; border-radius: 1.25rem; }
         .tpl-style-10 { border: 4px groove; border-radius: 1rem; }
+
+        /* International Luxury Templates (T11 to T20) */
+        .tpl-style-11 { border: 5px ridge; border-radius: 2rem; background: radial-gradient(circle, #0f172a 0%, #020617 100%); }
+        .tpl-style-12 { border: 2px solid; border-radius: 0rem; box-shadow: 0 0 0 6px #020617, 0 0 0 9px #eab308; }
+        .tpl-style-13 { border-top: 20px solid; border-radius: 1.5rem; }
+        .tpl-style-14 { border-left: 8px solid; border-bottom: 8px solid; border-radius: 1rem; }
+        .tpl-style-15 { border: 4px dashed; border-radius: 50% 10%; }
+        .tpl-style-16 { border: 6px double; border-radius: 1.5rem; backdrop-filter: blur(5px); }
+        .tpl-style-17 { border-top: 4px solid; border-bottom: 4px solid; border-left: 12px solid; border-radius: 0.5rem; }
+        .tpl-style-18 { border: 3px solid; border-radius: 3rem 0.5rem 3rem 0.5rem; }
+        .tpl-style-19 { border: 5px solid; border-radius: 2rem; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.7); }
+        .tpl-style-20 { border: 3px inset; border-radius: 1.5rem; background: linear-gradient(145deg, #020617, #090d16); }
         
         .whatsapp-bg { background-color: #0b141a; background-image: radial-gradient(circle at center, #111b21 0%, #0b141a 100%); }
     </style>
@@ -270,7 +282,10 @@
                     <p class="text-xs text-slate-400 mt-0.5"><span data-i18n="host">Mwenyeji</span>: <strong id="dash-user-name" class="text-slate-200">Juma Mkwawa</strong> (<span id="dash-user-role" class="text-gold-400">Mwenyekiti</span>)</p>
                 </div>
                 
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <button type="button" onclick="clearAllEventData()" class="px-3 py-2.5 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-300 font-bold text-xs hover:bg-rose-900 transition" title="Futa data zote za nyuma uanze sherehe mpya">
+                        🗑️ Clear All Data (Mpya)
+                    </button>
                     <button type="button" onclick="openVipModal()" id="btn-upgrade-vip" class="px-4 py-2.5 rounded-xl gold-gradient text-slate-950 font-black text-xs hover:brightness-110 transition shadow-lg shadow-gold-500/20">
                         👑 FUNGUA VIP (TSh 50,000)
                     </button>
@@ -321,18 +336,30 @@
                         </div>
 
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
-                            <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">2. Chagua Layout Template Style (Template 1-10):</label>
-                            <div class="grid grid-cols-5 gap-1.5 text-[11px]">
+                            <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">2. Chagua Layout Template Style (Template 1-20):</label>
+                            <div class="grid grid-cols-5 gap-1.5 text-[11px] max-h-40 overflow-y-auto pr-1">
+                                <!-- T1 to T10 (Original) -->
                                 <button type="button" onclick="selectCardTemplateStyle(1)" id="btn-tpl-1" class="p-2 rounded-lg gold-gradient text-slate-950 font-black text-center">T1</button>
                                 <button type="button" onclick="selectCardTemplateStyle(2)" id="btn-tpl-2" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T2</button>
                                 <button type="button" onclick="selectCardTemplateStyle(3)" id="btn-tpl-3" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T3</button>
                                 <button type="button" onclick="selectCardTemplateStyle(4)" id="btn-tpl-4" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T4</button>
                                 <button type="button" onclick="selectCardTemplateStyle(5)" id="btn-tpl-5" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T5</button>
-                                <button type="button" onclick="selectCardTemplateStyle(6)" id="btn-tpl-6" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T6 ✨</button>
-                                <button type="button" onclick="selectCardTemplateStyle(7)" id="btn-tpl-7" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T7 🌟</button>
-                                <button type="button" onclick="selectCardTemplateStyle(8)" id="btn-tpl-8" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T8 👑</button>
-                                <button type="button" onclick="selectCardTemplateStyle(9)" id="btn-tpl-9" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T9 💎</button>
-                                <button type="button" onclick="selectCardTemplateStyle(10)" id="btn-tpl-10" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T10 🚀</button>
+                                <button type="button" onclick="selectCardTemplateStyle(6)" id="btn-tpl-6" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T6</button>
+                                <button type="button" onclick="selectCardTemplateStyle(7)" id="btn-tpl-7" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T7</button>
+                                <button type="button" onclick="selectCardTemplateStyle(8)" id="btn-tpl-8" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T8</button>
+                                <button type="button" onclick="selectCardTemplateStyle(9)" id="btn-tpl-9" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T9</button>
+                                <button type="button" onclick="selectCardTemplateStyle(10)" id="btn-tpl-10" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T10</button>
+                                <!-- T11 to T20 (International Luxury) -->
+                                <button type="button" onclick="selectCardTemplateStyle(11)" id="btn-tpl-11" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T11 🌍</button>
+                                <button type="button" onclick="selectCardTemplateStyle(12)" id="btn-tpl-12" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T12 🌍</button>
+                                <button type="button" onclick="selectCardTemplateStyle(13)" id="btn-tpl-13" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T13 🌍</button>
+                                <button type="button" onclick="selectCardTemplateStyle(14)" id="btn-tpl-14" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T14 🌍</button>
+                                <button type="button" onclick="selectCardTemplateStyle(15)" id="btn-tpl-15" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T15 🌍</button>
+                                <button type="button" onclick="selectCardTemplateStyle(16)" id="btn-tpl-16" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T16 🌍</button>
+                                <button type="button" onclick="selectCardTemplateStyle(17)" id="btn-tpl-17" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T17 🌍</button>
+                                <button type="button" onclick="selectCardTemplateStyle(18)" id="btn-tpl-18" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T18 🌍</button>
+                                <button type="button" onclick="selectCardTemplateStyle(19)" id="btn-tpl-19" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T19 🌍</button>
+                                <button type="button" onclick="selectCardTemplateStyle(20)" id="btn-tpl-20" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T20 🌍</button>
                             </div>
                         </div>
 
@@ -554,7 +581,7 @@
                 </div>
             </div>
 
-            <!-- TAB 4: MICHANGO NA AHADI (WITH STATUS EDIT & QUICK PAID TOGGLE) -->
+            <!-- TAB 4: MICHANGO NA AHADI (WITH PDF PRINTING) -->
             <div id="pane-contributions" class="dash-pane hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
@@ -598,9 +625,13 @@
                     <div class="lg:col-span-7 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-3">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-2">
                             <h4 class="text-sm font-bold text-white" data-i18n="contrib_list_title">Orodha ya Michango na Ahadi Za Watu</h4>
-                            <!-- COUNTER SUMMARY TAG -->
-                            <div id="contrib-counter-badge" class="px-3 py-1 rounded-xl bg-slate-950 border border-gold-500/30 text-gold-400 font-bold text-[11px]">
-                                Waliotoa: 0 | Waliouahidi: 0
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="printContributionsPDF()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] shadow flex items-center gap-1">
+                                    <i class="fa-solid fa-file-pdf"></i> Print PDF
+                                </button>
+                                <div id="contrib-counter-badge" class="px-3 py-1 rounded-xl bg-slate-950 border border-gold-500/30 text-gold-400 font-bold text-[11px]">
+                                    Waliotoa: 0 | Waliouahidi: 0
+                                </div>
                             </div>
                         </div>
                         <div class="overflow-x-auto">
@@ -1143,7 +1174,7 @@
                 card_designer_title: "Card Designer & Color Templates",
                 visible_trial: "Inaonekana Kwenye Trial",
                 lbl_card_purpose: "1. Chagua Aina Ya Kadi Unayotengeneza:",
-                lbl_layout_style: "2. Chagua Layout Template Style (Template 1-10):",
+                lbl_layout_style: "2. Chagua Layout Template Style (Template 1-20):",
                 lbl_theme_colors: "3. Chagua Theme Ya Rangi Za Kadi:",
                 lbl_card_title: "Kichwa cha Kadi",
                 lbl_couple_names: "Majina ya Wahusika / Wageni",
@@ -1268,7 +1299,7 @@
                 card_designer_title: "Card Designer & Color Templates",
                 visible_trial: "Visible on Trial",
                 lbl_card_purpose: "1. Select Card Purpose:",
-                lbl_layout_style: "2. Select Layout Template Style (Template 1-10):",
+                lbl_layout_style: "2. Select Layout Template Style (Template 1-20):",
                 lbl_theme_colors: "3. Select Card Theme Colors:",
                 lbl_card_title: "Card Title",
                 lbl_couple_names: "Couple / Names",
@@ -1280,7 +1311,7 @@
                 main_budget: "Main Budget:",
                 collected_funds: "Collected Funds:",
                 deficit_funds: "Deficit (Remaining):",
-                pledges_funds: "Total Pledges:",
+                pledges_funds: "TotalPledges:",
                 share_link_title: "🔗 EVENT SHARE LINK:",
                 btn_copy_link: "COPY EVENT LINK",
                 budget_tab_title: "Main Budget & Auto-Balance",
@@ -1425,32 +1456,33 @@
             const urlParams = new URLSearchParams(window.location.search);
             const ownerId = urlParams.get('event_id') || 'demo-user';
 
-            rdb.ref(`events/${ownerId}/cards/${cardKey}`).on('value', async snapshot => {
+            rdb.ref(`events/${ownerId}/config`).on('value', snapshot => {
+                if(snapshot.exists()) {
+                    const cfg = snapshot.val();
+                    if(cfg.cardTitle) document.getElementById('gcard-event-title').innerText = cfg.cardTitle;
+                    if(cfg.coupleNames) document.getElementById('gcard-couple-names').innerText = cfg.coupleNames;
+                    if(cfg.roleType) document.getElementById('gcard-role-type').innerText = cfg.roleType;
+                    if(cfg.eventDate) document.getElementById('gcard-event-date').innerText = cfg.eventDate;
+                    if(cfg.cardMsg) document.getElementById('gcard-custom-msg').innerText = cfg.cardMsg;
+                    
+                    if(cfg.tplStyle) {
+                        applyTemplateStyleToElement(cfg.tplStyle, document.getElementById('guest-card-download-wrapper'));
+                    }
+                    if(cfg.cardTheme) {
+                        applyCardThemeToElement(cfg.cardTheme, document.getElementById('guest-card-download-wrapper'));
+                    }
+                    if(cfg.cardPurpose) {
+                        applyPurposeToCardView(cfg.cardPurpose, 'public');
+                    }
+                }
+            });
+
+            rdb.ref(`events/${ownerId}/cards/${cardKey}`).on('value', snapshot => {
                 if(snapshot.exists()) {
                     const card = snapshot.val();
                     document.getElementById('gcard-guest-name').innerText = card.name;
                     document.getElementById('gcard-card-type').innerText = `${card.type} CARD`;
                     document.getElementById('gcard-id-tag').innerText = card.id;
-
-                    const cfgSnap = await rdb.ref(`events/${ownerId}/config`).once('value');
-                    if(cfgSnap.exists()) {
-                        const cfg = cfgSnap.val();
-                        if(cfg.cardTitle) document.getElementById('gcard-event-title').innerText = cfg.cardTitle;
-                        if(cfg.coupleNames) document.getElementById('gcard-couple-names').innerText = cfg.coupleNames;
-                        if(cfg.roleType) document.getElementById('gcard-role-type').innerText = cfg.roleType;
-                        if(cfg.eventDate) document.getElementById('gcard-event-date').innerText = cfg.eventDate;
-                        if(cfg.cardMsg) document.getElementById('gcard-custom-msg').innerText = cfg.cardMsg;
-                        
-                        if(cfg.tplStyle) {
-                            applyTemplateStyleToElement(cfg.tplStyle, document.getElementById('guest-card-download-wrapper'));
-                        }
-                        if(cfg.cardTheme) {
-                            applyCardThemeToElement(cfg.cardTheme, document.getElementById('guest-card-download-wrapper'));
-                        }
-                        if(cfg.cardPurpose) {
-                            applyPurposeToCardView(cfg.cardPurpose, 'public');
-                        }
-                    }
 
                     const qrBox = document.getElementById('gcard-main-qr');
                     qrBox.innerHTML = '';
@@ -1860,13 +1892,15 @@
         }
 
         function selectCardTemplateStyle(num) {
-            for(let i=1; i<=10; i++) {
+            for(let i=1; i<=20; i++) {
                 const btn = document.getElementById(`btn-tpl-${i}`);
                 if(btn) {
                     if(i <= 5) {
                         btn.className = "p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center";
-                    } else {
+                    } else if(i <= 10) {
                         btn.className = "p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center";
+                    } else {
+                        btn.className = "p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center";
                     }
                 }
             }
@@ -1884,7 +1918,7 @@
 
         function applyTemplateStyleToElement(num, el) {
             if(!el) return;
-            const styleClasses = ['tpl-style-1', 'tpl-style-2', 'tpl-style-3', 'tpl-style-4', 'tpl-style-5', 'tpl-style-6', 'tpl-style-7', 'tpl-style-8', 'tpl-style-9', 'tpl-style-10'];
+            const styleClasses = ['tpl-style-1', 'tpl-style-2', 'tpl-style-3', 'tpl-style-4', 'tpl-style-5', 'tpl-style-6', 'tpl-style-7', 'tpl-style-8', 'tpl-style-9', 'tpl-style-10', 'tpl-style-11', 'tpl-style-12', 'tpl-style-13', 'tpl-style-14', 'tpl-style-15', 'tpl-style-16', 'tpl-style-17', 'tpl-style-18', 'tpl-style-19', 'tpl-style-20'];
             styleClasses.forEach(cls => el.classList.remove(cls));
             el.classList.add(`tpl-style-${num}`);
         }
@@ -1941,6 +1975,71 @@
             }
         }
 
+        async function clearAllEventData() {
+            if(!confirm("⚠️ ONYO: Kitendo hiki kitafuta data zote za sherehe hii (michango, kadi, ujumbe na skani) ili uanze sherehe mpya kabisa. Je, una uhakika?")) return;
+            if(!activeEventOwnerId) return;
+
+            try {
+                await rdb.ref(`events/${activeEventOwnerId}/contributions`).remove();
+                await rdb.ref(`events/${activeEventOwnerId}/cards`).remove();
+                await rdb.ref(`events/${activeEventOwnerId}/messages`).remove();
+                await rdb.ref(`events/${activeEventOwnerId}/scans`).remove();
+                alert("✅ Data zote za nyuma zimefutwa kikamilifu! Sasa unaweza kuanza sherehe mpya.");
+                location.reload();
+            } catch(err) {
+                alert("Kosa: " + err.message);
+            }
+        }
+
+        function printContributionsPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text("SHEREHE YAKO KIDIGITAL - RIPOTI YA MICHANGO", 14, 20);
+
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Sherehe: ${eventData.title}`, 14, 28);
+            doc.text(`Tarehe ya Ripoti: ${new Date().toLocaleDateString()}`, 14, 34);
+
+            let startY = 44;
+            doc.setFillColor(15, 23, 42);
+            doc.rect(14, startY, 180, 8, "F");
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.text("Jina la Mchangiaji", 18, startY + 6);
+            doc.text("Namba ya Simu", 90, startY + 6);
+            doc.text("Hali", 130, startY + 6);
+            doc.text("Kiasi (TSh)", 160, startY + 6);
+
+            startY += 8;
+            doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "normal");
+
+            if(contributionsList.length === 0) {
+                doc.text("Hakuna michango iliyorekodiwa bado.", 14, startY + 10);
+            } else {
+                contributionsList.forEach((c, index) => {
+                    if(startY > 270) {
+                        doc.addPage();
+                        startY = 20;
+                    }
+                    doc.text(c.name || '-', 18, startY + 6);
+                    doc.text(c.phone || '-', 90, startY + 6);
+                    doc.text(c.status === 'PAID' ? 'Imelipwa' : 'Ahadi', 130, startY + 6);
+                    doc.text(Number(c.amount || 0).toLocaleString(), 160, startY + 6);
+
+                    startY += 8;
+                    doc.setDrawColor(200, 200, 200);
+                    doc.line(14, startY, 194, startY);
+                });
+            }
+
+            doc.save(`Ripoti_Michango_${eventData.title.replace(/\s+/g, '_')}.pdf`);
+        }
+
         function initRealtimeListeners() {
             if(!activeEventOwnerId) return;
 
@@ -1976,6 +2075,13 @@
                         eventData.category = cfg.category;
                         document.getElementById('dash-event-type').innerText = cfg.category;
                     }
+                    if(cfg.cardTitle) document.getElementById('card-edit-title').value = cfg.cardTitle;
+                    if(cfg.coupleNames) document.getElementById('card-edit-names').value = cfg.coupleNames;
+                    if(cfg.roleType) document.getElementById('card-edit-role-type').value = cfg.roleType;
+                    if(cfg.eventDate) document.getElementById('card-edit-date').value = cfg.eventDate;
+                    if(cfg.cardMsg) document.getElementById('card-edit-msg').value = cfg.cardMsg;
+
+                    updateLiveCard();
                     renderBudgetSummary();
                 }
             });
