@@ -62,18 +62,38 @@
         .tpl-style-9 { border-left: 14px solid; border-right: 2px solid; border-radius: 1.25rem; }
         .tpl-style-10 { border: 4px groove; border-radius: 1rem; }
 
-        /* International Luxury Templates (T11 to T20) */
-        .tpl-style-11 { border: 5px ridge; border-radius: 2rem; background: radial-gradient(circle, #0f172a 0%, #020617 100%); }
-        .tpl-style-12 { border: 2px solid; border-radius: 0rem; box-shadow: 0 0 0 6px #020617, 0 0 0 9px #eab308; }
-        .tpl-style-13 { border-top: 20px solid; border-radius: 1.5rem; }
-        .tpl-style-14 { border-left: 8px solid; border-bottom: 8px solid; border-radius: 1rem; }
-        .tpl-style-15 { border: 4px dashed; border-radius: 50% 10%; }
-        .tpl-style-16 { border: 6px double; border-radius: 1.5rem; backdrop-filter: blur(5px); }
-        .tpl-style-17 { border-top: 4px solid; border-bottom: 4px solid; border-left: 12px solid; border-radius: 0.5rem; }
-        .tpl-style-18 { border: 3px solid; border-radius: 3rem 0.5rem 3rem 0.5rem; }
-        .tpl-style-19 { border: 5px solid; border-radius: 2rem; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.7); }
-        .tpl-style-20 { border: 3px inset; border-radius: 1.5rem; background: linear-gradient(145deg, #020617, #090d16); }
-        
+        /* Luxury Floral Sample Aesthetic (Templates 11 to 20 based on user sample) */
+        .tpl-style-11, .tpl-style-12, .tpl-style-13, .tpl-style-14, .tpl-style-15,
+        .tpl-style-16, .tpl-style-17, .tpl-style-18, .tpl-style-19, .tpl-style-20 {
+            background-color: #11261c !important;
+            border: 3px double #d4af37 !important;
+            box-shadow: inset 0 0 25px rgba(212, 175, 55, 0.25), 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+            position: relative;
+        }
+
+        /* Decorative Floral Borders inspired by user sample */
+        .tpl-style-11::before, .tpl-style-13::before, .tpl-style-15::before, .tpl-style-17::before, .tpl-style-19::before {
+            content: "🌿 🌸 🌿";
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            letter-spacing: 6px;
+            opacity: 0.85;
+        }
+
+        .tpl-style-12::after, .tpl-style-14::after, .tpl-style-16::after, .tpl-style-18::after, .tpl-style-20::after {
+            content: "🌸 🌿 🌸";
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            letter-spacing: 6px;
+            opacity: 0.85;
+        }
+
         .whatsapp-bg { background-color: #0b141a; background-image: radial-gradient(circle at center, #111b21 0%, #0b141a 100%); }
     </style>
 </head>
@@ -226,7 +246,7 @@
                     </div>
                     <div>
                         <label data-i18n="lbl_event_title" class="block font-semibold text-slate-300 mb-1">Jina la Sherehe Yako</label>
-                        <input type="text" id="reg-event-title" required placeholder="Mfano: Harusi ya Juma & Amina au Corporate Gala" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                        <input type="text" id="reg-event-title" required placeholder="Mfano: Sherehe Yangu" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                     </div>
 
                     <button type="submit" data-i18n="btn_reg_submit" class="w-full py-3 rounded-xl gold-gradient text-slate-950 font-black text-xs shadow-lg transition mt-2">
@@ -278,8 +298,8 @@
                         <span id="dash-event-type" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-gold-500/20 text-gold-400 border border-gold-500/30">HARUSI</span>
                         <span id="dash-vip-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-800 text-slate-400 border border-slate-700">⚪ TRIAL MODE</span>
                     </div>
-                    <h1 id="dash-event-title" class="text-2xl font-extrabold text-white mt-1">Harusi ya Juma & Amina</h1>
-                    <p class="text-xs text-slate-400 mt-0.5"><span data-i18n="host">Mwenyeji</span>: <strong id="dash-user-name" class="text-slate-200">Juma Mkwawa</strong> (<span id="dash-user-role" class="text-gold-400">Mwenyekiti</span>)</p>
+                    <h1 id="dash-event-title" class="text-2xl font-extrabold text-white mt-1">Sherehe Yangu</h1>
+                    <p class="text-xs text-slate-400 mt-0.5"><span data-i18n="host">Mwenyeji</span>: <strong id="dash-user-name" class="text-slate-200">Mtumiaji</strong> (<span id="dash-user-role" class="text-gold-400">Mwenyekiti</span>)</p>
                 </div>
                 
                 <div class="flex items-center gap-3 flex-wrap">
@@ -349,17 +369,17 @@
                                 <button type="button" onclick="selectCardTemplateStyle(8)" id="btn-tpl-8" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T8</button>
                                 <button type="button" onclick="selectCardTemplateStyle(9)" id="btn-tpl-9" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T9</button>
                                 <button type="button" onclick="selectCardTemplateStyle(10)" id="btn-tpl-10" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T10</button>
-                                <!-- T11 to T20 (International Luxury) -->
-                                <button type="button" onclick="selectCardTemplateStyle(11)" id="btn-tpl-11" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T11 🌍</button>
-                                <button type="button" onclick="selectCardTemplateStyle(12)" id="btn-tpl-12" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T12 🌍</button>
-                                <button type="button" onclick="selectCardTemplateStyle(13)" id="btn-tpl-13" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T13 🌍</button>
-                                <button type="button" onclick="selectCardTemplateStyle(14)" id="btn-tpl-14" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T14 🌍</button>
-                                <button type="button" onclick="selectCardTemplateStyle(15)" id="btn-tpl-15" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T15 🌍</button>
-                                <button type="button" onclick="selectCardTemplateStyle(16)" id="btn-tpl-16" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T16 🌍</button>
-                                <button type="button" onclick="selectCardTemplateStyle(17)" id="btn-tpl-17" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T17 🌍</button>
-                                <button type="button" onclick="selectCardTemplateStyle(18)" id="btn-tpl-18" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T18 🌍</button>
-                                <button type="button" onclick="selectCardTemplateStyle(19)" id="btn-tpl-19" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T19 🌍</button>
-                                <button type="button" onclick="selectCardTemplateStyle(20)" id="btn-tpl-20" class="p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center">T20 🌍</button>
+                                <!-- T11 to T20 (Luxury Floral Sample 1-10)[cite: 1] -->
+                                <button type="button" onclick="selectCardTemplateStyle(11)" id="btn-tpl-11" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T11 🌸</button>
+                                <button type="button" onclick="selectCardTemplateStyle(12)" id="btn-tpl-12" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T12 🌸</button>
+                                <button type="button" onclick="selectCardTemplateStyle(13)" id="btn-tpl-13" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T13 🌸</button>
+                                <button type="button" onclick="selectCardTemplateStyle(14)" id="btn-tpl-14" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T14 🌸</button>
+                                <button type="button" onclick="selectCardTemplateStyle(15)" id="btn-tpl-15" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T15 🌸</button>
+                                <button type="button" onclick="selectCardTemplateStyle(16)" id="btn-tpl-16" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T16 🌸</button>
+                                <button type="button" onclick="selectCardTemplateStyle(17)" id="btn-tpl-17" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T17 🌸</button>
+                                <button type="button" onclick="selectCardTemplateStyle(18)" id="btn-tpl-18" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T18 🌸</button>
+                                <button type="button" onclick="selectCardTemplateStyle(19)" id="btn-tpl-19" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T19 🌸</button>
+                                <button type="button" onclick="selectCardTemplateStyle(20)" id="btn-tpl-20" class="p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center">T20 🌸</button>
                             </div>
                         </div>
 
@@ -378,19 +398,19 @@
                         <div class="space-y-3 text-xs">
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_card_title">Kichwa cha Kadi</label>
-                                <input type="text" id="card-edit-title" oninput="updateLiveCard()" value="HARUSI YA WAPENDANAO" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                <input type="text" id="card-edit-title" oninput="updateLiveCard()" placeholder="HARUSI YA WAPENDANAO" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_couple_names">Majina ya Wahusika / Wageni</label>
-                                <input type="text" id="card-edit-names" oninput="updateLiveCard()" value="Juma & Amina" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                <input type="text" id="card-edit-names" oninput="updateLiveCard()" placeholder="Andika majina hapa" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1">Aina ya Mhusika wa Sherehe (Mfano: Bwana Harusi / Mgeni Mwaliko)</label>
-                                <input type="text" id="card-edit-role-type" oninput="updateLiveCard()" value="Mwaliko Maalum" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                <input type="text" id="card-edit-role-type" oninput="updateLiveCard()" placeholder="Mwaliko Maalum" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_date_venue">Tarehe & Eneo</label>
-                                <input type="text" id="card-edit-date" oninput="updateLiveCard()" value="12 Desemba 2026 - Mlimani City" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
+                                <input type="text" id="card-edit-date" oninput="updateLiveCard()" placeholder="Tarehe na Eneo" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
                             </div>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_invite_msg">Ujumbe Mfupi wa Mwaliko</label>
@@ -404,8 +424,8 @@
                             <div class="space-y-3 relative z-10">
                                 <div class="w-10 h-10 rounded-full mx-auto border border-gold-500 flex items-center justify-center"><i class="fa-solid fa-sparkles text-gold-400 text-sm"></i></div>
                                 <div>
-                                    <span id="prev-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">HARUSI YA WAPENDANAO</span>
-                                    <h2 id="prev-names" class="text-xl font-serif font-bold text-white mt-0.5">Juma & Amina</h2>
+                                    <span id="prev-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">MWALIKO RASMI</span>
+                                    <h2 id="prev-names" class="text-xl font-serif font-bold text-white mt-0.5">Majina ya Wahusika</h2>
                                     <span id="prev-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mwaliko Maalum</span>
                                 </div>
                                 <p id="prev-msg" class="text-[11px] text-slate-300 italic px-1 leading-snug">Tunayo furaha kubwa kukualika katika sherehe yetu...</p>
@@ -413,7 +433,7 @@
 
                             <div id="preview-bottom-box" class="space-y-1.5 bg-slate-900/90 p-3 rounded-2xl border border-gold-500/30 text-xs text-left relative z-10 flex items-center justify-between">
                                 <div>
-                                    <p class="text-gold-400 font-bold text-[11px]" id="prev-date">12 Desemba 2026 - Mlimani City</p>
+                                    <p class="text-gold-400 font-bold text-[11px]" id="prev-date">Tarehe & Eneo</p>
                                     <p class="text-[9px] text-slate-400" id="prev-guest-type-label">Uthibitisho Mlangoni (VIP)</p>
                                 </div>
                                 <div class="bg-white p-1 rounded-lg" id="preview-mini-qr-wrapper">
@@ -924,7 +944,7 @@
                     </div>
                     <div>
                         <span id="gcard-event-title" class="text-[10px] font-black uppercase text-gold-400 tracking-widest block">SHEREHE YAKO</span>
-                        <h2 id="gcard-couple-names" class="text-2xl font-serif font-bold text-white mt-0.5">Juma & Amina</h2>
+                        <h2 id="gcard-couple-names" class="text-2xl font-serif font-bold text-white mt-0.5">Majina ya Wahusika</h2>
                         <span id="gcard-role-type" class="text-[10px] text-emerald-400 font-bold block mt-0.5">Mwaliko Maalum</span>
                     </div>
 
@@ -939,7 +959,7 @@
 
                 <div id="gcard-bottom-wrapper" class="space-y-2 bg-slate-900/90 p-3 rounded-2xl border border-gold-500/30 text-xs text-center relative z-10">
                     <div>
-                        <p class="text-gold-400 font-bold text-xs" id="gcard-event-date">12 Desemba 2026 - Mlimani City</p>
+                        <p class="text-gold-400 font-bold text-xs" id="gcard-event-date">Tarehe & Eneo</p>
                         <p class="text-[9px] text-slate-400 mt-0.5" id="gcard-qr-notice">Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe</p>
                     </div>
                     <div class="bg-white p-1.5 rounded-xl inline-block mx-auto shadow-md" id="gcard-main-qr-wrapper">
@@ -1114,13 +1134,13 @@
             rateDouble: 100000, 
             rateCommittee: 150000,
             bankAcc: 'CRDB Bank - 015012345678',
-            bankName: 'JUMA MKWAWA',
+            bankName: 'MWEYENJI RASMI',
             phoneAcc: '0755123456 (M-PESA)',
-            phoneName: 'JUMA MKWAWA',
+            phoneName: 'MWEYENJI RASMI',
             cardTitle: 'MWALIKO RASMI',
-            coupleNames: 'Mhusika Mkuu',
+            coupleNames: 'Majina ya Wahusika',
             roleType: 'Mwaliko Maalum',
-            eventDate: '12 Desemba 2026 - Dar es Salaam',
+            eventDate: 'Tarehe & Eneo',
             cardMsg: 'Tunayo furaha kubwa kukualika katika sherehe yetu...',
             cardPurpose: 'HALL',
             tplStyle: 1,
@@ -1311,7 +1331,7 @@
                 main_budget: "Main Budget:",
                 collected_funds: "Collected Funds:",
                 deficit_funds: "Deficit (Remaining):",
-                pledges_funds: "TotalPledges:",
+                pledges_funds: "Total Pledges:",
                 share_link_title: "🔗 EVENT SHARE LINK:",
                 btn_copy_link: "COPY EVENT LINK",
                 budget_tab_title: "Main Budget & Auto-Balance",
@@ -1352,7 +1372,7 @@
                 btn_send_all_thanks: "SEND THANKS TO ALL CHECKED-IN",
                 lbl_select_thanks_tpl: "Select or Click Message Template:",
                 lbl_edit_thanks: "Write or Edit Your Thank You Message:",
-                confirmed_guests_list: "Confirmed Hall Guests List:",
+                confirmed_guests_list: "Confirmed Guests List:",
                 th_guest_card: "Guest / Card",
                 th_phone: "Phone Number",
                 th_time: "Check-in Time",
@@ -1697,6 +1717,7 @@
                     title: title,
                     category: cat,
                     cardTitle: title.toUpperCase(),
+                    coupleNames: name,
                     budget: 5000000,
                     single: 50000,
                     double: 100000,
@@ -1900,7 +1921,7 @@
                     } else if(i <= 10) {
                         btn.className = "p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center";
                     } else {
-                        btn.className = "p-2 rounded-lg bg-slate-800 text-emerald-400 font-bold border border-emerald-500/60 text-center";
+                        btn.className = "p-2 rounded-lg bg-[#11261c] text-[#d4af37] font-bold border border-[#d4af37]/60 text-center";
                     }
                 }
             }
@@ -2858,7 +2879,7 @@
             `).join('');
         }
 
-        async function approveVIP(uid) {
+        async function approveVIP(uid, uphone) {
             await rdb.ref('users/' + uid).update({ isVIP: true, status: 'VIP' });
             loadAdminUsers();
             alert("Amethibitishwa kuwa VIP!");
