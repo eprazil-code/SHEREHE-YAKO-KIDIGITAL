@@ -66,7 +66,7 @@
         .f-montserrat { font-family: 'Montserrat', sans-serif !important; }
         .f-jakarta { font-family: 'Plus Jakarta Sans', sans-serif !important; }
 
-        /* Template Border & Style Enforcers */
+        /* Template Styles */
         .tpl-style-1 { border-width: 4px; border-style: solid; border-radius: 1.5rem; }
         .tpl-style-2 { border-width: 1px; border-style: dashed; border-radius: 0.5rem; }
         .tpl-style-3 { border-top-width: 12px; border-style: solid; border-radius: 1rem; }
@@ -92,15 +92,12 @@
         .tpl-style-21 { border-radius: 2rem !important; }
         .tpl-style-22 { border-radius: 2rem !important; }
         .tpl-style-23 { border-radius: 2rem !important; }
-
-        /* NEW 3D TEMPLATE STYLES (T24 - T28) */
         .tpl-style-24 { border-radius: 2.5rem !important; box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(234, 179, 8, 0.4); }
         .tpl-style-25 { border-radius: 2rem !important; backdrop-filter: blur(16px); border: 2px solid rgba(255,255,255,0.2) !important; }
         .tpl-style-26 { border-radius: 2.5rem !important; box-shadow: 0 0 35px #eab308; }
         .tpl-style-27 { border-radius: 2rem !important; border: 4px double #ca8a04 !important; }
         .tpl-style-28 { border-radius: 3rem 0.5rem 3rem 0.5rem !important; border: 3px solid #facc15 !important; }
 
-        /* ADVANCED ARCH FRAME FOR T23 */
         .arch-gold-frame {
             border-top-left-radius: 150px;
             border-top-right-radius: 150px;
@@ -109,6 +106,22 @@
         }
 
         .whatsapp-bg { background-color: #0b141a; background-image: radial-gradient(circle at center, #111b21 0%, #0b141a 100%); }
+
+        /* Editable Live Elements */
+        [contenteditable="true"] {
+            outline: 1px dashed rgba(234, 179, 8, 0.5);
+            padding: 2px 4px;
+            border-radius: 4px;
+            cursor: text;
+        }
+        [contenteditable="true"]:hover {
+            outline: 1px solid #eab308;
+            background-color: rgba(234, 179, 8, 0.1);
+        }
+        [contenteditable="true"]:focus {
+            outline: 2px solid #eab308;
+            background-color: rgba(234, 179, 8, 0.15);
+        }
     </style>
 </head>
 <body class="font-sans text-slate-100 bg-slate-950 h-full flex flex-col antialiased selection:bg-gold-500 selection:text-slate-950">
@@ -341,7 +354,7 @@
                     <i class="fa-solid fa-wallet"></i> <span data-i18n="tab_contributions">Michango & Ahadi Za Watu</span>
                 </button>
                 <button type="button" onclick="switchDashTab('cards')" id="tab-btn-cards" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
-                    <i class="fa-solid fa-address-card"></i> <span data-i18n="tab_cards">Kadi Za Digital (Single/Double)</span>
+                    <i class="fa-solid fa-address-card"></i> <span data-i18n="tab_cards">Kadi Za Digital</span>
                 </button>
                 <button type="button" onclick="switchDashTab('thanks')" id="tab-btn-thanks" class="dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap">
                     <i class="fa-solid fa-heart text-rose-400"></i> <span data-i18n="tab_thanks">Ujumbe Wa Shukrani</span>
@@ -354,12 +367,14 @@
             <!-- TAB 1: CARD TEMPLATES & EDITOR -->
             <div id="pane-templates" class="dash-pane space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- LEFT EDITING CONTROLS (TOP TO BOTTOM ORDER) -->
                     <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 space-y-4 max-h-[85vh] overflow-y-auto">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                             <h3 class="text-sm font-bold text-white" data-i18n="card_designer_title">Card Designer & Color Templates</h3>
                             <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold" data-i18n="visible_trial">Inaonekana Kwenye Trial</span>
                         </div>
                         
+                        <!-- 1. PURPOSE -->
                         <div class="p-3 rounded-2xl bg-slate-950 border border-gold-500/40 space-y-2">
                             <label class="block text-xs font-bold text-gold-400" data-i18n="lbl_card_purpose">1. Chagua Aina Ya Kadi Unayotengeneza:</label>
                             <div class="grid grid-cols-3 gap-1.5 text-[11px]">
@@ -369,9 +384,9 @@
                             </div>
                         </div>
 
-                        <!-- FONT SELECTOR -->
+                        <!-- 2. FONT SELECTOR -->
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
-                            <label class="block text-xs font-bold text-gold-400"><i class="fa-solid fa-font"></i> Chagua Font Kali Ya Kadi:</label>
+                            <label class="block text-xs font-bold text-gold-400"><i class="fa-solid fa-font"></i> 2. Chagua Font Kali Ya Kadi:</label>
                             <select id="card-font-select" onchange="changeCardFont(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs outline-none">
                                 <option value="f-alex-brush" selected>Alex Brush (Royal Script)</option>
                                 <option value="f-great-vibes">Great Vibes (Classic Script)</option>
@@ -383,8 +398,9 @@
                             </select>
                         </div>
 
+                        <!-- 3. TEMPLATE STYLE -->
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
-                            <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">2. Chagua Layout Template Style (Template 1-28):</label>
+                            <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">3. Chagua Layout Template Style (Template 1-28):</label>
                             <div class="grid grid-cols-5 gap-1.5 text-[11px] max-h-48 overflow-y-auto pr-1">
                                 <!-- T1 to T10 -->
                                 <button type="button" onclick="selectCardTemplateStyle(1)" id="btn-tpl-1" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T1</button>
@@ -412,30 +428,38 @@
                                 <button type="button" onclick="selectCardTemplateStyle(21)" id="btn-tpl-21" class="p-2 rounded-lg bg-pink-900 text-pink-200 font-bold border border-pink-400 text-center" title="Bridal Shower Luxe">T21</button>
                                 <button type="button" onclick="selectCardTemplateStyle(22)" id="btn-tpl-22" class="p-2 rounded-lg bg-emerald-900 text-amber-300 font-bold border border-amber-400 text-center" title="Wedding Emerald">T22</button>
                                 <button type="button" onclick="selectCardTemplateStyle(23)" id="btn-tpl-23" class="p-2 rounded-lg gold-gradient text-slate-950 font-black text-center" title="Send-Off Arch">T23</button>
-                                <!-- NEW 3D TEMPLATES (T24 - T28) -->
-                                <button type="button" onclick="selectCardTemplateStyle(24)" id="btn-tpl-24" class="p-2 rounded-lg bg-gradient-to-r from-amber-600 to-yellow-400 text-slate-950 font-black text-center shadow-md">T24 (3D Gold)</button>
-                                <button type="button" onclick="selectCardTemplateStyle(25)" id="btn-tpl-25" class="p-2 rounded-lg bg-slate-800 text-cyan-300 font-bold border border-cyan-400 text-center shadow-md">T25 (Glass)</button>
-                                <button type="button" onclick="selectCardTemplateStyle(26)" id="btn-tpl-26" class="p-2 rounded-lg bg-purple-900 text-purple-200 font-bold border border-purple-400 text-center shadow-md">T26 (3D Neon)</button>
-                                <button type="button" onclick="selectCardTemplateStyle(27)" id="btn-tpl-27" class="p-2 rounded-lg bg-slate-900 text-slate-200 font-bold border border-slate-400 text-center shadow-md">T27 (3D Metallic)</button>
-                                <button type="button" onclick="selectCardTemplateStyle(28)" id="btn-tpl-28" class="p-2 rounded-lg bg-amber-900 text-amber-200 font-bold border border-amber-400 text-center shadow-md">T28 (Crystal)</button>
+                                <!-- 3D TEMPLATES (T24 - T28) -->
+                                <button type="button" onclick="selectCardTemplateStyle(24)" id="btn-tpl-24" class="p-2 rounded-lg bg-gradient-to-r from-amber-600 to-yellow-400 text-slate-950 font-black text-center shadow-md">T24</button>
+                                <button type="button" onclick="selectCardTemplateStyle(25)" id="btn-tpl-25" class="p-2 rounded-lg bg-slate-800 text-cyan-300 font-bold border border-cyan-400 text-center shadow-md">T25</button>
+                                <button type="button" onclick="selectCardTemplateStyle(26)" id="btn-tpl-26" class="p-2 rounded-lg bg-purple-900 text-purple-200 font-bold border border-purple-400 text-center shadow-md">T26</button>
+                                <button type="button" onclick="selectCardTemplateStyle(27)" id="btn-tpl-27" class="p-2 rounded-lg bg-slate-900 text-slate-200 font-bold border border-slate-400 text-center shadow-md">T27</button>
+                                <button type="button" onclick="selectCardTemplateStyle(28)" id="btn-tpl-28" class="p-2 rounded-lg bg-amber-900 text-amber-200 font-bold border border-amber-400 text-center shadow-md">T28</button>
                             </div>
                         </div>
 
+                        <!-- 4. COLOR THEMES (12 TOTAL SWATCHES) -->
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-2" data-i18n="lbl_theme_colors">3. Chagua Theme Ya Rangi Za Kadi (Kadi Yote):</label>
+                            <label class="block text-xs font-semibold text-slate-300 mb-2" data-i18n="lbl_theme_colors">4. Chagua Theme Ya Rangi Za Kadi (12 Jumla):</label>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                <button type="button" onclick="applyCardTheme('gold')" class="p-2.5 rounded-xl bg-slate-950 border border-gold-500/60 text-xs font-bold text-gold-400">✨ Gold Royalty</button>
-                                <button type="button" onclick="applyCardTheme('silver')" class="p-2.5 rounded-xl bg-slate-950 border border-slate-400/60 text-xs font-bold text-slate-300">🥈 Silver Elegance</button>
-                                <button type="button" onclick="applyCardTheme('emerald')" class="p-2.5 rounded-xl bg-emerald-950 border border-emerald-500/60 text-xs font-bold text-emerald-400">🕌 Emerald Green</button>
-                                <button type="button" onclick="applyCardTheme('purple')" class="p-2.5 rounded-xl bg-indigo-950 border border-indigo-500/60 text-xs font-bold text-indigo-300">👑 Royal Purple</button>
-                                <button type="button" onclick="applyCardTheme('rose')" class="p-2.5 rounded-xl bg-rose-950 border border-rose-500/60 text-xs font-bold text-rose-300">🌹 Blush Pink</button>
-                                <button type="button" onclick="applyCardTheme('ruby')" class="p-2.5 rounded-xl bg-red-950 border border-red-500/60 text-xs font-bold text-red-400">💎 Crimson Ruby</button>
+                                <button type="button" onclick="applyCardTheme('gold')" class="p-2 rounded-xl bg-slate-950 border border-gold-500/60 text-[11px] font-bold text-gold-400">✨ Gold Royalty</button>
+                                <button type="button" onclick="applyCardTheme('silver')" class="p-2 rounded-xl bg-slate-950 border border-slate-400/60 text-[11px] font-bold text-slate-300">🥈 Silver Elegance</button>
+                                <button type="button" onclick="applyCardTheme('emerald')" class="p-2 rounded-xl bg-emerald-950 border border-emerald-500/60 text-[11px] font-bold text-emerald-400">🕌 Emerald Green</button>
+                                <button type="button" onclick="applyCardTheme('purple')" class="p-2 rounded-xl bg-indigo-950 border border-indigo-500/60 text-[11px] font-bold text-indigo-300">👑 Royal Purple</button>
+                                <button type="button" onclick="applyCardTheme('rose')" class="p-2 rounded-xl bg-rose-950 border border-rose-500/60 text-[11px] font-bold text-rose-300">🌹 Blush Pink</button>
+                                <button type="button" onclick="applyCardTheme('ruby')" class="p-2 rounded-xl bg-red-950 border border-red-500/60 text-[11px] font-bold text-red-400">💎 Crimson Ruby</button>
+                                <!-- 6 NEW THEMES -->
+                                <button type="button" onclick="applyCardTheme('cyan')" class="p-2 rounded-xl bg-cyan-950 border border-cyan-500/60 text-[11px] font-bold text-cyan-300">⚡ Electric Cyan</button>
+                                <button type="button" onclick="applyCardTheme('amber')" class="p-2 rounded-xl bg-amber-950 border border-amber-500/60 text-[11px] font-bold text-amber-300">🔥 Amber Sunset</button>
+                                <button type="button" onclick="applyCardTheme('fuchsia')" class="p-2 rounded-xl bg-fuchsia-950 border border-fuchsia-500/60 text-[11px] font-bold text-fuchsia-300">🌸 Fuchsia Glow</button>
+                                <button type="button" onclick="applyCardTheme('teal')" class="p-2 rounded-xl bg-teal-950 border border-teal-500/60 text-[11px] font-bold text-teal-300">🌿 Deep Teal</button>
+                                <button type="button" onclick="applyCardTheme('midnight')" class="p-2 rounded-xl bg-slate-900 border border-blue-500/60 text-[11px] font-bold text-blue-300">🌌 Midnight Blue</button>
+                                <button type="button" onclick="applyCardTheme('bronze')" class="p-2 rounded-xl bg-stone-900 border border-stone-500/60 text-[11px] font-bold text-stone-300">🏺 Vintage Bronze</button>
                             </div>
                         </div>
 
-                        <!-- EDITING FIELDS (ALL TEXT EDITABLE) -->
-                        <div class="space-y-3 text-xs">
-                            <h4 class="font-bold text-gold-400 border-b border-slate-800 pb-1">✏️ EDITING TEXTS (KILA NENO LINAWEZA KUBADILISHWA)</h4>
+                        <!-- 5. TOP-TO-BOTTOM EDITING TEXT FIELDS -->
+                        <div class="space-y-3 text-xs pt-2 border-t border-slate-800">
+                            <h4 class="font-bold text-gold-400">✏️ 5. SEHEMU ZA KUEDIT MAANDISHI (TOP TO BOTTOM)</h4>
                             <div>
                                 <label class="block text-slate-300 font-semibold mb-1" data-i18n="lbl_card_title">Kichwa cha Kadi / Title Text</label>
                                 <input type="text" id="card-edit-title" oninput="updateLiveCard()" placeholder="MWALIKO WA SENDOFF / HARUSI" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none">
@@ -500,7 +524,9 @@
                         </div>
                     </div>
 
-                    <div class="lg:col-span-7 flex flex-col items-center justify-center p-2">
+                    <!-- RIGHT LIVE PREVIEW WITH CURSOR EDITING -->
+                    <div class="lg:col-span-7 flex flex-col items-center justify-center p-2 space-y-2">
+                        <p class="text-[11px] text-gold-400 italic">💡 Gusa au bofya neno lolote kwenye kadi hapa chini ili kuweka cursor na kuedit palepale!</p>
                         <div id="live-card-frame" class="card-preview tpl-style-23 rounded-3xl p-5 shadow-2xl flex flex-col justify-between text-center relative overflow-hidden">
                             <!-- LIVE CANVAS -->
                         </div>
@@ -511,7 +537,6 @@
             <!-- TAB 2: FULLSCREEN WHATSAPP GROUP CHAT & LIVE SUMMARY -->
             <div id="pane-chat" class="dash-pane hidden space-y-4">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                    <!-- LEFT DASHBOARD SUMMARY -->
                     <div class="lg:col-span-4 bg-slate-900 p-4 rounded-3xl border border-slate-800 space-y-3">
                         <h4 class="text-xs font-bold text-gold-400 border-b border-slate-800 pb-2"><i class="fa-solid fa-chart-line"></i> <span data-i18n="committee_dashboard">Dashboard ya Wanakamati</span></h4>
                         <div class="space-y-2 text-xs">
@@ -541,10 +566,7 @@
                         </div>
                     </div>
 
-                    <!-- RIGHT FULL WHATSAPP GROUP CHAT INTERFACE -->
                     <div id="whatsapp-chat-box" class="lg:col-span-8 bg-[#0b141a] border border-slate-800 rounded-3xl flex flex-col justify-between overflow-hidden shadow-2xl min-h-[500px]">
-                        
-                        <!-- CHAT HEADER -->
                         <div class="bg-[#202c33] p-3 flex justify-between items-center border-b border-slate-800">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-full gold-gradient text-slate-950 font-black flex items-center justify-center text-lg shadow">
@@ -565,10 +587,8 @@
                             </div>
                         </div>
 
-                        <!-- MESSAGES STREAM CONTAINER -->
                         <div id="chat-messages-stream" class="whatsapp-bg flex-1 p-4 overflow-y-auto space-y-3 max-h-[380px]"></div>
 
-                        <!-- CHAT INPUT & MEDIA ATTACHMENTS BAR -->
                         <div class="bg-[#202c33] p-3 border-t border-slate-800 space-y-2">
                             <div id="chat-media-preview-bar" class="hidden p-2 rounded-xl bg-slate-950 border border-gold-500/40 text-xs flex justify-between items-center text-gold-400">
                                 <span id="chat-media-preview-txt">📎 Media Tayari Kwa Kutumwa</span>
@@ -588,7 +608,6 @@
                                 </button>
                             </form>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -1004,7 +1023,6 @@
                 </button>
             </div>
 
-            <!-- IMAGE MODAL FOR LONG-PRESS SAVE -->
             <div id="modal-card-image-preview" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md hidden flex-col items-center justify-center p-4 space-y-3">
                 <div class="flex justify-between items-center w-full max-w-xs text-white">
                     <span class="text-xs font-bold text-gold-400" data-i18n="img_modal_title">🖼️ Picha Ya Kadi Imetengenezwa:</span>
@@ -1152,7 +1170,6 @@
             hostLoc: 'wa Kigamboni Dar es Salaam',
             brideName: 'Hafsa',
             groomName: 'Daniel John Lukuwi',
-            roleType: 'DOUBLE',
             eventDate: '11.06.2026',
             eventTime: 'Alhamisi | Saa 18:00 Jioni',
             eventVenue: 'NHC House Samora Avenue',
@@ -1208,20 +1225,18 @@
                 tab_chat: "Group Chat & Live Summary",
                 tab_budget: "Bajeti Ya Sherehe & Payments",
                 tab_contributions: "Michango & Ahadi Za Watu",
-                tab_cards: "Kadi Za Digital (Single/Double)",
+                tab_cards: "Kadi Za Digital",
                 tab_thanks: "Ujumbe Wa Shukrani",
                 tab_scanner: "Live Scan Mlangoni",
                 card_designer_title: "Card Designer & Color Templates",
                 visible_trial: "Inaonekana Kwenye Trial",
                 lbl_card_purpose: "1. Chagua Aina Ya Kadi Unayotengeneza:",
-                lbl_layout_style: "2. Chagua Layout Template Style (Template 1-28):",
-                lbl_theme_colors: "3. Chagua Theme Ya Rangi Za Kadi (Kadi Yote):",
+                lbl_layout_style: "3. Chagua Layout Template Style (Template 1-28):",
+                lbl_theme_colors: "4. Chagua Theme Ya Rangi Za Kadi (12 Jumla):",
                 lbl_card_title: "Kichwa cha Kadi",
                 lbl_couple_names: "Majina ya Wahusika / Wageni",
                 lbl_date_venue: "Tarehe & Eneo",
                 lbl_invite_msg: "Ujumbe Mfupi wa Mwaliko",
-                guest_of_honor: "Uthibitisho Mlangoni (VIP)",
-                brand_footer: "Sherehe Yako Kidigital",
                 committee_dashboard: "Dashboard ya Wanakamati",
                 main_budget: "Bajeti Kuu:",
                 collected_funds: "Michango Iliyopokelewa:",
@@ -1285,7 +1300,6 @@
                 th_card_id: "Kadi ID",
                 th_gate_time: "Geti / Muda",
                 th_status: "Hali",
-                pub_badge: "KADI YA MWALIKO RASMI",
                 pub_desc: "Tazama bajeti, michango, na uweke taarifa zako kutoa mchango au ahadi ili ujiunge kwenye Group Chat!",
                 pub_contrib_list: "Orodha ya Watu Waliochanga na Kuahidi:",
                 th_name: "Jina",
@@ -1293,8 +1307,6 @@
                 lbl_contrib_or_pledge: "Unatoa Mchango au Ahadi?",
                 lbl_amount_pledged: "Kiasi Unachotoa / Unachoahidi (TSh)",
                 btn_submit_chat: "WASILISHA & INGIA KWENYE GROUP CHAT 🚀",
-                card_special_for: "KADI HII NI MAALUM KWA AJILI YA:",
-                card_qr_instr: "Tafadhali onyesha QR Code hii Mlangoni Siku ya Sherehe",
                 btn_download_direct: "1. DOWNLOAD DIRECT (JPG/PNG)",
                 btn_open_img: "2. KUFUNGUA PICHA & KU-SAVE",
                 img_modal_title: "🖼️ Picha Ya Kadi Imetengenezwa:",
@@ -1333,20 +1345,18 @@
                 tab_chat: "Group Chat & Live Summary",
                 tab_budget: "Event Budget & Payments",
                 tab_contributions: "Contributions & Pledges",
-                tab_cards: "Digital Cards (Single/Double)",
+                tab_cards: "Digital Cards",
                 tab_thanks: "Thank You Messages",
                 tab_scanner: "Live Gate Check-in",
                 card_designer_title: "Card Designer & Color Templates",
                 visible_trial: "Visible on Trial",
                 lbl_card_purpose: "1. Select Card Purpose:",
-                lbl_layout_style: "2. Select Layout Template Style (Template 1-28):",
-                lbl_theme_colors: "3. Select Card Theme Colors (Entire Card):",
+                lbl_layout_style: "3. Select Layout Template Style (Template 1-28):",
+                lbl_theme_colors: "4. Select Card Theme Colors (12 Total):",
                 lbl_card_title: "Card Title",
                 lbl_couple_names: "Couple / Names",
                 lbl_date_venue: "Date & Venue",
                 lbl_invite_msg: "Invitation Message",
-                guest_of_honor: "Gate Verification (VIP)",
-                brand_footer: "Digital Event Platform",
                 committee_dashboard: "Committee Dashboard",
                 main_budget: "Main Budget:",
                 collected_funds: "Collected Funds:",
@@ -1410,7 +1420,6 @@
                 th_card_id: "Card ID",
                 th_gate_time: "Gate / Time",
                 th_status: "Status",
-                pub_badge: "OFFICIAL INVITATION CARD",
                 pub_desc: "View budget, contributions, and submit your contribution or pledge to join the Group Chat!",
                 pub_contrib_list: "Contributors & Pledges List:",
                 th_name: "Name",
@@ -1418,8 +1427,6 @@
                 lbl_contrib_or_pledge: "Contribution or Pledge?",
                 lbl_amount_pledged: "Amount Pledged / Paid (TSh)",
                 btn_submit_chat: "SUBMIT & JOIN GROUP CHAT 🚀",
-                card_special_for: "THIS CARD IS ISSUED SPECIALLY FOR:",
-                card_qr_instr: "Please present this QR Code at the gate on event day",
                 btn_download_direct: "1. DOWNLOAD DIRECT (JPG/PNG)",
                 btn_open_img: "2. OPEN IMAGE & SAVE",
                 img_modal_title: "🖼️ Generated Card Image:",
@@ -1861,7 +1868,6 @@
 
         function applyRolePermissions(role) {
             const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(role);
-            
             const saveBudgetBtn = document.getElementById('btn-save-budget-action');
             const sendAllCardsBtn = document.getElementById('btn-send-all-cards-action');
 
@@ -1954,6 +1960,7 @@
             }
         }
 
+        /* 12 COLOR THEMES (FIRST 6 KEPT, 6 NEW ADDED) */
         function applyCardTheme(theme) {
             eventData.cardTheme = theme;
 
@@ -1969,6 +1976,18 @@
                 eventData.color1 = '#4c0519'; eventData.color2 = '#fb7185'; eventData.color3 = '#ffe4e6';
             } else if(theme === 'ruby') {
                 eventData.color1 = '#450a0a'; eventData.color2 = '#ef4444'; eventData.color3 = '#fef08a';
+            } else if(theme === 'cyan') {
+                eventData.color1 = '#083344'; eventData.color2 = '#22d3ee'; eventData.color3 = '#cffafe';
+            } else if(theme === 'amber') {
+                eventData.color1 = '#451a03'; eventData.color2 = '#fbbf24'; eventData.color3 = '#fef3c7';
+            } else if(theme === 'fuchsia') {
+                eventData.color1 = '#701a75'; eventData.color2 = '#e879f9'; eventData.color3 = '#fae8ff';
+            } else if(theme === 'teal') {
+                eventData.color1 = '#042f2e'; eventData.color2 = '#2dd4bf'; eventData.color3 = '#ccfbf1';
+            } else if(theme === 'midnight') {
+                eventData.color1 = '#020617'; eventData.color2 = '#60a5fa'; eventData.color3 = '#bfdbfe';
+            } else if(theme === 'bronze') {
+                eventData.color1 = '#1c1917'; eventData.color2 = '#d97706'; eventData.color3 = '#fde68a';
             }
 
             document.getElementById('card-color-1').value = eventData.color1;
@@ -1984,13 +2003,13 @@
             }
         }
 
-        /* DYNAMIC RENDERER FOR TEMPLATES 1 TO 28 WITH CONDITIONAL QR CODE DISPLAY */
+        /* DYNAMIC RENDERER: NO QR CODE ON COMMITTEE & CONTRIBUTION STARTING FROM TPL 21 */
         function renderDynamicCardHTML(containerEl, cardObj, cfg, mode) {
             if(!containerEl) return;
 
             const tplNum = cfg.tplStyle || 23;
             const fontClass = cfg.cardFont || 'f-alex-brush';
-            const cardType = (cardObj && cardObj.type) ? cardObj.type : (cfg.roleType || 'DOUBLE');
+            const cardType = (cardObj && cardObj.type) ? cardObj.type : 'DOUBLE';
             const guestName = (cardObj && cardObj.name) ? cardObj.name : (cfg.coupleNames || 'MR & MRS ECARD HUB');
             const cardId = (cardObj && cardObj.id) ? cardObj.id : 'ECARD-992026';
             const purpose = cfg.cardPurpose || 'HALL';
@@ -1999,8 +2018,11 @@
             const c2 = cfg.color2 || '#eab308';
             const c3 = cfg.color3 || '#fef08a';
 
-            // QR CODE ONLY VISIBLE ON HALL INVITATION CARDS
-            const showQrCode = (purpose === 'HALL');
+            // QR CODE LOGIC: FROM TPL 21 ONWARDS, COMMITTEE AND CONTRIBUTION HAVE NO QR CODE
+            let showQrCode = (purpose === 'HALL');
+            if (tplNum >= 21 && (purpose === 'COMMITTEE' || purpose === 'CONTRIBUTION')) {
+                showQrCode = false;
+            }
 
             containerEl.className = `card-preview tpl-style-${tplNum} shadow-2xl relative overflow-hidden my-auto`;
             containerEl.style.backgroundColor = c1;
@@ -2020,60 +2042,58 @@
             `;
 
             if(tplNum === 23) {
-                // TEMPLATE 23: CLEAN ARCH (REMOVED @EHUBS / SOCIAL HANDLES)
                 containerEl.innerHTML = `
                     <div class="w-full h-full relative p-4 flex flex-col justify-between items-center text-center overflow-hidden" style="background: linear-gradient(180deg, ${c1} 0%, #000000 100%);">
                         <div class="arch-gold-frame w-full h-[91%] p-4 flex flex-col items-center justify-between relative z-10 shadow-2xl" style="background: linear-gradient(180deg, ${c2}15 0%, ${c1}cc 100%); border: 3px solid ${c2}; box-shadow: inset 0 0 25px ${c2}33, 0 0 20px ${c2}22;">
                             
                             <div class="pt-2">
-                                <span class="text-[9px] font-bold uppercase tracking-[0.2em] block" style="color: ${c2};">${cfg.cardTitle || 'MWALIKO WA SENDOFF'}</span>
+                                <span class="text-[9px] font-bold uppercase tracking-[0.2em] block" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('cardTitle', this.innerText)">${cfg.cardTitle || 'MWALIKO WA SENDOFF'}</span>
                                 <h3 class="text-[11px] font-medium leading-snug mt-1 opacity-90" style="color: ${c3};">
-                                    <span class="font-bold block">${cfg.hostName || 'Familia ya Mr & Mrs Juma Kirumbi'}</span>
-                                    <span class="text-[9px] opacity-80">${cfg.hostLoc || 'wa Kigamboni Dar es Salaam'}</span>
+                                    <span class="font-bold block" contenteditable="true" onblur="saveInlineEdit('hostName', this.innerText)">${cfg.hostName || 'Familia ya Mr & Mrs Juma Kirumbi'}</span>
+                                    <span class="text-[9px] opacity-80" contenteditable="true" onblur="saveInlineEdit('hostLoc', this.innerText)">${cfg.hostLoc || 'wa Kigamboni Dar es Salaam'}</span>
                                 </h3>
                                 <p class="text-[9px] italic opacity-80 mt-0.5">Inayo furaha kukualika wewe</p>
                             </div>
 
                             <div class="my-1 py-1.5 px-4 w-full border-y rounded-lg relative" style="background-color: ${c2}15; border-color: ${c2}66;">
-                                <p class="font-bold text-xs uppercase tracking-wide" style="color: ${c3};" id="gcard-guest-name">${guestName}</p>
+                                <p class="font-bold text-xs uppercase tracking-wide" style="color: ${c3};" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</p>
                                 <p class="text-[8.5px] opacity-80">kwenye sherehe ya Send-Off Party ya Binti yao mpendwa</p>
                             </div>
 
                             <div class="my-0.5">
-                                <h1 class="${fontClass} text-4xl font-extrabold tracking-wide drop-shadow-md" style="color: ${c2};">${cfg.brideName || 'Hafsa'}</h1>
-                                ${cfg.groomName ? `<p class="text-[10px] font-semibold opacity-90 text-white">& ${cfg.groomName}</p>` : ''}
+                                <h1 class="${fontClass} text-4xl font-extrabold tracking-wide drop-shadow-md" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('brideName', this.innerText)">${cfg.brideName || 'Hafsa'}</h1>
+                                ${cfg.groomName ? `<p class="text-[10px] font-semibold opacity-90 text-white">& <span contenteditable="true" onblur="saveInlineEdit('groomName', this.innerText)">${cfg.groomName}</span></p>` : ''}
                             </div>
 
                             <div class="text-[10px] space-y-1 w-full border-y py-1.5" style="border-color: ${c2}44;">
-                                <p class="${fontClass} text-base font-bold" style="color: ${c3};">Siku ya <span class="font-bold">${cfg.eventTime || 'Alhamisi'}</span></p>
+                                <p class="${fontClass} text-base font-bold" style="color: ${c3};">Siku ya <span class="font-bold" contenteditable="true" onblur="saveInlineEdit('eventTime', this.innerText)">${cfg.eventTime || 'Alhamisi'}</span></p>
                                 <div class="inline-flex items-center justify-center gap-2 font-bold text-xs px-3 py-0.5 rounded-full" style="background-color: ${c2}22; border: 1px solid ${c2}; color: ${c2};">
                                     <i class="fa-regular fa-calendar-check text-xs"></i>
-                                    <span>${cfg.eventDate || '11.06.2026'}</span>
+                                    <span contenteditable="true" onblur="saveInlineEdit('eventDate', this.innerText)">${cfg.eventDate || '11.06.2026'}</span>
                                 </div>
                             </div>
 
                             <div class="space-y-0.5">
                                 <span class="${fontClass} text-sm block opacity-80" style="color: ${c3};">Ukumbi wa Sherehe</span>
-                                <p class="font-bold text-xs text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> ${cfg.eventVenue || 'NHC House Samora Avenue'}</p>
+                                <p class="font-bold text-xs text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> <span contenteditable="true" onblur="saveInlineEdit('eventVenue', this.innerText)">${cfg.eventVenue || 'NHC House Samora Avenue'}</span></p>
                             </div>
 
                             <div class="text-[8.5px] opacity-90 bg-black/40 p-2 rounded-xl border w-full" style="border-color: ${c2}33;">
                                 <p class="font-semibold text-[8px] uppercase tracking-wider" style="color: ${c2};">Rangi Za Sherehe / Dress Code:</p>
-                                <p class="font-bold text-white mt-0.5">${cfg.cardMsg || 'Navy Blue, Light Blue, Blush Pink'}</p>
+                                <p class="font-bold text-white mt-0.5" contenteditable="true" onblur="saveInlineEdit('cardMsg', this.innerText)">${cfg.cardMsg || 'Navy Blue, Light Blue, Blush Pink'}</p>
                             </div>
                         </div>
 
                         <div class="w-full flex justify-between items-center z-20 px-2 pt-1">
                             <div class="text-[8px] text-left opacity-90">
                                 <p class="font-bold" style="color: ${c2};">Mawasiliano:</p>
-                                <p class="text-white">${cfg.contacts || '0754 586 893 / 0716 298 899'}</p>
+                                <p class="text-white" contenteditable="true" onblur="saveInlineEdit('contacts', this.innerText)">${cfg.contacts || '0754 586 893 / 0716 298 899'}</p>
                             </div>
                             ${qrSectionHtml}
                         </div>
                     </div>
                 `;
             } else if(tplNum === 22) {
-                // TEMPLATE 22: ALL EDITABLE FIELDS INCLUDING VENUE
                 const dateParts = (cfg.eventDate || '24.10.2026').split('.');
                 const dateNum = dateParts[0] || '24';
                 containerEl.innerHTML = `
@@ -2083,40 +2103,40 @@
                                 <div class="w-9 h-9 border-2 rounded-full flex items-center justify-center shadow" style="border-color: ${c2}; background-color: ${c2}22;">
                                     <span class="font-cinzel text-xs font-bold" style="color: ${c2};">WED</span>
                                 </div>
-                                <span class="text-[7.5px] font-mono tracking-widest mt-0.5" style="color: ${c3};">${cfg.cardTitle || 'MWALIKO WA HARUSI'}</span>
+                                <span class="text-[7.5px] font-mono tracking-widest mt-0.5" style="color: ${c3};" contenteditable="true" onblur="saveInlineEdit('cardTitle', this.innerText)">${cfg.cardTitle || 'MWALIKO WA HARUSI'}</span>
                             </div>
 
                             <div class="text-[9px] opacity-90 leading-snug">
-                                <p class="font-bold text-white">${cfg.hostName || 'Familia ya Mr. John Daniel Lukuwi'}</p>
-                                <p class="text-[8px] opacity-80">${cfg.hostLoc || 'wa Buza Dar es Salaam'}</p>
+                                <p class="font-bold text-white" contenteditable="true" onblur="saveInlineEdit('hostName', this.innerText)">${cfg.hostName || 'Familia ya Mr. John Daniel Lukuwi'}</p>
+                                <p class="text-[8px] opacity-80" contenteditable="true" onblur="saveInlineEdit('hostLoc', this.innerText)">${cfg.hostLoc || 'wa Buza Dar es Salaam'}</p>
                                 <p class="text-[8px] italic mt-0.5" style="color: ${c2};">Wanayofuraha kukualika kwenye sherehe</p>
                             </div>
 
                             <div class="rounded-xl px-4 py-1 border w-full" style="background-color: ${c2}22; border-color: ${c2}66;">
                                 <p class="text-[8.5px] font-bold tracking-wider" style="color: ${c2};">${cardType} CARD</p>
-                                <p class="text-[10px] font-bold text-white uppercase" id="gcard-guest-name">${guestName}</p>
+                                <p class="text-[10px] font-bold text-white uppercase" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</p>
                             </div>
 
                             <div class="my-0.5">
-                                <h2 class="${fontClass} text-2xl font-bold" style="color: ${c2};">${cfg.groomName || 'Daniel John Lukuwi'}</h2>
-                                ${cfg.brideName ? `<span class="${fontClass} text-lg block -my-1" style="color: ${c3};">&</span><h2 class="${fontClass} text-2xl font-bold" style="color: ${c2};">${cfg.brideName}</h2>` : ''}
+                                <h2 class="${fontClass} text-2xl font-bold" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('groomName', this.innerText)">${cfg.groomName || 'Daniel John Lukuwi'}</h2>
+                                ${cfg.brideName ? `<span class="${fontClass} text-lg block -my-1" style="color: ${c3};">&</span><h2 class="${fontClass} text-2xl font-bold" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('brideName', this.innerText)">${cfg.brideName}</h2>` : ''}
                             </div>
 
                             <div class="flex items-center justify-center gap-3 border-y py-1.5 w-full" style="border-color: ${c2}44;">
-                                <span class="text-[9px] opacity-90 font-bold" style="color: ${c3};">${cfg.eventTime || 'Jumamosi'}</span>
+                                <span class="text-[9px] opacity-90 font-bold" style="color: ${c3};" contenteditable="true" onblur="saveInlineEdit('eventTime', this.innerText)">${cfg.eventTime || 'Jumamosi'}</span>
                                 <span class="text-2xl font-bold font-cinzel border-x px-3" style="border-color: ${c2}; color: ${c2};">${dateNum}</span>
-                                <span class="text-[9px] opacity-90 font-bold" style="color: ${c3};">${cfg.eventDate || '2026'}</span>
+                                <span class="text-[9px] opacity-90 font-bold" style="color: ${c3};" contenteditable="true" onblur="saveInlineEdit('eventDate', this.innerText)">${cfg.eventDate || '2026'}</span>
                             </div>
 
                             <div class="text-[8.5px]">
                                 <span class="text-[8px] block opacity-75" style="color: ${c3};">Ukumbi wa Sherehe:</span>
-                                <p class="font-bold text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> ${cfg.eventVenue || 'Mrina Hall'}</p>
+                                <p class="font-bold text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> <span contenteditable="true" onblur="saveInlineEdit('eventVenue', this.innerText)">${cfg.eventVenue || 'Mrina Hall'}</span></p>
                             </div>
 
                             <div class="w-full flex justify-between items-end border-t pt-1.5" style="border-color: ${c2}44;">
                                 <div class="text-left text-[7.5px] opacity-80">
-                                    <p class="text-white font-bold">Mawasiliano: <span>${cfg.contacts || '+255764986042'}</span></p>
-                                    <p class="text-[8px] font-bold" style="color: ${c2};">Dress Code: <span>${cfg.cardMsg || 'GOLD NA EMERALD GREEN'}</span></p>
+                                    <p class="text-white font-bold">Mawasiliano: <span contenteditable="true" onblur="saveInlineEdit('contacts', this.innerText)">${cfg.contacts || '+255764986042'}</span></p>
+                                    <p class="text-[8px] font-bold" style="color: ${c2};">Dress Code: <span contenteditable="true" onblur="saveInlineEdit('cardMsg', this.innerText)">${cfg.cardMsg || 'GOLD NA EMERALD GREEN'}</span></p>
                                 </div>
                                 ${qrSectionHtml}
                             </div>
@@ -2124,38 +2144,37 @@
                     </div>
                 `;
             } else if(tplNum >= 24 && tplNum <= 28) {
-                // NEW 3D TEMPLATES (T24 - T28)
                 containerEl.innerHTML = `
                     <div class="w-full h-full relative p-5 flex flex-col justify-between items-center text-center overflow-hidden" style="background: radial-gradient(circle at top left, ${c1} 0%, #020617 100%);">
                         <div class="w-full h-full rounded-2xl p-4 flex flex-col justify-between items-center border shadow-2xl relative z-10" style="border-color: ${c2}; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);">
                             <div>
-                                <span class="text-[10px] font-black uppercase tracking-widest block" style="color: ${c2};">${cfg.cardTitle || 'MWALIKO MAALUM'}</span>
-                                <p class="text-[9px] text-slate-300 mt-1">${cfg.hostName || ''} ${cfg.hostLoc || ''}</p>
+                                <span class="text-[10px] font-black uppercase tracking-widest block" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('cardTitle', this.innerText)">${cfg.cardTitle || 'MWALIKO MAALUM'}</span>
+                                <p class="text-[9px] text-slate-300 mt-1"><span contenteditable="true" onblur="saveInlineEdit('hostName', this.innerText)">${cfg.hostName || ''}</span> <span contenteditable="true" onblur="saveInlineEdit('hostLoc', this.innerText)">${cfg.hostLoc || ''}</span></p>
                             </div>
 
                             <div class="my-2 p-3 rounded-2xl border w-full shadow-inner" style="background-color: ${c2}22; border-color: ${c2}66;">
                                 <p class="text-[8px] font-bold uppercase tracking-widest opacity-80" style="color: ${c3};">MWALIKO NI MAALUM KWA:</p>
-                                <h2 class="text-base font-extrabold text-white uppercase mt-0.5" id="gcard-guest-name">${guestName}</h2>
+                                <h2 class="text-base font-extrabold text-white uppercase mt-0.5" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</h2>
                             </div>
 
                             <div>
-                                <h1 class="${fontClass} text-3xl font-extrabold drop-shadow-lg" style="color: ${c2};">${cfg.brideName || 'Sherehe'}</h1>
-                                ${cfg.groomName ? `<p class="text-xs font-bold text-white">& ${cfg.groomName}</p>` : ''}
+                                <h1 class="${fontClass} text-3xl font-extrabold drop-shadow-lg" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('brideName', this.innerText)">${cfg.brideName || 'Sherehe'}</h1>
+                                ${cfg.groomName ? `<p class="text-xs font-bold text-white">& <span contenteditable="true" onblur="saveInlineEdit('groomName', this.innerText)">${cfg.groomName}</span></p>` : ''}
                             </div>
 
                             <div class="w-full border-y py-2 space-y-1" style="border-color: ${c2}44;">
-                                <p class="text-xs font-bold text-white"><i class="fa-regular fa-calendar-check mr-1" style="color: ${c2};"></i> ${cfg.eventTime || ''} - ${cfg.eventDate || ''}</p>
-                                <p class="text-xs font-bold text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> ${cfg.eventVenue || ''}</p>
+                                <p class="text-xs font-bold text-white"><i class="fa-regular fa-calendar-check mr-1" style="color: ${c2};"></i> <span contenteditable="true" onblur="saveInlineEdit('eventTime', this.innerText)">${cfg.eventTime || ''}</span> - <span contenteditable="true" onblur="saveInlineEdit('eventDate', this.innerText)">${cfg.eventDate || ''}</span></p>
+                                <p class="text-xs font-bold text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> <span contenteditable="true" onblur="saveInlineEdit('eventVenue', this.innerText)">${cfg.eventVenue || ''}</span></p>
                             </div>
 
                             <div class="text-[8.5px] opacity-90">
-                                <p class="font-bold text-white">Dress Code: ${cfg.cardMsg || ''}</p>
+                                <p class="font-bold text-white">Dress Code: <span contenteditable="true" onblur="saveInlineEdit('cardMsg', this.innerText)">${cfg.cardMsg || ''}</span></p>
                             </div>
 
                             <div class="w-full flex justify-between items-end border-t pt-2" style="border-color: ${c2}44;">
                                 <div class="text-left text-[8px] text-slate-300">
                                     <p class="font-bold" style="color: ${c2};">Mawasiliano:</p>
-                                    <p>${cfg.contacts || ''}</p>
+                                    <p contenteditable="true" onblur="saveInlineEdit('contacts', this.innerText)">${cfg.contacts || ''}</p>
                                 </div>
                                 ${qrSectionHtml}
                             </div>
@@ -2163,17 +2182,16 @@
                     </div>
                 `;
             } else {
-                // STANDARD TEMPLATES 1 TO 21
                 containerEl.innerHTML = `
                     <div class="w-full h-full flex flex-col justify-between text-center relative z-10 p-5 rounded-2xl" style="background: linear-gradient(135deg, ${c1} 0%, #000000 100%);">
                         <div class="space-y-3">
                             <div class="w-10 h-10 rounded-full mx-auto border flex items-center justify-center shadow" style="border-color: ${c2}; background-color: ${c2}22;"><i class="fa-solid fa-sparkles text-sm" style="color: ${c2};"></i></div>
                             <div>
-                                <span class="text-[10px] font-black uppercase tracking-widest block" style="color: ${c2};">${cfg.cardTitle || 'MWALIKO RASMI'}</span>
-                                <h2 class="${fontClass} text-2xl font-bold text-white mt-0.5" id="gcard-guest-name">${guestName}</h2>
+                                <span class="text-[10px] font-black uppercase tracking-widest block" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('cardTitle', this.innerText)">${cfg.cardTitle || 'MWALIKO RASMI'}</span>
+                                <h2 class="${fontClass} text-2xl font-bold text-white mt-0.5" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</h2>
                                 <span class="text-[10px] font-bold block mt-0.5" style="color: ${c3};">${cardType} CARD</span>
                             </div>
-                            <p class="text-[11px] text-slate-300 italic px-1 leading-snug">${cfg.cardMsg || 'Tunayo furaha kubwa kukualika katika sherehe yetu...'}</p>
+                            <p class="text-[11px] text-slate-300 italic px-1 leading-snug" contenteditable="true" onblur="saveInlineEdit('cardMsg', this.innerText)">${cfg.cardMsg || 'Tunayo furaha kubwa kukualika katika sherehe yetu...'}</p>
                         </div>
                         <div class="my-2 space-y-1">
                             <span class="text-[9px] uppercase font-bold tracking-widest opacity-75">Rangi za Sherehe</span>
@@ -2185,8 +2203,8 @@
                         </div>
                         <div class="space-y-1.5 bg-black/50 p-3 rounded-2xl border text-xs text-left flex items-center justify-between" style="border-color: ${c2}44;">
                             <div>
-                                <p class="font-bold text-[11px]" style="color: ${c2};">${cfg.eventVenue || 'Ukumbi'} - ${cfg.eventDate || 'Tarehe'}</p>
-                                <p class="text-[9px] text-slate-400">${cfg.eventTime || ''}</p>
+                                <p class="font-bold text-[11px]" style="color: ${c2};"><span contenteditable="true" onblur="saveInlineEdit('eventVenue', this.innerText)">${cfg.eventVenue || 'Ukumbi'}</span> - <span contenteditable="true" onblur="saveInlineEdit('eventDate', this.innerText)">${cfg.eventDate || 'Tarehe'}</span></p>
+                                <p class="text-[9px] text-slate-400" contenteditable="true" onblur="saveInlineEdit('eventTime', this.innerText)">${cfg.eventTime || ''}</p>
                             </div>
                             ${qrSectionHtml}
                         </div>
@@ -2198,7 +2216,6 @@
                 `;
             }
 
-            // GENERATE QR CODE ONLY IF SHOWQRCODE IS TRUE
             if(showQrCode) {
                 const qrTarget = document.getElementById(`${mode}-qr-box`);
                 if(qrTarget) {
@@ -2206,6 +2223,26 @@
                     const qrContent = `${cardId}|${guestName.replace(/\|/g,'')}`;
                     new QRCode(qrTarget, { text: qrContent, width: 46, height: 46 });
                 }
+            }
+        }
+
+        /* SYNC INLINE EDITING FROM CARD DIRECTLY TO INPUTS AND DB */
+        function saveInlineEdit(field, val) {
+            eventData[field] = val;
+            if(field === 'cardTitle' && document.getElementById('card-edit-title')) document.getElementById('card-edit-title').value = val;
+            if(field === 'hostName' && document.getElementById('card-edit-host')) document.getElementById('card-edit-host').value = val;
+            if(field === 'hostLoc' && document.getElementById('card-edit-host-loc')) document.getElementById('card-edit-host-loc').value = val;
+            if(field === 'brideName' && document.getElementById('card-edit-bride')) document.getElementById('card-edit-bride').value = val;
+            if(field === 'groomName' && document.getElementById('card-edit-groom')) document.getElementById('card-edit-groom').value = val;
+            if(field === 'coupleNames' && document.getElementById('card-edit-names')) document.getElementById('card-edit-names').value = val;
+            if(field === 'eventDate' && document.getElementById('card-edit-date')) document.getElementById('card-edit-date').value = val;
+            if(field === 'eventTime' && document.getElementById('card-edit-time')) document.getElementById('card-edit-time').value = val;
+            if(field === 'eventVenue' && document.getElementById('card-edit-venue')) document.getElementById('card-edit-venue').value = val;
+            if(field === 'cardMsg' && document.getElementById('card-edit-msg')) document.getElementById('card-edit-msg').value = val;
+            if(field === 'contacts' && document.getElementById('card-edit-contacts')) document.getElementById('card-edit-contacts').value = val;
+
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ [field]: val });
             }
         }
 
@@ -2713,7 +2750,7 @@
             document.getElementById('chat-summary-pledges').innerText = `TSh ${totalPledges.toLocaleString()}`;
         }
 
-        /* AUTO CALCULATE SINGLE / DOUBLE BASED ON AMOUNT GIVEN */
+        /* AUTO-CALCULATE SINGLE / DOUBLE BASED ON AMOUNT */
         async function handleAddContribution(e) {
             e.preventDefault();
 
@@ -2731,13 +2768,7 @@
             const status = document.getElementById('c-status').value;
             const amount = Number(document.getElementById('c-amount').value);
 
-            // AUTOMATIC SINGLE / DOUBLE CARD DETERMINATION AFTER CONTRIBUTION
-            let cardTypeAssigned = 'SINGLE';
-            if(amount >= eventData.rateDouble) {
-                cardTypeAssigned = 'DOUBLE';
-            } else {
-                cardTypeAssigned = 'SINGLE';
-            }
+            let cardTypeAssigned = (amount >= eventData.rateDouble) ? 'DOUBLE' : 'SINGLE';
 
             if(activeEventOwnerId) {
                 const newContribRef = await rdb.ref(`events/${activeEventOwnerId}/contributions`).push({
