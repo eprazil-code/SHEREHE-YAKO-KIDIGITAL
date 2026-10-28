@@ -26,6 +26,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -600,6 +601,9 @@
                                     <i class="fa-solid fa-paperclip text-lg"></i>
                                     <input type="file" id="chat-media-file-input" accept="image/*,video/*,audio/*" onchange="previewMediaAttachment(event)" class="hidden">
                                 </label>
+                                <button type="button" id="voice-note-btn" onclick="toggleVoiceRecording()" class="text-slate-400 hover:text-emerald-400 cursor-pointer p-2 rounded-full hover:bg-slate-800 transition" title="Rekodi Voice Note">
+                                    <i id="voice-note-icon" class="fa-solid fa-microphone text-lg"></i>
+                                </button>
 
                                 <input type="text" id="chat-text-input" placeholder="Andika ujumbe wako hapa..." class="flex-1 px-4 py-2.5 rounded-2xl bg-[#2a3942] text-white border-none outline-none text-xs placeholder-slate-400">
 
@@ -1150,6 +1154,7 @@
         }
         const rdb = firebase.database();
         const auth = firebase.auth();
+        const storage = firebase.storage();
 
         let currentUser = null;
         let eventData = { 
@@ -1189,6 +1194,9 @@
         let currentLang = 'sw';
         let pendingMediaBase64 = null;
         let pendingMediaType = null;
+        let mediaRecorder = null;
+        let recordedAudioChunks = [];
+        let isRecordingVoice = false;
         let activeEventOwnerId = null;
 
         const i18nDictionary = {
@@ -2010,6 +2018,7 @@
             const fontClass = cfg.cardFont || 'f-alex-brush';
             const guestName = (cardObj && cardObj.name) ? cardObj.name : (cfg.coupleNames || 'MR & MRS ECARD HUB');
             const cardId = (cardObj && cardObj.id) ? cardObj.id : 'ECARD-992026';
+            const cardType = (cardObj && cardObj.type) ? String(cardObj.type).toUpperCase() : '';
             const purpose = cfg.cardPurpose || 'HALL';
 
             const c1 = cfg.color1 || '#0f172a';
@@ -2018,9 +2027,9 @@
 
             // QR CODE LOGIC: FROM TPL 21 ONWARDS, COMMITTEE AND CONTRIBUTION HAVE NO QR CODE
             let showQrCode = (purpose === 'HALL');
-            if (tplNum >= 21 && (purpose === 'COMMITTEE' || purpose === 'CONTRIBUTION')) {
-                showQrCode = false;
-            }
+            // Guest invitation cards always carry a scannable QR. Other card purposes keep their existing rules.
+            if (cardObj && cardObj.id) showQrCode = true;
+            if (purpose === 'COMMITTEE' || purpose === 'CONTRIBUTION') showQrCode = false;
 
             containerEl.className = `card-preview tpl-style-${tplNum} shadow-2xl relative overflow-hidden my-auto`;
             containerEl.style.backgroundColor = c1;
@@ -2051,7 +2060,8 @@
                             </div>
 
                             <div class="my-1 py-1.5 px-4 w-full border-y rounded-lg relative" style="background-color: ${c2}15; border-color: ${c2}66;">
-                                <p class="font-bold text-xs uppercase tracking-wide" style="color: ${c3};" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</p>
+                                <p class="font-bold text-xs uppercase tracking-wide" style="color: ${c3};" id="gcard-guest-name">${guestName}</p>
+                                 ${cardType ? `<span class="inline-flex mt-1 px-2 py-0.5 rounded-full text-[7px] font-black uppercase" style="background-color:${c2}22;border:1px solid ${c2}66;color:${c2};">${cardType}</span>` : ''}
                                 <p class="text-[8.5px] opacity-80">kwenye sherehe ya Send-Off Party ya Binti yao mpendwa</p>
                             </div>
 
@@ -2108,7 +2118,8 @@
                             </div>
 
                             <div class="rounded-xl px-4 py-1 border w-full" style="background-color: ${c2}22; border-color: ${c2}66;">
-                                <p class="text-[10px] font-bold text-white uppercase" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</p>
+                                <p class="text-[10px] font-bold text-white uppercase" id="gcard-guest-name">${guestName}</p>
+                                 ${cardType ? `<span class="inline-flex mt-1 px-2 py-0.5 rounded-full text-[7px] font-black uppercase" style="background-color:${c2}22;border:1px solid ${c2}66;color:${c2};">${cardType}</span>` : ''}
                             </div>
 
                             <div class="my-0.5">
@@ -2148,7 +2159,8 @@
 
                             <div class="my-2 p-3 rounded-2xl border w-full shadow-inner" style="background-color: ${c2}22; border-color: ${c2}66;">
                                 <p class="text-[8px] font-bold uppercase tracking-widest opacity-80" style="color: ${c3};">MWALIKO NI MAALUM KWA:</p>
-                                <h2 class="text-base font-extrabold text-white uppercase mt-0.5" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</h2>
+                                <h2 class="text-base font-extrabold text-white uppercase mt-0.5" id="gcard-guest-name">${guestName}</h2>
+                                 ${cardType ? `<span class="inline-flex mt-1 px-2 py-0.5 rounded-full text-[7px] font-black uppercase" style="background-color:${c2}22;border:1px solid ${c2}66;color:${c2};">${cardType}</span>` : ''}
                             </div>
 
                             <div>
@@ -2182,7 +2194,8 @@
                             <div class="w-10 h-10 rounded-full mx-auto border flex items-center justify-center shadow" style="border-color: ${c2}; background-color: ${c2}22;"><i class="fa-solid fa-sparkles text-sm" style="color: ${c2};"></i></div>
                             <div>
                                 <span class="text-[10px] font-black uppercase tracking-widest block" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('cardTitle', this.innerText)">${cfg.cardTitle || 'MWALIKO RASMI'}</span>
-                                <h2 class="${fontClass} text-2xl font-bold text-white mt-0.5" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</h2>
+                                <h2 class="${fontClass} text-2xl font-bold text-white mt-0.5" id="gcard-guest-name">${guestName}</h2>
+                                 ${cardType ? `<span class="inline-flex mt-1 px-2 py-0.5 rounded-full text-[7px] font-black uppercase" style="background-color:${c2}22;border:1px solid ${c2}66;color:${c2};">${cardType}</span>` : ''}
                             </div>
                             <p class="text-[11px] text-slate-300 italic px-1 leading-snug" contenteditable="true" onblur="saveInlineEdit('cardMsg', this.innerText)">${cfg.cardMsg || 'Tunayo furaha kubwa kukualika katika sherehe yetu...'}</p>
                         </div>
@@ -2245,7 +2258,6 @@
             const titleVal = document.getElementById('card-edit-title')?.value;
             const brideVal = document.getElementById('card-edit-bride')?.value;
             const groomVal = document.getElementById('card-edit-groom')?.value;
-            const namesVal = document.getElementById('card-edit-names')?.value;
             const dateVal = document.getElementById('card-edit-date')?.value;
             const timeVal = document.getElementById('card-edit-time')?.value;
             const venueVal = document.getElementById('card-edit-venue')?.value;
@@ -2261,7 +2273,6 @@
             if(titleVal !== undefined) eventData.cardTitle = titleVal;
             if(brideVal !== undefined) eventData.brideName = brideVal;
             if(groomVal !== undefined) eventData.groomName = groomVal;
-            if(namesVal !== undefined) eventData.coupleNames = namesVal;
             if(dateVal !== undefined) eventData.eventDate = dateVal;
             if(timeVal !== undefined) eventData.eventTime = timeVal;
             if(venueVal !== undefined) eventData.eventVenue = venueVal;
@@ -2380,8 +2391,7 @@
                     if(document.getElementById('card-edit-title')) document.getElementById('card-edit-title').value = cfg.cardTitle || '';
                     if(document.getElementById('card-edit-bride')) document.getElementById('card-edit-bride').value = cfg.brideName || '';
                     if(document.getElementById('card-edit-groom')) document.getElementById('card-edit-groom').value = cfg.groomName || '';
-                    if(document.getElementById('card-edit-names')) document.getElementById('card-edit-names').value = cfg.coupleNames || '';
-                    if(document.getElementById('card-edit-date')) document.getElementById('card-edit-date').value = cfg.eventDate || '';
+                                        if(document.getElementById('card-edit-date')) document.getElementById('card-edit-date').value = cfg.eventDate || '';
                     if(document.getElementById('card-edit-time')) document.getElementById('card-edit-time').value = cfg.eventTime || '';
                     if(document.getElementById('card-edit-venue')) document.getElementById('card-edit-venue').value = cfg.eventVenue || '';
                     if(document.getElementById('card-edit-msg')) document.getElementById('card-edit-msg').value = cfg.cardMsg || '';
@@ -2469,19 +2479,28 @@
             }
         }
 
-        function previewMediaAttachment(e) {
+        async function previewMediaAttachment(e) {
             const file = e.target.files[0];
             if(!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                pendingMediaBase64 = evt.target.result;
-                pendingMediaType = file.type.startsWith('image/') ? 'image' : (file.type.startsWith('video/') ? 'video' : 'audio');
-                
-                document.getElementById('chat-media-preview-txt').innerText = `📎 Media (${pendingMediaType.toUpperCase()}): ${file.name}`;
+            if(file.size > 50 * 1024 * 1024) {
+                alert('Faili ni kubwa sana. Tafadhali tumia faili chini ya 50MB.');
+                e.target.value = '';
+                return;
+            }
+            try {
+                const mediaType = file.type.startsWith('image/') ? 'image' : (file.type.startsWith('video/') ? 'video' : (file.type.startsWith('audio/') ? 'audio' : null));
+                if(!mediaType) { alert('Aina hii ya faili haikubaliki.'); return; }
+                document.getElementById('chat-media-preview-txt').innerText = `⏳ Inapakia ${mediaType.toUpperCase()}: ${file.name}`;
                 document.getElementById('chat-media-preview-bar').classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
+                const uploaded = await uploadChatMedia(file, mediaType);
+                pendingMediaBase64 = uploaded.url;
+                pendingMediaType = uploaded.type;
+                document.getElementById('chat-media-preview-txt').innerText = `📎 ${mediaType.toUpperCase()} tayari kwa kutumwa`;
+            } catch(err) {
+                pendingMediaBase64 = null; pendingMediaType = null;
+                document.getElementById('chat-media-preview-bar').classList.add('hidden');
+                alert('Media haikupakiwa: ' + err.message);
+            }
         }
 
         function cancelMediaAttachment() {
@@ -2491,32 +2510,77 @@
             document.getElementById('chat-media-preview-bar').classList.add('hidden');
         }
 
+        async function uploadChatMedia(file, mediaType) {
+            if(!file || !activeEventOwnerId) throw new Error('Hakuna event iliyochaguliwa.');
+            const safeName = String(file.name || ('media-' + Date.now())).replace(/[^a-zA-Z0-9._-]/g, '_');
+            const path = `events/${activeEventOwnerId}/chat-media/${Date.now()}-${Math.random().toString(36).slice(2)}-${safeName}`;
+            const ref = storage.ref(path);
+            const snapshot = await ref.put(file, { contentType: file.type || (mediaType === 'audio' ? 'audio/webm' : undefined) });
+            const url = await snapshot.ref.getDownloadURL();
+            return { url, type: mediaType, path };
+        }
+
+        async function toggleVoiceRecording() {
+            const btn = document.getElementById('voice-note-btn');
+            const icon = document.getElementById('voice-note-icon');
+            if(isRecordingVoice) {
+                if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+                return;
+            }
+            if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Browser yako hairuhusu Voice Note. Tumia Chrome/Edge/Safari yenye HTTPS.');
+                return;
+            }
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                recordedAudioChunks = [];
+                mediaRecorder = new MediaRecorder(stream);
+                isRecordingVoice = true;
+                if(btn) btn.classList.add('text-rose-400');
+                if(icon) icon.className = 'fa-solid fa-stop text-lg';
+                mediaRecorder.ondataavailable = e => { if(e.data.size > 0) recordedAudioChunks.push(e.data); };
+                mediaRecorder.onstop = async () => {
+                    stream.getTracks().forEach(t => t.stop());
+                    isRecordingVoice = false;
+                    if(btn) btn.classList.remove('text-rose-400');
+                    if(icon) icon.className = 'fa-solid fa-microphone text-lg';
+                    const blob = new Blob(recordedAudioChunks, { type: 'audio/webm' });
+                    try {
+                        const uploaded = await uploadChatMedia(blob, 'audio');
+                        pendingMediaBase64 = uploaded.url;
+                        pendingMediaType = 'audio';
+                        document.getElementById('chat-media-preview-txt').innerText = '🎙️ Voice Note tayari kwa kutumwa';
+                        document.getElementById('chat-media-preview-bar').classList.remove('hidden');
+                    } catch(err) {
+                        alert('Voice Note haikupakiwa: ' + err.message);
+                    }
+                };
+                mediaRecorder.start();
+            } catch(err) {
+                isRecordingVoice = false;
+                alert('Ruhusa ya microphone imekataliwa au haipatikani.');
+            }
+        }
+
         async function handleSendGroupMessage(e) {
             e.preventDefault();
             const textInput = document.getElementById('chat-text-input');
             const text = textInput.value.trim();
-
             if(!text && !pendingMediaBase64) return;
 
             let senderName = "Mwaalikwa";
-            if(currentUser && currentUser.dbData) {
-                senderName = `${currentUser.dbData.name} (${currentUser.dbData.role || 'Mwaalikwa'})`;
-            } else if(currentUser && currentUser.email) {
-                senderName = currentUser.email;
-            }
+            if(currentUser && currentUser.dbData) senderName = `${currentUser.dbData.name} (${currentUser.dbData.role || 'Mwaalikwa'})`;
+            else if(currentUser && currentUser.email) senderName = currentUser.email;
 
             const msg = {
                 sender: senderName,
                 text: text || '',
                 mediaUrl: pendingMediaBase64 || null,
                 mediaType: pendingMediaType || null,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now()
             };
-
-            if(activeEventOwnerId) {
-                await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
-            }
-            
+            if(activeEventOwnerId) await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
             textInput.value = '';
             cancelMediaAttachment();
         }
@@ -2977,7 +3041,7 @@
             const coupleNames = eventData.coupleNames || eventData.title;
             const cardTitle = eventData.cardTitle || eventData.category;
 
-            const cardMessage = `👑 *KADI YA MWALIKO RASMI (${type} CARD)* 👑\n\n` +
+            const cardMessage = `👑 *KADI YA MWALIKO RASMI* 👑\n\n` +
                                 `Ndugu: *${name}*\n` +
                                 `Unakaribishwa Kwenye: *${cardTitle}*\n` +
                                 `Wahusika/Taasisi: *${coupleNames}*\n` +
