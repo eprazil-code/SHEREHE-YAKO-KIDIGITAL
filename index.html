@@ -4467,8 +4467,39 @@
             loadDashboard();
         }
 
+        // Unified startup: preserve the existing region setup while honoring public invitation-card links.
+        // Without this routing, the later onload handler replaced the Firebase card-link handler,
+        // causing ?event_id=...&card_id=... links to land on the signup/dashboard screen.
         window.onload = function() {
-            populateRegions();
+            try { populateRegions(); } catch (e) { console.warn('Region setup skipped:', e); }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventIdParam = urlParams.get('event_id');
+            const cardIdParam = urlParams.get('card_id');
+
+            if (cardIdParam && eventIdParam) {
+                renderPublicCardView(cardIdParam);
+                return;
+            }
+
+            if (eventIdParam) {
+                setupPublicGuestView(eventIdParam);
+                return;
+            }
+
+            if (typeof auth !== 'undefined' && auth && typeof auth.onAuthStateChanged === 'function') {
+                auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        currentUser = user;
+                        await fetchUserData(user.uid);
+                        switchView('dashboard');
+                        initRealtimeListeners();
+                    } else {
+                        switchView('splash');
+                    }
+                });
+                try { selectThanksTemplate(1); } catch (e) { /* optional UI initialization */ }
+            }
         };
     </script>
 </body>
