@@ -99,6 +99,20 @@
         .tpl-style-27 { border-radius: 2rem !important; border: 4px double #ca8a04 !important; }
         .tpl-style-28 { border-radius: 3rem 0.5rem 3rem 0.5rem !important; border: 3px solid #facc15 !important; }
 
+        /* New curated event templates (the old 28-option picker is replaced; legacy styles remain for compatibility). */
+        .event-template-option { min-height: 48px; background: #0f172a; border-color: #334155; transition: transform .15s, box-shadow .15s; }
+        .event-template-option:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+        .event-template-option.is-selected { outline: 2px solid #fbbf24; border-color: #fbbf24; background: linear-gradient(135deg,#713f12,#f59e0b); color: #111827; }
+        .tpl-style-1 { border: 3px solid #d4af37 !important; border-radius: 1.25rem !important; box-shadow: inset 0 0 0 5px rgba(212,175,55,.12), 0 16px 36px rgba(0,0,0,.3); }
+        .tpl-style-2 { border: 2px solid #9caf88 !important; border-radius: .75rem !important; box-shadow: inset 0 0 0 5px rgba(156,175,136,.12); }
+        .tpl-style-3 { border: 3px solid #f2c14e !important; border-radius: 1.1rem !important; box-shadow: inset 0 0 0 5px rgba(242,193,78,.12), 0 12px 30px rgba(0,0,0,.25); }
+        .tpl-style-4 { border: 2px solid #fb7185 !important; border-radius: 1.5rem !important; box-shadow: inset 0 0 0 5px rgba(251,113,133,.12); }
+        .tpl-style-5 { border: 2px solid #60a5fa !important; border-radius: .65rem !important; box-shadow: inset 0 0 0 4px rgba(96,165,250,.12); }
+        .tpl-style-6 { border: 2px solid #d6b779 !important; border-radius: .9rem !important; box-shadow: inset 0 0 0 5px rgba(214,183,121,.12); }
+        .tpl-style-7 { border: 2px solid #93c5fd !important; border-radius: .75rem !important; box-shadow: inset 0 0 0 4px rgba(147,197,253,.12); }
+        .tpl-style-8 { border: 2px solid #c6a15b !important; border-radius: .25rem !important; box-shadow: inset 0 0 0 5px rgba(198,161,91,.12); }
+
+
         .arch-gold-frame {
             border-top-left-radius: 150px;
             border-top-right-radius: 150px;
@@ -401,40 +415,17 @@
 
                         <!-- 3. TEMPLATE STYLE -->
                         <div class="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
-                            <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">3. Chagua Layout Template Style (Template 1-28):</label>
-                            <div class="grid grid-cols-5 gap-1.5 text-[11px] max-h-48 overflow-y-auto pr-1">
-                                <!-- T1 to T10 -->
-                                <button type="button" onclick="selectCardTemplateStyle(1)" id="btn-tpl-1" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T1</button>
-                                <button type="button" onclick="selectCardTemplateStyle(2)" id="btn-tpl-2" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T2</button>
-                                <button type="button" onclick="selectCardTemplateStyle(3)" id="btn-tpl-3" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T3</button>
-                                <button type="button" onclick="selectCardTemplateStyle(4)" id="btn-tpl-4" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T4</button>
-                                <button type="button" onclick="selectCardTemplateStyle(5)" id="btn-tpl-5" class="p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center">T5</button>
-                                <button type="button" onclick="selectCardTemplateStyle(6)" id="btn-tpl-6" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T6</button>
-                                <button type="button" onclick="selectCardTemplateStyle(7)" id="btn-tpl-7" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T7</button>
-                                <button type="button" onclick="selectCardTemplateStyle(8)" id="btn-tpl-8" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T8</button>
-                                <button type="button" onclick="selectCardTemplateStyle(9)" id="btn-tpl-9" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T9</button>
-                                <button type="button" onclick="selectCardTemplateStyle(10)" id="btn-tpl-10" class="p-2 rounded-lg bg-slate-800 text-gold-400 font-bold border border-gold-500/50 text-center">T10</button>
-                                <!-- T11 to T20 -->
-                                <button type="button" onclick="selectCardTemplateStyle(11)" id="btn-tpl-11" class="p-2 rounded-lg bg-indigo-950 text-indigo-300 font-bold border border-indigo-500 text-center">T11</button>
-                                <button type="button" onclick="selectCardTemplateStyle(12)" id="btn-tpl-12" class="p-2 rounded-lg bg-rose-950 text-rose-300 font-bold border border-rose-500 text-center">T12</button>
-                                <button type="button" onclick="selectCardTemplateStyle(13)" id="btn-tpl-13" class="p-2 rounded-lg bg-emerald-950 text-emerald-300 font-bold border border-emerald-500 text-center">T13</button>
-                                <button type="button" onclick="selectCardTemplateStyle(14)" id="btn-tpl-14" class="p-2 rounded-lg bg-purple-950 text-purple-300 font-bold border border-purple-500 text-center">T14</button>
-                                <button type="button" onclick="selectCardTemplateStyle(15)" id="btn-tpl-15" class="p-2 rounded-lg bg-amber-950 text-amber-300 font-bold border border-amber-500 text-center">T15</button>
-                                <button type="button" onclick="selectCardTemplateStyle(16)" id="btn-tpl-16" class="p-2 rounded-lg bg-sky-950 text-sky-300 font-bold border border-sky-500 text-center">T16</button>
-                                <button type="button" onclick="selectCardTemplateStyle(17)" id="btn-tpl-17" class="p-2 rounded-lg bg-red-950 text-red-300 font-bold border border-red-500 text-center">T17</button>
-                                <button type="button" onclick="selectCardTemplateStyle(18)" id="btn-tpl-18" class="p-2 rounded-lg bg-blue-950 text-blue-300 font-bold border border-blue-500 text-center">T18</button>
-                                <button type="button" onclick="selectCardTemplateStyle(19)" id="btn-tpl-19" class="p-2 rounded-lg bg-teal-950 text-teal-300 font-bold border border-teal-500 text-center">T19</button>
-                                <button type="button" onclick="selectCardTemplateStyle(20)" id="btn-tpl-20" class="p-2 rounded-lg bg-fuchsia-950 text-fuchsia-300 font-bold border border-fuchsia-500 text-center">T20</button>
-                                <!-- T21 to T23 -->
-                                <button type="button" onclick="selectCardTemplateStyle(21)" id="btn-tpl-21" class="p-2 rounded-lg bg-pink-900 text-pink-200 font-bold border border-pink-400 text-center" title="Bridal Shower Luxe">T21</button>
-                                <button type="button" onclick="selectCardTemplateStyle(22)" id="btn-tpl-22" class="p-2 rounded-lg bg-emerald-900 text-amber-300 font-bold border border-amber-400 text-center" title="Wedding Emerald">T22</button>
-                                <button type="button" onclick="selectCardTemplateStyle(23)" id="btn-tpl-23" class="p-2 rounded-lg gold-gradient text-slate-950 font-black text-center" title="Send-Off Arch">T23</button>
-                                <!-- 3D TEMPLATES (T24 - T28) -->
-                                <button type="button" onclick="selectCardTemplateStyle(24)" id="btn-tpl-24" class="p-2 rounded-lg bg-gradient-to-r from-amber-600 to-yellow-400 text-slate-950 font-black text-center shadow-md">T24</button>
-                                <button type="button" onclick="selectCardTemplateStyle(25)" id="btn-tpl-25" class="p-2 rounded-lg bg-slate-800 text-cyan-300 font-bold border border-cyan-400 text-center shadow-md">T25</button>
-                                <button type="button" onclick="selectCardTemplateStyle(26)" id="btn-tpl-26" class="p-2 rounded-lg bg-purple-900 text-purple-200 font-bold border border-purple-400 text-center shadow-md">T26</button>
-                                <button type="button" onclick="selectCardTemplateStyle(27)" id="btn-tpl-27" class="p-2 rounded-lg bg-slate-900 text-slate-200 font-bold border border-slate-400 text-center shadow-md">T27</button>
-                                <button type="button" onclick="selectCardTemplateStyle(28)" id="btn-tpl-28" class="p-2 rounded-lg bg-amber-900 text-amber-200 font-bold border border-amber-400 text-center shadow-md">T28</button>
+                            <label class="block text-xs font-bold text-slate-200" data-i18n="lbl_layout_style">3. Chagua Template Inayolingana na Aina ya Sherehe:</label>
+                            <p id="template-category-hint" class="text-[10px] text-slate-400">Template zinaonyeshwa kulingana na aina ya sherehe yako.</p>
+                            <div id="event-template-options" class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] max-h-64 overflow-y-auto pr-1">
+                                <button type="button" data-tpl="1" data-categories="wedding sendoff kitchen" onclick="selectCardTemplateStyle(1)" id="btn-tpl-1" class="event-template-option p-3 rounded-xl text-white font-bold border text-center" title="Harusi — Nyeusi na Dhahabu">👑 Harusi Royal</button>
+                                <button type="button" data-tpl="2" data-categories="wedding sendoff kitchen" onclick="selectCardTemplateStyle(2)" id="btn-tpl-2" class="event-template-option p-3 rounded-xl text-white font-bold border text-center" title="Harusi — Cream na Kijani">🌿 Botanical</button>
+                                <button type="button" data-tpl="3" data-categories="birthday" onclick="selectCardTemplateStyle(3)" id="btn-tpl-3" class="event-template-option p-3 rounded-xl text-white font-bold border text-center" title="Birthday — Nyeusi na Dhahabu">🎂 Birthday Luxe</button>
+                                <button type="button" data-tpl="4" data-categories="birthday" onclick="selectCardTemplateStyle(4)" id="btn-tpl-4" class="event-template-option p-3 rounded-xl text-white font-bold border text-center" title="Birthday — Pink na Maua">🌸 Birthday Floral</button>
+                                <button type="button" data-tpl="5" data-categories="corporate graduation custom other" onclick="selectCardTemplateStyle(5)" id="btn-tpl-5" class="event-template-option p-3 rounded-xl text-white font-bold border text-center" title="Corporate — Modern Professional">🏢 Corporate Modern</button>
+                                <button type="button" data-tpl="6" data-categories="birthday corporate graduation custom other" onclick="selectCardTemplateStyle(6)" id="btn-tpl-6" class="event-template-option p-3 rounded-xl text-white font-bold border text-center" title="Cream na Dhahabu">✨ Cream & Gold</button>
+                                <button type="button" data-tpl="7" data-categories="wedding sendoff kitchen corporate graduation custom other" onclick="selectCardTemplateStyle(7)" id="btn-tpl-7" class="event-template-option p-3 rounded-xl text-white font-bold border text-center" title="Blue — Elegant">💙 Blue Elegance</button>
+                                <button type="button" data-tpl="8" data-categories="wedding sendoff kitchen corporate graduation custom other" onclick="selectCardTemplateStyle(8)" id="btn-tpl-8" class="event-template-option p-3 rounded-xl text-white font-bold border text-center" title="Minimal Champagne">🥂 Minimal Champagne</button>
                             </div>
                         </div>
 
@@ -1238,7 +1229,7 @@
                 card_designer_title: "Card Designer & Color Templates",
                 visible_trial: "Inaonekana Kwenye Trial",
                 lbl_card_purpose: "1. Chagua Aina Ya Kadi Unayotengeneza:",
-                lbl_layout_style: "3. Chagua Layout Template Style (Template 1-28):",
+                lbl_layout_style: "3. Chagua Layout Template Style (Template za sherehe yako):",
                 lbl_theme_colors: "4. Chagua Theme Ya Rangi Za Kadi (12 Jumla):",
                 lbl_card_title: "Kichwa cha Kadi",
                 lbl_couple_names: "Majina ya Wahusika / Wageni",
@@ -1358,7 +1349,7 @@
                 card_designer_title: "Card Designer & Color Templates",
                 visible_trial: "Visible on Trial",
                 lbl_card_purpose: "1. Select Card Purpose:",
-                lbl_layout_style: "3. Select Layout Template Style (Template 1-28):",
+                lbl_layout_style: "3. Select Layout Template Style (Template za sherehe yako):",
                 lbl_theme_colors: "4. Select Card Theme Colors (12 Total):",
                 lbl_card_title: "Card Title",
                 lbl_couple_names: "Couple / Names",
@@ -1949,19 +1940,45 @@
             }
         }
 
-        function selectCardTemplateStyle(num) {
-            for(let i=1; i<=28; i++) {
-                const btn = document.getElementById(`btn-tpl-${i}`);
-                if(btn) {
-                    btn.className = "p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center";
+        function getEventTemplateCategory() {
+            const raw = String(eventData?.category || document.getElementById('dash-event-type')?.innerText || '').toLowerCase();
+            if (/birthday|siku ya kuzaliwa/.test(raw)) return 'birthday';
+            if (/corporate|company|business|conference|seminar|meeting|kampuni|taasisi/.test(raw)) return 'corporate';
+            if (/graduation|mahafali/.test(raw)) return 'graduation';
+            if (/send.?off/.test(raw)) return 'sendoff';
+            if (/kitchen party/.test(raw)) return 'kitchen';
+            if (/harusi|wedding|ndoa|bridal/.test(raw)) return 'wedding';
+            if (/custom|aina nyingine/.test(raw)) return 'custom';
+            return 'other';
+        }
+
+        function filterCardTemplatesByEvent() {
+            const category = getEventTemplateCategory();
+            const opts = Array.from(document.querySelectorAll('.event-template-option'));
+            if (!opts.length) return;
+            opts.forEach(btn => {
+                const cats = (btn.dataset.categories || '').split(/\s+/);
+                btn.classList.toggle('hidden', !cats.includes(category));
+                btn.classList.toggle('is-selected', Number(btn.dataset.tpl) === Number(eventData.tplStyle || 1));
+            });
+            const hint = document.getElementById('template-category-hint');
+            const labels = { wedding:'Harusi / Ndoa', sendoff:'Send-off', kitchen:'Kitchen Party', birthday:'Birthday', corporate:'Corporate Event', graduation:'Graduation / Mahafali', custom:'Sherehe maalum', other:'Sherehe nyingine' };
+            if (hint) hint.textContent = 'Templates za ' + (labels[category] || labels.other) + ' zinaonyeshwa hapa.';
+            const current = opts.find(btn => Number(btn.dataset.tpl) === Number(eventData.tplStyle || 1));
+            if (!current || current.classList.contains('hidden')) {
+                const first = opts.find(btn => !btn.classList.contains('hidden'));
+                if (first) {
+                    eventData.tplStyle = Number(first.dataset.tpl);
+                    opts.forEach(btn => btn.classList.toggle('is-selected', btn === first));
                 }
             }
-            const activeBtn = document.getElementById(`btn-tpl-${num}`);
-            if(activeBtn) activeBtn.className = "p-2 rounded-lg gold-gradient text-slate-950 font-black text-center";
+        }
 
+        function selectCardTemplateStyle(num) {
+            if (num < 1 || num > 8) return;
             eventData.tplStyle = num;
+            filterCardTemplatesByEvent();
             updateLiveCard();
-
             if(activeEventOwnerId) {
                 rdb.ref(`events/${activeEventOwnerId}/config`).update({ tplStyle: num });
             }
@@ -2253,6 +2270,7 @@
         }
 
         function updateLiveCard() {
+            filterCardTemplatesByEvent();
             const hostVal = document.getElementById('card-edit-host')?.value;
             const hostLocVal = document.getElementById('card-edit-host-loc')?.value;
             const titleVal = document.getElementById('card-edit-title')?.value;
