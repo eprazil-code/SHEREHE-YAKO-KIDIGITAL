@@ -769,7 +769,6 @@
                                     <th class="p-2.5" data-i18n="th_id_card">ID / Kadi</th>
                                     <th class="p-2.5" data-i18n="th_guest">Mwaalikwa</th>
                                     <th class="p-2.5" data-i18n="th_number">Namba</th>
-                                    <th class="p-2.5" data-i18n="th_type">Aina (Inavyokokotolewa)</th>
                                     <th class="p-2.5 text-right" data-i18n="th_action">Tuma Template Card</th>
                                 </tr>
                             </thead>
@@ -1512,4 +1511,2854 @@
 
             const cachedCard = localStorage.getItem(`sherehe_card_${cardKey}`);
             let cardObj = null;
-            if
+            if(cachedCard) {
+                try {
+                    cardObj = JSON.parse(cachedCard);
+                } catch(e) {}
+            }
+
+            rdb.ref(`events/${ownerId}/config`).on('value', snapshot => {
+                if(snapshot.exists()) {
+                    const cfg = snapshot.val();
+                    localStorage.setItem(`sherehe_config_${ownerId}`, JSON.stringify(cfg));
+                    Object.assign(eventData, cfg);
+                    renderDynamicCardHTML(document.getElementById('guest-card-download-wrapper'), cardObj, eventData, 'public');
+                }
+            });
+
+            rdb.ref(`events/${ownerId}/cards/${cardKey}`).on('value', snapshot => {
+                if(snapshot.exists()) {
+                    cardObj = snapshot.val();
+                    localStorage.setItem(`sherehe_card_${cardKey}`, JSON.stringify(cardObj));
+                    renderDynamicCardHTML(document.getElementById('guest-card-download-wrapper'), cardObj, eventData, 'public');
+                }
+            });
+
+            renderDynamicCardHTML(document.getElementById('guest-card-download-wrapper'), cardObj, eventData, 'public');
+        }
+
+        function downloadCardAsJpg() {
+            const cardWrapper = document.getElementById('guest-card-download-wrapper');
+            const guestName = (document.getElementById('gcard-guest-name')?.innerText || 'kadi').replace(/\s+/g, '_');
+
+            html2canvas(cardWrapper, {
+                scale: 3,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#020617'
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                const a = document.createElement('a');
+                a.href = imgData;
+                a.download = `KADI-${guestName.toUpperCase()}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                document.getElementById('generated-card-img').src = imgData;
+                document.getElementById('modal-card-image-preview').classList.remove('hidden');
+                document.getElementById('modal-card-image-preview').classList.add('flex');
+            }).catch(err => {
+                generateAndShowImageModal();
+            });
+        }
+
+        function generateAndShowImageModal() {
+            const cardWrapper = document.getElementById('guest-card-download-wrapper');
+            html2canvas(cardWrapper, { scale: 3, useCORS: true, backgroundColor: '#020617' }).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                document.getElementById('generated-card-img').src = imgData;
+                document.getElementById('modal-card-image-preview').classList.remove('hidden');
+                document.getElementById('modal-card-image-preview').classList.add('flex');
+            });
+        }
+
+        function closeImageModal() {
+            document.getElementById('modal-card-image-preview').classList.add('hidden');
+            document.getElementById('modal-card-image-preview').classList.remove('flex');
+        }
+
+        async function setupPublicGuestView(eventId) {
+            switchView('public-guest');
+            activeEventOwnerId = eventId;
+            
+            rdb.ref(`events/${eventId}/config`).on('value', snapshot => {
+                if(snapshot.exists()) {
+                    const cfg = snapshot.val();
+                    if(cfg.budget) eventData.budget = Number(cfg.budget);
+                    if(cfg.bankAcc) eventData.bankAcc = cfg.bankAcc;
+                    if(cfg.bankName) eventData.bankName = cfg.bankName;
+                    if(cfg.phoneAcc) eventData.phoneAcc = cfg.phoneAcc;
+                    if(cfg.phoneName) eventData.phoneName = cfg.phoneName;
+                    if(cfg.title) eventData.title = cfg.title;
+                    if(cfg.category) eventData.category = cfg.category;
+
+                    document.getElementById('pub-bank-acc').innerText = eventData.bankAcc;
+                    document.getElementById('pub-bank-name').innerText = eventData.bankName;
+                    document.getElementById('pub-phone-acc').innerText = eventData.phoneAcc;
+                    document.getElementById('pub-phone-name').innerText = eventData.phoneName;
+                    
+                    const catName = eventData.category || 'Sherehe';
+                    const titleName = eventData.title || 'Yetu';
+                    document.getElementById('public-event-heading').innerText = `KARIBU ${catName.toUpperCase()} - ${titleName.toUpperCase()}`;
+                }
+            });
+
+            rdb.ref(`events/${eventId}/contributions`).on('value', snapshot => {
+                contributionsList = [];
+                let totalCollected = 0;
+                let paidCount = 0;
+                let pledgeCount = 0;
+
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const item = { key: child.key, ...child.val() };
+                        contributionsList.push(item);
+                        if(item.status === 'PAID') {
+                            totalCollected += Number(item.amount || 0);
+                            paidCount++;
+                        } else {
+                            pledgeCount++;
+                        }
+                    });
+                }
+                const deficit = Math.max(0, eventData.budget - totalCollected);
+                document.getElementById('pub-sum-budget').innerText = `TSh ${eventData.budget.toLocaleString()}`;
+                document.getElementById('pub-sum-collected').innerText = `TSh ${totalCollected.toLocaleString()}`;
+                document.getElementById('pub-sum-deficit').innerText = `TSh ${deficit.toLocaleString()}`;
+                document.getElementById('pub-counter-badge').innerText = `Waliotoa: ${paidCount} | Waliouahidi: ${pledgeCount}`;
+
+                const tbody = document.getElementById('pub-contrib-tbody');
+                if(tbody) {
+                    if(contributionsList.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-slate-500 italic">Hakuna michango bado.</td></tr>';
+                    } else {
+                        tbody.innerHTML = contributionsList.map(c => `
+                            <tr>
+                                <td class="p-2 font-bold text-white">${c.name}</td>
+                                <td class="p-2 font-bold text-emerald-400">TSh ${Number(c.amount || 0).toLocaleString()}</td>
+                                <td class="p-2"><span class="px-2 py-0.5 rounded text-[9px] font-bold ${c.status === 'PAID' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${c.status === 'PAID' ? '✅ Imelipwa' : '⏳ Ahadi'}</span></td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+            });
+        }
+
+        function directEnterGroupChat() {
+            const rawInput = document.getElementById('quick-guest-identifier').value.trim();
+            if(!rawInput) {
+                alert("Tafadhali weka namba yako ya simu au jina ulilotumia kuchangia.");
+                return;
+            }
+
+            const inputVal = rawInput.toLowerCase();
+            const cleanInputDigits = rawInput.replace(/[^0-9]/g, '').replace(/^0+/, '');
+
+            const found = contributionsList.find(c => {
+                const cName = (c.name || '').toLowerCase();
+                const cPhone = (c.phone || '').toString();
+                const cleanCPassDigits = cPhone.replace(/[^0-9]/g, '').replace(/^0+/, '');
+                
+                const nameMatch = cName.includes(inputVal);
+                const phoneMatch = cleanInputDigits.length >= 3 && cleanCPassDigits.includes(cleanInputDigits);
+                const exactPhoneMatch = cPhone.toLowerCase().includes(inputVal);
+                
+                return nameMatch || phoneMatch || exactPhoneMatch;
+            });
+
+            if(found) {
+                currentUser = {
+                    uid: 'guest-' + Date.now(),
+                    email: `${(found.phone || '000').replace(/[^0-9]/g,'')}@guest.com`,
+                    dbData: { name: found.name, role: 'Mwaalikwa / Mchangiaji', isVIP: true }
+                };
+                alert(`🎉 Karibu tena ${found.name}! Unapelekwa moja kwa moja kwenye Group Chat.`);
+                switchView('dashboard');
+                switchDashTab('chat');
+                initRealtimeListeners();
+            } else {
+                alert("Hatujakuta taarifa zako kwenye orodha ya michango. Tafadhali hakikisha jina au namba ya simu uliyoweka ni sahihi au jaza fomu ya kuchangia hapa chini.");
+            }
+        }
+
+        async function fetchUserData(uid) {
+            try {
+                const snapshot = await rdb.ref('users/' + uid).once('value');
+                if(snapshot.exists()) {
+                    const data = snapshot.val();
+                    currentUser.dbData = data;
+                    activeEventOwnerId = uid;
+                    if(data.title) eventData.title = data.title;
+                    if(data.category) eventData.category = data.category;
+                    renderDashboard();
+                } else {
+                    const defaultData = {
+                        name: currentUser.email || 'Mtumiaji',
+                        email: currentUser.email,
+                        phone: '+255700000000',
+                        role: 'Mwenyekiti',
+                        category: 'Sherehe',
+                        title: 'Sherehe Yangu',
+                        isVIP: false,
+                        status: 'TRIAL'
+                    };
+                    await rdb.ref('users/' + uid).set(defaultData);
+                    currentUser.dbData = defaultData;
+                    activeEventOwnerId = uid;
+                    renderDashboard();
+                }
+            } catch(err) {
+                currentUser.dbData = { name: currentUser.email, role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' };
+                activeEventOwnerId = uid;
+                renderDashboard();
+            }
+        }
+
+        async function handleRegistration(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+            const countryCode = document.getElementById('reg-country-code').value;
+            const rawPhone = document.getElementById('reg-phone').value.replace(/^0/,'');
+            const fullPhone = `+${countryCode}${rawPhone}`;
+            
+            const role = document.getElementById('reg-role').value;
+            let cat = document.getElementById('reg-category').value;
+            if(cat === 'CUSTOM') cat = document.getElementById('reg-custom-cat').value || 'Sherehe Maalum';
+            const title = document.getElementById('reg-event-title').value;
+
+            try {
+                const res = await auth.createUserWithEmailAndPassword(email, password);
+                const userData = {
+                    name, email, phone: fullPhone, role, category: cat, title,
+                    isVIP: false, status: 'TRIAL'
+                };
+                await rdb.ref('users/' + res.user.uid).set(userData);
+                
+                await rdb.ref(`events/${res.user.uid}/config`).set({
+                    title: title,
+                    category: cat,
+                    cardTitle: title.toUpperCase(),
+                    coupleNames: name,
+                    hostName: 'Familia ya ' + name,
+                    hostLoc: 'wa Dar es Salaam',
+                    brideName: name,
+                    groomName: '',
+                    budget: 5000000,
+                    single: 50000,
+                    double: 100000,
+                    committee: 150000,
+                    cardPurpose: 'HALL',
+                    tplStyle: 23,
+                    cardTheme: 'gold',
+                    cardFont: 'f-alex-brush',
+                    color1: '#0f172a',
+                    color2: '#eab308',
+                    color3: '#fef08a'
+                });
+
+                alert("Usajili umefanikiwa!");
+            } catch(err) {
+                alert("Kosa: " + err.message);
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch(err) {
+                alert("Imeshindikana kuingia: " + err.message);
+            }
+        }
+
+        function logoutUser() {
+            auth.signOut().then(() => location.reload());
+        }
+
+        function startTrialExperience() {
+            currentUser = { uid: 'demo-user', email: 'demo@trial.com', dbData: { name: 'Mteja Trial', role: 'Mwenyekiti', isVIP: false, status: 'TRIAL' } };
+            activeEventOwnerId = 'demo-user';
+            eventData = { 
+                title: 'Sherehe ya Demo', category: 'Send-off', budget: 5000000, rateSingle: 50000, rateDouble: 100000, rateCommittee: 150000, 
+                cardPurpose: 'HALL', tplStyle: 23, cardTheme: 'gold', cardFont: 'f-alex-brush', color1: '#0f172a', color2: '#eab308', color3: '#fef08a',
+                cardTitle: 'Mwaliko wa Sendoff', hostName: 'Familia ya Mr & Mrs Juma Kirumbi', hostLoc: 'wa Kigamboni Dar es Salaam', coupleNames: 'MR & MRS ECARD HUB', brideName: 'Hafsa', groomName: 'Daniel John Lukuwi',
+                eventDate: '11.06.2026', eventTime: 'Alhamisi | Saa 18:00 Jioni', eventVenue: 'NHC House Samora Avenue', cardMsg: 'Navy Blue, Light Blue, Blush Pink', contacts: '0754 586 893 / 0716 298 899'
+            };
+            renderDashboard();
+            switchView('dashboard');
+            initRealtimeListeners();
+        }
+
+        function switchView(v) {
+            document.getElementById('view-splash').classList.add('hidden');
+            document.getElementById('view-auth').classList.add('hidden');
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-public-guest').classList.add('hidden');
+            document.getElementById('view-public-card').classList.add('hidden');
+
+            if(v === 'splash') document.getElementById('view-splash').classList.remove('hidden');
+            if(v === 'auth') document.getElementById('view-auth').classList.remove('hidden');
+            if(v === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
+            if(v === 'public-guest') document.getElementById('view-public-guest').classList.remove('hidden');
+            if(v === 'public-card') document.getElementById('view-public-card').classList.remove('hidden');
+        }
+
+        function goToAuth(mode) {
+            switchView('auth');
+            toggleAuthMode(mode);
+        }
+
+        function toggleAuthMode(mode) {
+            if(mode === 'register') {
+                document.getElementById('form-register').classList.remove('hidden');
+                document.getElementById('form-login').classList.add('hidden');
+            } else {
+                document.getElementById('form-login').classList.remove('hidden');
+                document.getElementById('form-register').classList.add('hidden');
+            }
+        }
+
+        function toggleCustomCategory(val) {
+            const box = document.getElementById('custom-cat-box');
+            if(val === 'CUSTOM') box.classList.remove('hidden');
+            else box.classList.add('hidden');
+        }
+
+        function renderDashboard() {
+            if(!currentUser) return;
+            const data = currentUser.dbData || { name: 'Mgeni', role: 'Mjumbe', isVIP: false, status: 'TRIAL' };
+
+            document.getElementById('nav-user-area').classList.remove('hidden');
+            document.getElementById('nav-user-area').classList.add('flex');
+            document.getElementById('dash-event-type').innerText = eventData.category;
+            document.getElementById('dash-event-title').innerText = eventData.title;
+            document.getElementById('dash-user-name').innerText = data.name;
+            document.getElementById('dash-user-role').innerText = data.role;
+
+            const vipBadge = document.getElementById('dash-vip-badge');
+            const btnUpgrade = document.getElementById('btn-upgrade-vip');
+            const demoBadge = document.getElementById('demo-limit-badge');
+
+            if(data.isVIP) {
+                vipBadge.innerText = '🟢 VIP ACTIVE';
+                vipBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-gold-500/20 text-gold-400 border border-gold-500/40';
+                btnUpgrade.innerText = '✨ VIP ACTIVE (NO LIMIT)';
+                if(demoBadge) demoBadge.innerText = "VIP: Unlimited Cards Allowed";
+            } else {
+                vipBadge.innerText = '⚪ TRIAL DEMO';
+                vipBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-slate-800 text-slate-400 border border-slate-700';
+                if(demoBadge) demoBadge.innerText = "TRIAL DEMO: Limit Of 2 Cards Only";
+            }
+
+            applyRolePermissions(data.role);
+
+            renderBudgetSummary();
+            renderContributions();
+            renderCardsList();
+            renderThanksTable();
+            updateLiveCard();
+        }
+
+        function applyRolePermissions(role) {
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(role);
+            const saveBudgetBtn = document.getElementById('btn-save-budget-action');
+            const sendAllCardsBtn = document.getElementById('btn-send-all-cards-action');
+
+            if(!isLeader) {
+                if(saveBudgetBtn) {
+                    saveBudgetBtn.disabled = true;
+                    saveBudgetBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    saveBudgetBtn.innerText = "🔒 Viongozi Wakuu Pekee Ndio Wanaoweza Kubadili Bajeti";
+                }
+                if(sendAllCardsBtn) {
+                    sendAllCardsBtn.disabled = true;
+                    sendAllCardsBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    sendAllCardsBtn.innerText = "🔒 Viongozi Wakuu Pekee Wanaoweza Kutuma Kadi Zote";
+                }
+            } else {
+                if(saveBudgetBtn) {
+                    saveBudgetBtn.disabled = false;
+                    saveBudgetBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    saveBudgetBtn.innerText = "HIFADHI TAARIFA ZA MALIPO NA BAJETI";
+                }
+                if(sendAllCardsBtn) {
+                    sendAllCardsBtn.disabled = false;
+                    sendAllCardsBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    sendAllCardsBtn.innerText = "🚀 TUMA KADI KWA WOTE WALIOCHANGA (PAID)";
+                }
+            }
+        }
+
+        function switchDashTab(tabName) {
+            document.querySelectorAll('.dash-tab').forEach(b => b.className = "dash-tab px-4 py-2.5 rounded-xl bg-slate-900 text-slate-400 border border-slate-800 hover:text-white whitespace-nowrap");
+            document.querySelectorAll('.dash-pane').forEach(p => p.classList.add('hidden'));
+
+            document.getElementById(`tab-btn-${tabName}`).className = "dash-tab active px-4 py-2.5 rounded-xl bg-slate-900 text-gold-400 border border-gold-500/40 whitespace-nowrap";
+            document.getElementById(`pane-${tabName}`).classList.remove('hidden');
+        }
+
+        function selectCardPurpose(type) {
+            const btnComm = document.getElementById('btn-card-committee');
+            const btnCont = document.getElementById('btn-card-contribution');
+            const btnHall = document.getElementById('btn-card-hall');
+
+            btnComm.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
+            btnCont.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
+            btnHall.className = "p-2 rounded-xl bg-slate-800 text-white font-bold border border-slate-700";
+
+            eventData.cardPurpose = type;
+
+            if(type === 'COMMITTEE') {
+                btnComm.className = "p-2 rounded-xl gold-gradient text-slate-950 font-black";
+                document.getElementById('card-edit-title').value = "KADI YA MWALIKO WA WANAKAMATI";
+            } else if(type === 'CONTRIBUTION') {
+                btnCont.className = "p-2 rounded-xl gold-gradient text-slate-950 font-black";
+                document.getElementById('card-edit-title').value = "KADI YA MCHANGO NA AHADI";
+            } else if(type === 'HALL') {
+                btnHall.className = "p-2 rounded-xl gold-gradient text-slate-950 font-black";
+                document.getElementById('card-edit-title').value = "MWALIKO WA SENDOFF";
+            }
+
+            updateLiveCard();
+
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ cardPurpose: type });
+            }
+        }
+
+        function changeCardFont(fontClass) {
+            eventData.cardFont = fontClass;
+            updateLiveCard();
+
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ cardFont: fontClass });
+            }
+        }
+
+        function selectCardTemplateStyle(num) {
+            for(let i=1; i<=28; i++) {
+                const btn = document.getElementById(`btn-tpl-${i}`);
+                if(btn) {
+                    btn.className = "p-2 rounded-lg bg-slate-800 text-white font-bold border border-slate-700 text-center";
+                }
+            }
+            const activeBtn = document.getElementById(`btn-tpl-${num}`);
+            if(activeBtn) activeBtn.className = "p-2 rounded-lg gold-gradient text-slate-950 font-black text-center";
+
+            eventData.tplStyle = num;
+            updateLiveCard();
+
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ tplStyle: num });
+            }
+        }
+
+        /* 12 COLOR THEMES (FIRST 6 KEPT, 6 NEW ADDED) */
+        function applyCardTheme(theme) {
+            eventData.cardTheme = theme;
+
+            if(theme === 'gold') {
+                eventData.color1 = '#0f172a'; eventData.color2 = '#eab308'; eventData.color3 = '#fef08a';
+            } else if(theme === 'silver') {
+                eventData.color1 = '#090d16'; eventData.color2 = '#cbd5e1'; eventData.color3 = '#ffffff';
+            } else if(theme === 'emerald') {
+                eventData.color1 = '#022c22'; eventData.color2 = '#34d399'; eventData.color3 = '#fef08a';
+            } else if(theme === 'purple') {
+                eventData.color1 = '#2e1065'; eventData.color2 = '#c084fc'; eventData.color3 = '#f5d0fe';
+            } else if(theme === 'rose') {
+                eventData.color1 = '#4c0519'; eventData.color2 = '#fb7185'; eventData.color3 = '#ffe4e6';
+            } else if(theme === 'ruby') {
+                eventData.color1 = '#450a0a'; eventData.color2 = '#ef4444'; eventData.color3 = '#fef08a';
+            } else if(theme === 'cyan') {
+                eventData.color1 = '#083344'; eventData.color2 = '#22d3ee'; eventData.color3 = '#cffafe';
+            } else if(theme === 'amber') {
+                eventData.color1 = '#451a03'; eventData.color2 = '#fbbf24'; eventData.color3 = '#fef3c7';
+            } else if(theme === 'fuchsia') {
+                eventData.color1 = '#701a75'; eventData.color2 = '#e879f9'; eventData.color3 = '#fae8ff';
+            } else if(theme === 'teal') {
+                eventData.color1 = '#042f2e'; eventData.color2 = '#2dd4bf'; eventData.color3 = '#ccfbf1';
+            } else if(theme === 'midnight') {
+                eventData.color1 = '#020617'; eventData.color2 = '#60a5fa'; eventData.color3 = '#bfdbfe';
+            } else if(theme === 'bronze') {
+                eventData.color1 = '#1c1917'; eventData.color2 = '#d97706'; eventData.color3 = '#fde68a';
+            }
+
+            document.getElementById('card-color-1').value = eventData.color1;
+            document.getElementById('card-color-2').value = eventData.color2;
+            document.getElementById('card-color-3').value = eventData.color3;
+
+            updateLiveCard();
+
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ 
+                    cardTheme: theme, color1: eventData.color1, color2: eventData.color2, color3: eventData.color3 
+                });
+            }
+        }
+
+        /* DYNAMIC RENDERER: NO QR CODE ON COMMITTEE & CONTRIBUTION STARTING FROM TPL 21 */
+        function renderDynamicCardHTML(containerEl, cardObj, cfg, mode) {
+            if(!containerEl) return;
+
+            const tplNum = cfg.tplStyle || 23;
+            const fontClass = cfg.cardFont || 'f-alex-brush';
+            const guestName = (cardObj && cardObj.name) ? cardObj.name : (cfg.coupleNames || 'MR & MRS ECARD HUB');
+            const cardId = (cardObj && cardObj.id) ? cardObj.id : 'ECARD-992026';
+            const purpose = cfg.cardPurpose || 'HALL';
+
+            const c1 = cfg.color1 || '#0f172a';
+            const c2 = cfg.color2 || '#eab308';
+            const c3 = cfg.color3 || '#fef08a';
+
+            // QR CODE LOGIC: FROM TPL 21 ONWARDS, COMMITTEE AND CONTRIBUTION HAVE NO QR CODE
+            let showQrCode = (purpose === 'HALL');
+            if (tplNum >= 21 && (purpose === 'COMMITTEE' || purpose === 'CONTRIBUTION')) {
+                showQrCode = false;
+            }
+
+            containerEl.className = `card-preview tpl-style-${tplNum} shadow-2xl relative overflow-hidden my-auto`;
+            containerEl.style.backgroundColor = c1;
+            containerEl.style.borderColor = c2;
+            containerEl.style.color = '#ffffff';
+
+            const qrSectionHtml = showQrCode ? `
+                <div class="flex flex-col items-center">
+                    <div id="${mode}-qr-box" class="bg-white p-1 rounded-lg border shadow-lg" style="border-color: ${c2};"></div>
+                </div>
+            ` : `
+                <div class="flex flex-col items-center justify-center border px-3 py-1 rounded-xl opacity-0 pointer-events-none" style="border-color: ${c2}; background-color: ${c2}22;">
+                </div>
+            `;
+
+            if(tplNum === 23) {
+                containerEl.innerHTML = `
+                    <div class="w-full h-full relative p-4 flex flex-col justify-between items-center text-center overflow-hidden" style="background: linear-gradient(180deg, ${c1} 0%, #000000 100%);">
+                        <div class="arch-gold-frame w-full h-[91%] p-4 flex flex-col items-center justify-between relative z-10 shadow-2xl" style="background: linear-gradient(180deg, ${c2}15 0%, ${c1}cc 100%); border: 3px solid ${c2}; box-shadow: inset 0 0 25px ${c2}33, 0 0 20px ${c2}22;">
+                            
+                            <div class="pt-2">
+                                <span class="text-[9px] font-bold uppercase tracking-[0.2em] block" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('cardTitle', this.innerText)">${cfg.cardTitle || 'MWALIKO WA SENDOFF'}</span>
+                                <h3 class="text-[11px] font-medium leading-snug mt-1 opacity-90" style="color: ${c3};">
+                                    <span class="font-bold block" contenteditable="true" onblur="saveInlineEdit('hostName', this.innerText)">${cfg.hostName || 'Familia ya Mr & Mrs Juma Kirumbi'}</span>
+                                    <span class="text-[9px] opacity-80" contenteditable="true" onblur="saveInlineEdit('hostLoc', this.innerText)">${cfg.hostLoc || 'wa Kigamboni Dar es Salaam'}</span>
+                                </h3>
+                                <p class="text-[9px] italic opacity-80 mt-0.5">Inayo furaha kukualika wewe</p>
+                            </div>
+
+                            <div class="my-1 py-1.5 px-4 w-full border-y rounded-lg relative" style="background-color: ${c2}15; border-color: ${c2}66;">
+                                <p class="font-bold text-xs uppercase tracking-wide" style="color: ${c3};" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</p>
+                                <p class="text-[8.5px] opacity-80">kwenye sherehe ya Send-Off Party ya Binti yao mpendwa</p>
+                            </div>
+
+                            <div class="my-0.5">
+                                <h1 class="${fontClass} text-4xl font-extrabold tracking-wide drop-shadow-md" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('brideName', this.innerText)">${cfg.brideName || 'Hafsa'}</h1>
+                                ${cfg.groomName ? `<p class="text-[10px] font-semibold opacity-90 text-white">& <span contenteditable="true" onblur="saveInlineEdit('groomName', this.innerText)">${cfg.groomName}</span></p>` : ''}
+                            </div>
+
+                            <div class="text-[10px] space-y-1 w-full border-y py-1.5" style="border-color: ${c2}44;">
+                                <p class="${fontClass} text-base font-bold" style="color: ${c3};">Siku ya <span class="font-bold" contenteditable="true" onblur="saveInlineEdit('eventTime', this.innerText)">${cfg.eventTime || 'Alhamisi'}</span></p>
+                                <div class="inline-flex items-center justify-center gap-2 font-bold text-xs px-3 py-0.5 rounded-full" style="background-color: ${c2}22; border: 1px solid ${c2}; color: ${c2};">
+                                    <i class="fa-regular fa-calendar-check text-xs"></i>
+                                    <span contenteditable="true" onblur="saveInlineEdit('eventDate', this.innerText)">${cfg.eventDate || '11.06.2026'}</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-0.5">
+                                <span class="${fontClass} text-sm block opacity-80" style="color: ${c3};">Ukumbi wa Sherehe</span>
+                                <p class="font-bold text-xs text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> <span contenteditable="true" onblur="saveInlineEdit('eventVenue', this.innerText)">${cfg.eventVenue || 'NHC House Samora Avenue'}</span></p>
+                            </div>
+
+                            <div class="text-[8.5px] opacity-90 bg-black/40 p-2 rounded-xl border w-full" style="border-color: ${c2}33;">
+                                <p class="font-semibold text-[8px] uppercase tracking-wider" style="color: ${c2};">Rangi Za Sherehe / Dress Code:</p>
+                                <p class="font-bold text-white mt-0.5" contenteditable="true" onblur="saveInlineEdit('cardMsg', this.innerText)">${cfg.cardMsg || 'Navy Blue, Light Blue, Blush Pink'}</p>
+                            </div>
+                        </div>
+
+                        <div class="w-full flex justify-between items-center z-20 px-2 pt-1">
+                            <div class="text-[8px] text-left opacity-90">
+                                <p class="font-bold" style="color: ${c2};">Mawasiliano:</p>
+                                <p class="text-white" contenteditable="true" onblur="saveInlineEdit('contacts', this.innerText)">${cfg.contacts || '0754 586 893 / 0716 298 899'}</p>
+                            </div>
+                            ${qrSectionHtml}
+                        </div>
+                    </div>
+                `;
+            } else if(tplNum === 22) {
+                const dateParts = (cfg.eventDate || '24.10.2026').split('.');
+                const dateNum = dateParts[0] || '24';
+                containerEl.innerHTML = `
+                    <div class="w-full h-full relative p-5 flex flex-col justify-between items-center text-center overflow-hidden" style="background: radial-gradient(circle at center, ${c1} 0%, #000000 100%);">
+                        <div class="w-full h-full rounded-2xl p-4 flex flex-col justify-between items-center border shadow-2xl" style="border-color: ${c2}66; background-color: rgba(0,0,0,0.3);">
+                            <div class="mt-1 flex flex-col items-center">
+                                <div class="w-9 h-9 border-2 rounded-full flex items-center justify-center shadow" style="border-color: ${c2}; background-color: ${c2}22;">
+                                    <span class="font-cinzel text-xs font-bold" style="color: ${c2};">WED</span>
+                                </div>
+                                <span class="text-[7.5px] font-mono tracking-widest mt-0.5" style="color: ${c3};" contenteditable="true" onblur="saveInlineEdit('cardTitle', this.innerText)">${cfg.cardTitle || 'MWALIKO WA HARUSI'}</span>
+                            </div>
+
+                            <div class="text-[9px] opacity-90 leading-snug">
+                                <p class="font-bold text-white" contenteditable="true" onblur="saveInlineEdit('hostName', this.innerText)">${cfg.hostName || 'Familia ya Mr. John Daniel Lukuwi'}</p>
+                                <p class="text-[8px] opacity-80" contenteditable="true" onblur="saveInlineEdit('hostLoc', this.innerText)">${cfg.hostLoc || 'wa Buza Dar es Salaam'}</p>
+                                <p class="text-[8px] italic mt-0.5" style="color: ${c2};">Wanayofuraha kukualika kwenye sherehe</p>
+                            </div>
+
+                            <div class="rounded-xl px-4 py-1 border w-full" style="background-color: ${c2}22; border-color: ${c2}66;">
+                                <p class="text-[10px] font-bold text-white uppercase" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</p>
+                            </div>
+
+                            <div class="my-0.5">
+                                <h2 class="${fontClass} text-2xl font-bold" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('groomName', this.innerText)">${cfg.groomName || 'Daniel John Lukuwi'}</h2>
+                                ${cfg.brideName ? `<span class="${fontClass} text-lg block -my-1" style="color: ${c3};">&</span><h2 class="${fontClass} text-2xl font-bold" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('brideName', this.innerText)">${cfg.brideName}</h2>` : ''}
+                            </div>
+
+                            <div class="flex items-center justify-center gap-3 border-y py-1.5 w-full" style="border-color: ${c2}44;">
+                                <span class="text-[9px] opacity-90 font-bold" style="color: ${c3};" contenteditable="true" onblur="saveInlineEdit('eventTime', this.innerText)">${cfg.eventTime || 'Jumamosi'}</span>
+                                <span class="text-2xl font-bold font-cinzel border-x px-3" style="border-color: ${c2}; color: ${c2};">${dateNum}</span>
+                                <span class="text-[9px] opacity-90 font-bold" style="color: ${c3};" contenteditable="true" onblur="saveInlineEdit('eventDate', this.innerText)">${cfg.eventDate || '2026'}</span>
+                            </div>
+
+                            <div class="text-[8.5px]">
+                                <span class="text-[8px] block opacity-75" style="color: ${c3};">Ukumbi wa Sherehe:</span>
+                                <p class="font-bold text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> <span contenteditable="true" onblur="saveInlineEdit('eventVenue', this.innerText)">${cfg.eventVenue || 'Mrina Hall'}</span></p>
+                            </div>
+
+                            <div class="w-full flex justify-between items-end border-t pt-1.5" style="border-color: ${c2}44;">
+                                <div class="text-left text-[7.5px] opacity-80">
+                                    <p class="text-white font-bold">Mawasiliano: <span contenteditable="true" onblur="saveInlineEdit('contacts', this.innerText)">${cfg.contacts || '+255764986042'}</span></p>
+                                    <p class="text-[8px] font-bold" style="color: ${c2};">Dress Code: <span contenteditable="true" onblur="saveInlineEdit('cardMsg', this.innerText)">${cfg.cardMsg || 'GOLD NA EMERALD GREEN'}</span></p>
+                                </div>
+                                ${qrSectionHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if(tplNum >= 24 && tplNum <= 28) {
+                containerEl.innerHTML = `
+                    <div class="w-full h-full relative p-5 flex flex-col justify-between items-center text-center overflow-hidden" style="background: radial-gradient(circle at top left, ${c1} 0%, #020617 100%);">
+                        <div class="w-full h-full rounded-2xl p-4 flex flex-col justify-between items-center border shadow-2xl relative z-10" style="border-color: ${c2}; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);">
+                            <div>
+                                <span class="text-[10px] font-black uppercase tracking-widest block" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('cardTitle', this.innerText)">${cfg.cardTitle || 'MWALIKO MAALUM'}</span>
+                                <p class="text-[9px] text-slate-300 mt-1"><span contenteditable="true" onblur="saveInlineEdit('hostName', this.innerText)">${cfg.hostName || ''}</span> <span contenteditable="true" onblur="saveInlineEdit('hostLoc', this.innerText)">${cfg.hostLoc || ''}</span></p>
+                            </div>
+
+                            <div class="my-2 p-3 rounded-2xl border w-full shadow-inner" style="background-color: ${c2}22; border-color: ${c2}66;">
+                                <p class="text-[8px] font-bold uppercase tracking-widest opacity-80" style="color: ${c3};">MWALIKO NI MAALUM KWA:</p>
+                                <h2 class="text-base font-extrabold text-white uppercase mt-0.5" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</h2>
+                            </div>
+
+                            <div>
+                                <h1 class="${fontClass} text-3xl font-extrabold drop-shadow-lg" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('brideName', this.innerText)">${cfg.brideName || 'Sherehe'}</h1>
+                                ${cfg.groomName ? `<p class="text-xs font-bold text-white">& <span contenteditable="true" onblur="saveInlineEdit('groomName', this.innerText)">${cfg.groomName}</span></p>` : ''}
+                            </div>
+
+                            <div class="w-full border-y py-2 space-y-1" style="border-color: ${c2}44;">
+                                <p class="text-xs font-bold text-white"><i class="fa-regular fa-calendar-check mr-1" style="color: ${c2};"></i> <span contenteditable="true" onblur="saveInlineEdit('eventTime', this.innerText)">${cfg.eventTime || ''}</span> - <span contenteditable="true" onblur="saveInlineEdit('eventDate', this.innerText)">${cfg.eventDate || ''}</span></p>
+                                <p class="text-xs font-bold text-white"><i class="fa-solid fa-location-dot mr-1" style="color: ${c2};"></i> <span contenteditable="true" onblur="saveInlineEdit('eventVenue', this.innerText)">${cfg.eventVenue || ''}</span></p>
+                            </div>
+
+                            <div class="text-[8.5px] opacity-90">
+                                <p class="font-bold text-white">Dress Code: <span contenteditable="true" onblur="saveInlineEdit('cardMsg', this.innerText)">${cfg.cardMsg || ''}</span></p>
+                            </div>
+
+                            <div class="w-full flex justify-between items-end border-t pt-2" style="border-color: ${c2}44;">
+                                <div class="text-left text-[8px] text-slate-300">
+                                    <p class="font-bold" style="color: ${c2};">Mawasiliano:</p>
+                                    <p contenteditable="true" onblur="saveInlineEdit('contacts', this.innerText)">${cfg.contacts || ''}</p>
+                                </div>
+                                ${qrSectionHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                containerEl.innerHTML = `
+                    <div class="w-full h-full flex flex-col justify-between text-center relative z-10 p-5 rounded-2xl" style="background: linear-gradient(135deg, ${c1} 0%, #000000 100%);">
+                        <div class="space-y-3">
+                            <div class="w-10 h-10 rounded-full mx-auto border flex items-center justify-center shadow" style="border-color: ${c2}; background-color: ${c2}22;"><i class="fa-solid fa-sparkles text-sm" style="color: ${c2};"></i></div>
+                            <div>
+                                <span class="text-[10px] font-black uppercase tracking-widest block" style="color: ${c2};" contenteditable="true" onblur="saveInlineEdit('cardTitle', this.innerText)">${cfg.cardTitle || 'MWALIKO RASMI'}</span>
+                                <h2 class="${fontClass} text-2xl font-bold text-white mt-0.5" id="gcard-guest-name" contenteditable="true" onblur="saveInlineEdit('coupleNames', this.innerText)">${guestName}</h2>
+                            </div>
+                            <p class="text-[11px] text-slate-300 italic px-1 leading-snug" contenteditable="true" onblur="saveInlineEdit('cardMsg', this.innerText)">${cfg.cardMsg || 'Tunayo furaha kubwa kukualika katika sherehe yetu...'}</p>
+                        </div>
+                        <div class="my-2 space-y-1">
+                            <span class="text-[9px] uppercase font-bold tracking-widest opacity-75">Rangi za Sherehe</span>
+                            <div class="flex justify-center gap-2">
+                                <span class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: ${c1};"></span>
+                                <span class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: ${c2};"></span>
+                                <span class="w-5 h-5 rounded-full border border-white/40 shadow" style="background-color: ${c3};"></span>
+                            </div>
+                        </div>
+                        <div class="space-y-1.5 bg-black/50 p-3 rounded-2xl border text-xs text-left flex items-center justify-between" style="border-color: ${c2}44;">
+                            <div>
+                                <p class="font-bold text-[11px]" style="color: ${c2};"><span contenteditable="true" onblur="saveInlineEdit('eventVenue', this.innerText)">${cfg.eventVenue || 'Ukumbi'}</span> - <span contenteditable="true" onblur="saveInlineEdit('eventDate', this.innerText)">${cfg.eventDate || 'Tarehe'}</span></p>
+                                <p class="text-[9px] text-slate-400" contenteditable="true" onblur="saveInlineEdit('eventTime', this.innerText)">${cfg.eventTime || ''}</p>
+                            </div>
+                            ${qrSectionHtml}
+                        </div>
+                        <div class="flex justify-between items-center text-[9px] text-slate-400 font-bold uppercase tracking-widest border-t border-slate-800 pt-2">
+                            <span>${cardId}</span>
+                            <span>Sherehe Yako Kidigital</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if(showQrCode) {
+                const qrTarget = document.getElementById(`${mode}-qr-box`);
+                if(qrTarget) {
+                    qrTarget.innerHTML = '';
+                    const qrContent = `${cardId}|${guestName.replace(/\|/g,'')}`;
+                    new QRCode(qrTarget, { text: qrContent, width: 46, height: 46 });
+                }
+            }
+        }
+
+        /* SYNC INLINE EDITING FROM CARD DIRECTLY TO INPUTS AND DB */
+        function saveInlineEdit(field, val) {
+            eventData[field] = val;
+            if(field === 'cardTitle' && document.getElementById('card-edit-title')) document.getElementById('card-edit-title').value = val;
+            if(field === 'hostName' && document.getElementById('card-edit-host')) document.getElementById('card-edit-host').value = val;
+            if(field === 'hostLoc' && document.getElementById('card-edit-host-loc')) document.getElementById('card-edit-host-loc').value = val;
+            if(field === 'brideName' && document.getElementById('card-edit-bride')) document.getElementById('card-edit-bride').value = val;
+            if(field === 'groomName' && document.getElementById('card-edit-groom')) document.getElementById('card-edit-groom').value = val;
+            if(field === 'coupleNames' && document.getElementById('card-edit-names')) document.getElementById('card-edit-names').value = val;
+            if(field === 'eventDate' && document.getElementById('card-edit-date')) document.getElementById('card-edit-date').value = val;
+            if(field === 'eventTime' && document.getElementById('card-edit-time')) document.getElementById('card-edit-time').value = val;
+            if(field === 'eventVenue' && document.getElementById('card-edit-venue')) document.getElementById('card-edit-venue').value = val;
+            if(field === 'cardMsg' && document.getElementById('card-edit-msg')) document.getElementById('card-edit-msg').value = val;
+            if(field === 'contacts' && document.getElementById('card-edit-contacts')) document.getElementById('card-edit-contacts').value = val;
+
+            if(activeEventOwnerId) {
+                rdb.ref(`events/${activeEventOwnerId}/config`).update({ [field]: val });
+            }
+        }
+
+        function updateLiveCard() {
+            const hostVal = document.getElementById('card-edit-host')?.value;
+            const hostLocVal = document.getElementById('card-edit-host-loc')?.value;
+            const titleVal = document.getElementById('card-edit-title')?.value;
+            const brideVal = document.getElementById('card-edit-bride')?.value;
+            const groomVal = document.getElementById('card-edit-groom')?.value;
+            const namesVal = document.getElementById('card-edit-names')?.value;
+            const dateVal = document.getElementById('card-edit-date')?.value;
+            const timeVal = document.getElementById('card-edit-time')?.value;
+            const venueVal = document.getElementById('card-edit-venue')?.value;
+            const msgVal = document.getElementById('card-edit-msg')?.value;
+            const contactsVal = document.getElementById('card-edit-contacts')?.value;
+
+            const c1 = document.getElementById('card-color-1')?.value;
+            const c2 = document.getElementById('card-color-2')?.value;
+            const c3 = document.getElementById('card-color-3')?.value;
+
+            if(hostVal !== undefined) eventData.hostName = hostVal;
+            if(hostLocVal !== undefined) eventData.hostLoc = hostLocVal;
+            if(titleVal !== undefined) eventData.cardTitle = titleVal;
+            if(brideVal !== undefined) eventData.brideName = brideVal;
+            if(groomVal !== undefined) eventData.groomName = groomVal;
+            if(namesVal !== undefined) eventData.coupleNames = namesVal;
+            if(dateVal !== undefined) eventData.eventDate = dateVal;
+            if(timeVal !== undefined) eventData.eventTime = timeVal;
+            if(venueVal !== undefined) eventData.eventVenue = venueVal;
+            if(msgVal !== undefined) eventData.cardMsg = msgVal;
+            if(contactsVal !== undefined) eventData.contacts = contactsVal;
+
+            if(c1) eventData.color1 = c1;
+            if(c2) eventData.color2 = c2;
+            if(c3) eventData.color3 = c3;
+
+            renderDynamicCardHTML(document.getElementById('live-card-frame'), null, eventData, 'preview');
+
+            if(activeEventOwnerId) {
+                const configPayload = {
+                    hostName: eventData.hostName,
+                    hostLoc: eventData.hostLoc,
+                    cardTitle: eventData.cardTitle,
+                    brideName: eventData.brideName,
+                    groomName: eventData.groomName,
+                    coupleNames: eventData.coupleNames,
+                    eventDate: eventData.eventDate,
+                    eventTime: eventData.eventTime,
+                    eventVenue: eventData.eventVenue,
+                    cardMsg: eventData.cardMsg,
+                    contacts: eventData.contacts,
+                    color1: eventData.color1,
+                    color2: eventData.color2,
+                    color3: eventData.color3,
+                    tplStyle: eventData.tplStyle,
+                    cardFont: eventData.cardFont
+                };
+                rdb.ref(`events/${activeEventOwnerId}/config`).update(configPayload);
+                localStorage.setItem(`sherehe_config_${activeEventOwnerId}`, JSON.stringify(configPayload));
+            }
+        }
+
+        async function clearAllEventData() {
+            if(!confirm("⚠️ ONYO: Kitendo hiki kitafuta data zote za sherehe hii (michango, kadi, ujumbe na skani) ili uanze sherehe mpya kabisa. Je, una uhakika?")) return;
+            if(!activeEventOwnerId) return;
+
+            try {
+                await rdb.ref(`events/${activeEventOwnerId}/contributions`).remove();
+                await rdb.ref(`events/${activeEventOwnerId}/cards`).remove();
+                await rdb.ref(`events/${activeEventOwnerId}/messages`).remove();
+                await rdb.ref(`events/${activeEventOwnerId}/scans`).remove();
+                alert("✅ Data zote za nyuma zimefutwa kikamilifu! Sasa unaweza kuanza sherehe mpya.");
+                location.reload();
+            } catch(err) {
+                alert("Kosa: " + err.message);
+            }
+        }
+
+        function printContributionsPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text("SHEREHE YAKO KIDIGITAL - RIPOTI YA MICHANGO", 14, 20);
+
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Sherehe: ${eventData.title}`, 14, 28);
+            doc.text(`Tarehe ya Ripoti: ${new Date().toLocaleDateString()}`, 14, 34);
+
+            let startY = 44;
+            doc.setFillColor(15, 23, 42);
+            doc.rect(14, startY, 180, 8, "F");
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.text("Jina la Mchangiaji", 18, startY + 6);
+            doc.text("Namba ya Simu", 90, startY + 6);
+            doc.text("Aina Ya Kadi", 130, startY + 6);
+            doc.text("Kiasi (TSh)", 160, startY + 6);
+
+            startY += 8;
+            doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "normal");
+
+            if(contributionsList.length === 0) {
+                doc.text("Hakuna michango iliyorekodiwa bado.", 14, startY + 10);
+            } else {
+                contributionsList.forEach((c) => {
+                    if(startY > 270) {
+                        doc.addPage();
+                        startY = 20;
+                    }
+                    doc.text(c.name || '-', 18, startY + 6);
+                    doc.text(c.phone || '-', 90, startY + 6);
+                    doc.text(c.cardTypeAssigned || 'SINGLE', 130, startY + 6);
+                    doc.text(Number(c.amount || 0).toLocaleString(), 160, startY + 6);
+
+                    startY += 8;
+                    doc.setDrawColor(200, 200, 200);
+                    doc.line(14, startY, 194, startY);
+                });
+            }
+
+            doc.save(`Ripoti_Michango_${eventData.title.replace(/\s+/g, '_')}.pdf`);
+        }
+
+        function initRealtimeListeners() {
+            if(!activeEventOwnerId) return;
+
+            rdb.ref(`events/${activeEventOwnerId}/config`).on('value', snapshot => {
+                if(snapshot.exists()) {
+                    const cfg = snapshot.val();
+                    localStorage.setItem(`sherehe_config_${activeEventOwnerId}`, JSON.stringify(cfg));
+                    Object.assign(eventData, cfg);
+
+                    if(cfg.title) document.getElementById('dash-event-title').innerText = cfg.title;
+                    if(cfg.category) document.getElementById('dash-event-type').innerText = cfg.category;
+
+                    if(document.getElementById('card-edit-host')) document.getElementById('card-edit-host').value = cfg.hostName || '';
+                    if(document.getElementById('card-edit-host-loc')) document.getElementById('card-edit-host-loc').value = cfg.hostLoc || '';
+                    if(document.getElementById('card-edit-title')) document.getElementById('card-edit-title').value = cfg.cardTitle || '';
+                    if(document.getElementById('card-edit-bride')) document.getElementById('card-edit-bride').value = cfg.brideName || '';
+                    if(document.getElementById('card-edit-groom')) document.getElementById('card-edit-groom').value = cfg.groomName || '';
+                    if(document.getElementById('card-edit-names')) document.getElementById('card-edit-names').value = cfg.coupleNames || '';
+                    if(document.getElementById('card-edit-date')) document.getElementById('card-edit-date').value = cfg.eventDate || '';
+                    if(document.getElementById('card-edit-time')) document.getElementById('card-edit-time').value = cfg.eventTime || '';
+                    if(document.getElementById('card-edit-venue')) document.getElementById('card-edit-venue').value = cfg.eventVenue || '';
+                    if(document.getElementById('card-edit-msg')) document.getElementById('card-edit-msg').value = cfg.cardMsg || '';
+                    if(document.getElementById('card-edit-contacts')) document.getElementById('card-edit-contacts').value = cfg.contacts || '';
+
+                    if(cfg.cardFont && document.getElementById('card-font-select')) {
+                        document.getElementById('card-font-select').value = cfg.cardFont;
+                    }
+
+                    updateLiveCard();
+                    renderBudgetSummary();
+                }
+            });
+
+            rdb.ref(`events/${activeEventOwnerId}/messages`).on('value', snapshot => {
+                chatMessagesList = [];
+                snapshot.forEach(child => chatMessagesList.push(child.val()));
+                renderGroupChat();
+            });
+
+            rdb.ref(`events/${activeEventOwnerId}/contributions`).on('value', snapshot => {
+                contributionsList = [];
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        contributionsList.push({ key: child.key, ...child.val() });
+                    });
+                }
+                renderContributions();
+                renderBudgetSummary();
+            });
+
+            rdb.ref(`events/${activeEventOwnerId}/cards`).on('value', snapshot => {
+                cardsList = [];
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const cardItem = { key: child.key, ...child.val() };
+                        cardsList.push(cardItem);
+                        localStorage.setItem(`sherehe_card_${child.key}`, JSON.stringify(cardItem));
+                    });
+                }
+                renderCardsList();
+            });
+
+            rdb.ref(`events/${activeEventOwnerId}/scans`).on('value', snapshot => {
+                const tbody = document.getElementById('scanned-guests-tbody');
+                const badge = document.getElementById('scanned-count-badge');
+                if(!tbody) return;
+
+                globalScansList = [];
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        globalScansList.push({ key: child.key, ...child.val() });
+                    });
+                }
+
+                if(badge) badge.innerText = `${globalScansList.length} WALIOINGIA`;
+
+                if(globalScansList.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Bado hakuna mgeni aliyethibitishwa.</td></tr>';
+                } else {
+                    tbody.innerHTML = [...globalScansList].reverse().map(s => `
+                        <tr class="hover:bg-slate-900">
+                            <td class="p-2 font-bold text-white">${s.guestName} <span class="text-[10px] text-gold-400 font-mono">(${s.attemptNumber || 1}/${s.maxAllowed || 1})</span></td>
+                            <td class="p-2 font-mono text-gold-400 text-[10px]">${s.cardId}</td>
+                            <td class="p-2 text-slate-400 text-[10px]">${s.gateName || 'Gate 1'} • ${s.time}</td>
+                            <td class="p-2 text-right"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[9px]">✅ CONFIRMED</span></td>
+                        </tr>
+                    `).join('');
+                }
+
+                renderThanksTable();
+            });
+        }
+
+        function toggleFullscreenChat() {
+            const chatBox = document.getElementById('whatsapp-chat-box');
+            const icon = document.getElementById('fullscreen-chat-icon');
+            
+            if(chatBox.classList.contains('fixed')) {
+                chatBox.className = "lg:col-span-8 bg-[#0b141a] border border-slate-800 rounded-3xl flex flex-col justify-between overflow-hidden shadow-2xl min-h-[500px]";
+                icon.className = "fa-solid fa-expand";
+            } else {
+                chatBox.className = "fixed inset-0 z-50 bg-[#0b141a] flex flex-col justify-between overflow-hidden shadow-2xl h-full w-full rounded-none";
+                icon.className = "fa-solid fa-compress";
+            }
+        }
+
+        function previewMediaAttachment(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                pendingMediaBase64 = evt.target.result;
+                pendingMediaType = file.type.startsWith('image/') ? 'image' : (file.type.startsWith('video/') ? 'video' : 'audio');
+                
+                document.getElementById('chat-media-preview-txt').innerText = `📎 Media (${pendingMediaType.toUpperCase()}): ${file.name}`;
+                document.getElementById('chat-media-preview-bar').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function cancelMediaAttachment() {
+            pendingMediaBase64 = null;
+            pendingMediaType = null;
+            document.getElementById('chat-media-file-input').value = '';
+            document.getElementById('chat-media-preview-bar').classList.add('hidden');
+        }
+
+        async function handleSendGroupMessage(e) {
+            e.preventDefault();
+            const textInput = document.getElementById('chat-text-input');
+            const text = textInput.value.trim();
+
+            if(!text && !pendingMediaBase64) return;
+
+            let senderName = "Mwaalikwa";
+            if(currentUser && currentUser.dbData) {
+                senderName = `${currentUser.dbData.name} (${currentUser.dbData.role || 'Mwaalikwa'})`;
+            } else if(currentUser && currentUser.email) {
+                senderName = currentUser.email;
+            }
+
+            const msg = {
+                sender: senderName,
+                text: text || '',
+                mediaUrl: pendingMediaBase64 || null,
+                mediaType: pendingMediaType || null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            if(activeEventOwnerId) {
+                await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
+            }
+            
+            textInput.value = '';
+            cancelMediaAttachment();
+        }
+
+        function renderGroupChat() {
+            const stream = document.getElementById('chat-messages-stream');
+            if(!stream) return;
+
+            stream.innerHTML = chatMessagesList.map(m => {
+                let mediaHtml = '';
+                if(m.mediaUrl) {
+                    if(m.mediaType === 'image') {
+                        mediaHtml = `<img src="${m.mediaUrl}" class="max-w-xs rounded-xl my-1 border border-slate-700 shadow">`;
+                    } else if(m.mediaType === 'video') {
+                        mediaHtml = `<video src="${m.mediaUrl}" controls class="max-w-xs rounded-xl my-1 border border-slate-700 shadow"></video>`;
+                    } else if(m.mediaType === 'audio') {
+                        mediaHtml = `<audio src="${m.mediaUrl}" controls class="w-full my-1"></audio>`;
+                    }
+                }
+
+                return `
+                    <div class="bg-[#202c33] p-3 rounded-2xl border border-slate-800 max-w-md space-y-1 shadow">
+                        <div class="flex justify-between items-center text-[10px] border-b border-slate-800/80 pb-1">
+                            <span class="font-bold text-gold-400">${m.sender}</span>
+                            <span class="text-slate-400 font-mono">${m.time}</span>
+                        </div>
+                        ${mediaHtml}
+                        ${m.text ? `<p class="text-slate-100 text-xs leading-relaxed mt-1">${m.text}</p>` : ''}
+                    </div>
+                `;
+            }).join('') || '<p class="text-slate-500 italic text-center py-6">Hakuna ujumbe kwenye group bado.</p>';
+
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function filterManualSearchGuests(query) {
+            const dropdown = document.getElementById('manual-search-dropdown');
+            if(!query.trim()) {
+                dropdown.classList.add('hidden');
+                dropdown.innerHTML = '';
+                return;
+            }
+
+            const q = query.toLowerCase();
+            const matches = cardsList.filter(c => c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q));
+
+            if(matches.length === 0) {
+                dropdown.classList.add('hidden');
+                dropdown.innerHTML = '';
+                return;
+            }
+
+            dropdown.classList.remove('hidden');
+            dropdown.innerHTML = matches.map(m => `
+                <div onclick="selectSuggestedGuest('${m.name.replace(/'/g, "\\'")}')" class="p-2.5 hover:bg-slate-900 cursor-pointer flex justify-between items-center transition">
+                    <span class="font-bold text-white">${m.name}</span>
+                    <span class="text-[10px] text-gold-400 font-mono">${m.id} (${m.type})</span>
+                </div>
+            `).join('');
+        }
+
+        function selectSuggestedGuest(name) {
+            document.getElementById('manual-search-input').value = name;
+            document.getElementById('manual-search-dropdown').classList.add('hidden');
+            manualCheckInGuest();
+        }
+
+        async function clearScansForCard(cardId) {
+            if(!confirm(`Je, unauhakika unataka kusafisha historia na kuifungua Kadi (${cardId}) ili iweze kuthibitishwa tena?`)) return;
+            
+            const snapshot = await rdb.ref(`events/${activeEventOwnerId}/scans`).once('value');
+            if(snapshot.exists()) {
+                snapshot.forEach(child => {
+                    if(child.val().cardId === cardId) {
+                        rdb.ref(`events/${activeEventOwnerId}/scans/${child.key}`).remove();
+                    }
+                });
+            }
+            const feedback = document.getElementById('scan-live-feedback');
+            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+            feedback.innerText = `🔄 KADI ${cardId} IMESAFISHWA NA KUFUNGUWA KIKAMILIFU!`;
+        }
+
+        async function processGuestCheckIn(matchedCard, gateName) {
+            const feedback = document.getElementById('scan-live-feedback');
+            feedback.classList.remove('hidden');
+
+            const cardScans = globalScansList.filter(s => s.cardId === matchedCard.id);
+            const existingCount = cardScans.length;
+
+            const cardType = (matchedCard.type || 'SINGLE').toUpperCase();
+            const maxAllowed = (cardType === 'DOUBLE') ? 2 : 1;
+
+            if(existingCount >= maxAllowed) {
+                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30 space-y-2";
+                feedback.innerHTML = `
+                    <div>⚠️ Kadi ya ${matchedCard.name} (${matchedCard.id} - ${cardType} CARD) imeshakamilisha uthibitisho wote (${existingCount}/${maxAllowed})!</div>
+                    <button type="button" onclick="clearScansForCard('${matchedCard.id}')" class="px-3 py-1.5 rounded-xl bg-gold-500 text-slate-950 font-black text-[11px] uppercase shadow">
+                        🔄 SAFISHA NA UNLOCK KADI HII (RESET)
+                    </button>
+                `;
+                return;
+            }
+
+            const attemptNo = existingCount + 1;
+            const scanData = {
+                cardId: matchedCard.id,
+                guestName: matchedCard.name,
+                guestPhone: matchedCard.phone || '',
+                gateName: gateName || 'Gate Scanner',
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now(),
+                attemptNumber: attemptNo,
+                maxAllowed: maxAllowed
+            };
+
+            if(activeEventOwnerId) {
+                await rdb.ref(`events/${activeEventOwnerId}/scans`).push(scanData);
+            }
+
+            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+            feedback.innerText = `🎉 CONFIRMATION ${attemptNo}/${maxAllowed} IMEFANIKIWA: ${matchedCard.name} (${matchedCard.id} - ${cardType}) AMEINGIA UKUMBINI!`;
+        }
+
+        async function scanQrFromFile(e) {
+            const file = e.target.files[0];
+            const feedback = document.getElementById('scan-live-feedback');
+            if(!file) return;
+
+            feedback.classList.remove('hidden');
+            feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-slate-900 text-gold-400 border border-gold-500/30";
+            feedback.innerText = "Inasoma QR Code...";
+
+            try {
+                const result = await QrScanner.scanImage(file, { returnDetailedScanResult: true });
+                onScanSuccess(result.data);
+            } catch (err) {
+                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                feedback.innerText = "Imeshindikana kusoma picha hii. Tafadhali hakikisha QR code inaonekana vizuri.";
+            }
+            e.target.value = '';
+        }
+
+        async function manualCheckInGuest() {
+            const query = document.getElementById('manual-search-input').value.trim().toLowerCase();
+            const feedback = document.getElementById('scan-live-feedback');
+            document.getElementById('manual-search-dropdown').classList.add('hidden');
+            if(!query) return;
+
+            const matchedCard = cardsList.find(c => c.name.toLowerCase().includes(query) || c.id.toLowerCase().includes(query));
+
+            if(matchedCard) {
+                const gateName = currentUser && currentUser.dbData ? currentUser.dbData.role : 'Manual Gate';
+                await processGuestCheckIn(matchedCard, gateName);
+                document.getElementById('manual-search-input').value = '';
+            } else {
+                feedback.classList.remove('hidden');
+                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                feedback.innerText = `⚠️ Mgeni "${query}" hajapatikana kwenye orodha ya kadi!`;
+            }
+        }
+
+        async function onScanSuccess(decodedText) {
+            const matchedCard = cardsList.find(c => decodedText.includes(c.id));
+            const feedback = document.getElementById('scan-live-feedback');
+            feedback.classList.remove('hidden');
+
+            if(matchedCard) {
+                const gateName = currentUser && currentUser.dbData ? currentUser.dbData.role : 'Gate Scanner';
+                await processGuestCheckIn(matchedCard, gateName);
+            } else {
+                feedback.className = "p-3 rounded-2xl text-xs font-bold text-center bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                feedback.innerText = `⚠️ KADI HAITAMBULIKANI AU HAIPO KWENYE MFUMO! (${decodedText})`;
+            }
+        }
+
+        async function saveBudgetRates() {
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+            if(!isLeader) {
+                alert("⚠️ Huna ruhusa ya kubadili bajeti. Kazi hii ni ya Viongozi Wakuu pekee.");
+                return;
+            }
+
+            const b = Number(document.getElementById('cfg-budget').value) || eventData.budget;
+            const s = Number(document.getElementById('cfg-single').value) || eventData.rateSingle;
+            const d = Number(document.getElementById('cfg-double').value) || eventData.rateDouble;
+            const c = Number(document.getElementById('cfg-committee').value) || eventData.rateCommittee;
+            const bAcc = document.getElementById('cfg-bank').value || eventData.bankAcc;
+            const bName = document.getElementById('cfg-bank-name').value || eventData.bankName;
+            const pAcc = document.getElementById('cfg-phone-acc').value || eventData.phoneAcc;
+            const pName = document.getElementById('cfg-phone-name').value || eventData.phoneName;
+
+            if(activeEventOwnerId) {
+                const budgetPayload = { 
+                    budget: b, single: s, double: d, committee: c,
+                    bankAcc: bAcc, bankName: bName, phoneAcc: pAcc, phoneName: pName,
+                    title: eventData.title
+                };
+                await rdb.ref(`events/${activeEventOwnerId}/config`).update(budgetPayload);
+                localStorage.setItem(`sherehe_config_${activeEventOwnerId}`, JSON.stringify(budgetPayload));
+            }
+            alert("Taarifa za Malipo na Bajeti zimesasishwa kikamilifu!");
+        }
+
+        function renderBudgetSummary() {
+            const paidList = contributionsList.filter(c => c.status === 'PAID');
+            const totalCollected = paidList.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
+            
+            const pledgeList = contributionsList.filter(c => c.status === 'PLEDGE');
+            const totalPledges = pledgeList.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
+
+            const remainingDeficit = Math.max(0, eventData.budget - totalCollected);
+
+            document.getElementById('budget-total-display').innerText = `TSh ${eventData.budget.toLocaleString()}`;
+            document.getElementById('budget-collected-display').innerText = `TSh ${totalCollected.toLocaleString()}`;
+            document.getElementById('budget-deficit-display').innerText = `TSh ${remainingDeficit.toLocaleString()}`;
+            document.getElementById('rate-single-display').innerText = `TSh ${eventData.rateSingle.toLocaleString()}`;
+            document.getElementById('rate-double-display').innerText = `TSh ${eventData.rateDouble.toLocaleString()}`;
+
+            document.getElementById('chat-summary-budget').innerText = `TSh ${eventData.budget.toLocaleString()}`;
+            document.getElementById('chat-summary-collected').innerText = `TSh ${totalCollected.toLocaleString()}`;
+            document.getElementById('chat-summary-deficit').innerText = `TSh ${remainingDeficit.toLocaleString()}`;
+            document.getElementById('chat-summary-pledges').innerText = `TSh ${totalPledges.toLocaleString()}`;
+        }
+
+        /* AUTO-CALCULATE SINGLE / DOUBLE BASED ON AMOUNT (NO MANUAL DOUBLE SELECTOR) */
+        async function handleAddContribution(e) {
+            e.preventDefault();
+
+            if(currentUser && currentUser.dbData && !currentUser.dbData.isVIP && cardsList.length >= 2) {
+                alert("⚠️ Hali ya TRIAL/DEMO inaruhusu kusajili wageni/kadi 2 pekee! Tafadhali Boresha kwenda VIP.");
+                openVipModal();
+                return;
+            }
+
+            const name = document.getElementById('c-name').value;
+            const countryCode = document.getElementById('c-country-code').value;
+            const rawPhone = document.getElementById('c-phone').value.replace(/^0/,'');
+            const phone = `+${countryCode}${rawPhone}`;
+
+            const status = document.getElementById('c-status').value;
+            const amount = Number(document.getElementById('c-amount').value);
+
+            let cardTypeAssigned = (amount >= eventData.rateDouble) ? 'DOUBLE' : 'SINGLE';
+
+            if(activeEventOwnerId) {
+                const newContribRef = await rdb.ref(`events/${activeEventOwnerId}/contributions`).push({
+                    name, phone, status, amount, cardTypeAssigned, date: new Date().toLocaleDateString()
+                });
+
+                if(status === 'PAID') {
+                    const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+                    const cardPayload = { id: cardId, name, phone, type: cardTypeAssigned, scanned: false, contribKey: newContribRef.key };
+                    const newCardRef = await rdb.ref(`events/${activeEventOwnerId}/cards`).push(cardPayload);
+                    localStorage.setItem(`sherehe_card_${newCardRef.key}`, JSON.stringify(cardPayload));
+                }
+
+                const msg = {
+                    sender: "SYSTEM (MCHANGO MPYA)",
+                    text: `🎉 ${name} ametoa ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} (Kadi: ${cardTypeAssigned} CARD)!`,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
+            }
+
+            document.getElementById('c-name').value = '';
+            document.getElementById('c-phone').value = '';
+            document.getElementById('c-amount').value = '';
+            alert(`Mchango umehifadhiwa kikamilifu! Aina ya Kadi: ${cardTypeAssigned} Card (Kulingana na kiasi)`);
+        }
+
+        async function changeContributionStatus(contribKey, newStatus, name, phone, amount) {
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+            if(!isLeader) {
+                alert("⚠️ Huna ruhusa ya kubadili hali ya malipo.");
+                return;
+            }
+
+            const isToPaid = newStatus === 'PAID';
+            const actionText = isToPaid ? "imelipwa (PAID)" : "ahadi (PLEDGE)";
+
+            if(!confirm(`Je, unathibitisha kubadilisha hali ya mchango wa ${name} kuwa ${actionText}?`)) return;
+
+            let cardTypeAssigned = (Number(amount) >= eventData.rateDouble) ? 'DOUBLE' : 'SINGLE';
+
+            if(activeEventOwnerId) {
+                await rdb.ref(`events/${activeEventOwnerId}/contributions/${contribKey}`).update({ status: newStatus });
+
+                if(isToPaid) {
+                    const existingCard = cardsList.find(c => c.contribKey === contribKey || (c.name === name && c.phone === phone));
+                    if(!existingCard) {
+                        const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+                        const cardPayload = {
+                            id: cardId, 
+                            name: name, 
+                            phone: phone, 
+                            type: cardTypeAssigned, 
+                            scanned: false, 
+                            contribKey: contribKey
+                        };
+                        const newCardRef = await rdb.ref(`events/${activeEventOwnerId}/cards`).push(cardPayload);
+                        localStorage.setItem(`sherehe_card_${newCardRef.key}`, JSON.stringify(cardPayload));
+                    }
+
+                    const msg = {
+                        sender: "SYSTEM (AHADI IMELIPWA)",
+                        text: `✅ ${name} amelipa ahadi yake kikamilifu (TSh ${Number(amount).toLocaleString()})! Kadi yake ya ${cardTypeAssigned} ipo tayari.`,
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
+                }
+            }
+
+            alert(isToPaid ? `🎉 Mchango wa ${name} umebadilishwa kuwa PAID na kadi ya ${cardTypeAssigned} imetengenezwa!` : `Hali ya malipo ya ${name} imebadilishwa kuwa PLEDGE.`);
+        }
+
+        async function handlePublicGuestSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('pub-guest-name').value;
+            const countryCode = document.getElementById('pub-country-code').value;
+            const rawPhone = document.getElementById('pub-guest-phone').value.replace(/^0/,'');
+            const phone = `+${countryCode}${rawPhone}`;
+
+            const status = document.getElementById('pub-guest-status').value;
+            const amount = Number(document.getElementById('pub-guest-amount').value);
+
+            let cardTypeAssigned = (amount >= eventData.rateDouble) ? 'DOUBLE' : 'SINGLE';
+
+            if(activeEventOwnerId) {
+                const newContribRef = await rdb.ref(`events/${activeEventOwnerId}/contributions`).push({
+                    name, phone, status, amount, cardTypeAssigned, date: new Date().toLocaleDateString()
+                });
+
+                if(status === 'PAID') {
+                    const cardId = `ID #${String(cardsList.length + 1).padStart(3, '0')}`;
+                    const cardPayload = { id: cardId, name, phone, type: cardTypeAssigned, scanned: false, contribKey: newContribRef.key };
+                    const newCardRef = await rdb.ref(`events/${activeEventOwnerId}/cards`).push(cardPayload);
+                    localStorage.setItem(`sherehe_card_${newCardRef.key}`, JSON.stringify(cardPayload));
+                }
+
+                const msg = {
+                    sender: "SYSTEM (MWENGENI ONLINE)",
+                    text: `✨ ${name} amewasilisha ${status === 'PAID' ? 'Mchango wa' : 'Ahadi ya'} TSh ${amount.toLocaleString()} na kujiunga na Group Chat!`,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                await rdb.ref(`events/${activeEventOwnerId}/messages`).push(msg);
+            }
+
+            currentUser = { 
+                uid: 'guest-' + Date.now(), 
+                email: `${phone.replace('+','')}@guest.com`, 
+                dbData: { name: name, role: 'Mwaalikwa / Mchangiaji', isVIP: true } 
+            };
+
+            alert(`🎉 Hongera ${name}! Taarifa zako zimepokelewa kikamilifu. Kadi yako ya ${cardTypeAssigned} imetengenezwa. Unahamishwa kwenye Group Chat!`);
+
+            switchView('dashboard');
+            switchDashTab('chat');
+            initRealtimeListeners();
+        }
+
+        function renderContributions() {
+            const tbody = document.getElementById('contrib-table-body');
+            const badge = document.getElementById('contrib-counter-badge');
+            if(!tbody) return;
+
+            if(contributionsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Hakuna mchango au ahadi bado.</td></tr>';
+                if(badge) badge.innerText = "Waliotoa: 0 | Waliouahidi: 0";
+                return;
+            }
+
+            let paidCount = 0;
+            let pledgeCount = 0;
+
+            contributionsList.forEach(c => {
+                if(c.status === 'PAID') paidCount++;
+                else pledgeCount++;
+            });
+
+            if(badge) {
+                badge.innerText = `Waliotoa: ${paidCount} | Waliouahidi: ${pledgeCount}`;
+            }
+
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+
+            tbody.innerHTML = contributionsList.map(c => {
+                const autoCardType = (Number(c.amount || 0) >= eventData.rateDouble) ? 'DOUBLE' : 'SINGLE';
+                return `
+                    <tr class="hover:bg-slate-800/40">
+                        <td class="p-2.5 font-bold text-white">${c.name} <br><span class="text-[10px] text-slate-400 font-mono">${c.phone}</span></td>
+                        <td class="p-2.5"><span class="px-2 py-0.5 rounded bg-slate-800 text-gold-400 font-bold text-[10px]">${c.cardTypeAssigned || autoCardType} CARD</span></td>
+                        <td class="p-2.5 font-bold text-emerald-400">TSh ${Number(c.amount || 0).toLocaleString()}</td>
+                        <td class="p-2.5 text-right flex items-center justify-end gap-2">
+                            <select ${!isLeader ? 'disabled' : ''} onchange="changeContributionStatus('${c.key}', this.value, '${c.name.replace(/'/g, "\\'")}', '${c.phone}', ${c.amount})" class="px-2 py-1 rounded-lg bg-slate-950 border border-slate-700 text-white font-bold text-[10px] outline-none ${!isLeader ? 'opacity-60 cursor-not-allowed' : ''}">
+                                <option value="PAID" ${c.status === 'PAID' ? 'selected' : ''}>✅ Imelipwa (Paid)</option>
+                                <option value="PLEDGE" ${c.status === 'PLEDGE' ? 'selected' : ''}>⏳ Ahadi (Pledge)</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderCardsList() {
+            const tbody = document.getElementById('cards-table-body');
+            if(!tbody) return;
+
+            if(cardsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Hakuna kadi.</td></tr>';
+                return;
+            }
+
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+
+            tbody.innerHTML = cardsList.map(c => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-2.5 font-mono text-gold-400 font-bold text-[10px]">${c.id}</td>
+                    <td class="p-2.5 font-bold text-white">${c.name}</td>
+                    <td class="p-2.5 font-mono text-slate-400">${c.phone}</td>
+                    <td class="p-2.5 text-right flex justify-end gap-1">
+                        <button type="button" ${!isLeader ? 'disabled' : ''} onclick="sendWhatsappTemplateCard('${c.key}', '${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2.5 py-1 rounded-lg ${isLeader ? 'bg-emerald-600 hover:bg-emerald-500 cursor-pointer' : 'bg-slate-700 opacity-50 cursor-not-allowed'} text-white font-bold text-[10px] shadow"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                        <button type="button" ${!isLeader ? 'disabled' : ''} onclick="sendSmsTemplateCard('${c.key}', '${c.id}', '${c.name}', '${c.phone}', '${c.type}')" class="px-2.5 py-1 rounded-lg ${isLeader ? 'bg-indigo-600 hover:bg-indigo-500 cursor-pointer' : 'bg-slate-700 opacity-50 cursor-not-allowed'} text-white font-bold text-[10px] shadow"><i class="fa-solid fa-comment-sms"></i> SMS</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function sendCardsToAllPaidGuests() {
+            const userRole = currentUser && currentUser.dbData ? currentUser.dbData.role : '';
+            const isLeader = ['Mwenyekiti', 'Katibu', 'Mhasibu'].includes(userRole);
+            if(!isLeader) {
+                alert("⚠️ Viongozi Wakuu pekee ndio wanaruhusiwa kutuma kadi kwa wote.");
+                return;
+            }
+
+            if(cardsList.length === 0) {
+                alert("Hakuna kadi bado!");
+                return;
+            }
+
+            let sentCount = 0;
+            cardsList.forEach(c => {
+                sendWhatsappTemplateCard(c.key, c.id, c.name, c.phone, c.type);
+                sentCount++;
+            });
+
+            alert(`🚀 Kadi ${sentCount} zimetumwa!`);
+        }
+
+        function sendWhatsappTemplateCard(cardKey, id, name, phone, type) {
+            const ownerId = activeEventOwnerId || (currentUser ? currentUser.uid : 'demo-user');
+            const cardLink = `${window.location.origin}${window.location.pathname}?event_id=${ownerId}&card_id=${cardKey}`;
+            const coupleNames = eventData.coupleNames || eventData.title;
+            const cardTitle = eventData.cardTitle || eventData.category;
+
+            const cardMessage = `👑 *KADI YA MWALIKO RASMI (${type} CARD)* 👑\n\n` +
+                                `Ndugu: *${name}*\n` +
+                                `Unakaribishwa Kwenye: *${cardTitle}*\n` +
+                                `Wahusika/Taasisi: *${coupleNames}*\n` +
+                                `Namba ya Kadi: *${id}*\n\n` +
+                                `👇 *BOFYA LINK HII CHINI KUONA NA KUDOWNLOAD KADI YAKO (JPG):* 👇\n` +
+                                `${cardLink}\n\n` +
+                                `_Onyesha kadi hii Mlangoni Siku ya Sherehe!_`;
+
+            const encoded = encodeURIComponent(cardMessage);
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            window.open(`https://wa.me/${cleanPhone}?text=${encoded}`, '_blank');
+        }
+
+        function sendSmsTemplateCard(cardKey, id, name, phone, type) {
+            const ownerId = activeEventOwnerId || (currentUser ? currentUser.uid : 'demo-user');
+            const cardLink = `${window.location.origin}${window.location.pathname}?event_id=${ownerId}&card_id=${cardKey}`;
+            const coupleNames = eventData.coupleNames || eventData.title;
+            const smsText = `Habari ${name}, umepokea KADI YA MWALIKO (${type} - ${id}) ya ${coupleNames}. Fungua Link hii: ${cardLink}`;
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            window.open(`sms:+${cleanPhone}?body=${encodeURIComponent(smsText)}`, '_blank');
+        }
+
+        function selectThanksTemplate(num) {
+            const txt = document.getElementById(`tpl-text-${num}`).innerText.replace(/^"|"$/g, '');
+            document.getElementById('thanks-custom-input').value = txt;
+        }
+
+        function renderThanksTable() {
+            const tbody = document.getElementById('thanks-table-body');
+            if(!tbody) return;
+
+            if(globalScansList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-500 italic">Bado hakuna mgeni aliyethibitishwa kuingia ukumbini.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = globalScansList.map(s => {
+                const matchedCard = cardsList.find(c => c.id === s.cardId);
+                const phoneNum = (matchedCard && matchedCard.phone) ? matchedCard.phone : (s.guestPhone || 'Namba Haipo');
+
+                return `
+                    <tr class="hover:bg-slate-800/40">
+                        <td class="p-2.5 font-bold text-white">${s.guestName} <span class="text-[10px] text-gold-400 font-mono">(${s.cardId})</span></td>
+                        <td class="p-2.5 font-mono text-slate-400">${phoneNum}</td>
+                        <td class="p-2.5 text-slate-400 text-[10px]">${s.time}</td>
+                        <td class="p-2.5 text-right flex justify-end gap-1">
+                            <button type="button" onclick="sendWhatsappThanks('${s.guestName}', '${phoneNum}')" class="px-2 py-1 rounded bg-emerald-600 text-white font-bold text-[10px]"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                            <button type="button" onclick="sendSmsThanks('${s.guestName}', '${phoneNum}')" class="px-2 py-1 rounded bg-indigo-600 text-white font-bold text-[10px]"><i class="fa-solid fa-comment-sms"></i> SMS</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function sendMultiThanksWhatsApp() {
+            if(globalScansList.length === 0) {
+                alert("Hakuna mgeni aliyethibitishwa ukumbini!");
+                return;
+            }
+
+            let count = 0;
+            globalScansList.forEach(s => {
+                const matchedCard = cardsList.find(c => c.id === s.cardId);
+                const phoneNum = (matchedCard && matchedCard.phone) ? matchedCard.phone : s.guestPhone;
+                if(phoneNum) {
+                    sendWhatsappThanks(s.guestName, phoneNum);
+                    count++;
+                }
+            });
+
+            alert(`🚀 Shukrani zimetumwa kwa waalikwa ${count}!`);
+        }
+
+        function sendWhatsappThanks(name, phone) {
+            const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana!';
+            const fullMsg = `Habari Ndugu *${name}*,\n\n${customMsg}\n\nKutoka kwa Kamati ya: *${eventData.title}* 🎉`;
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(fullMsg)}`, '_blank');
+        }
+
+        function sendSmsThanks(name, phone) {
+            const customMsg = document.getElementById('thanks-custom-input').value || 'Asante sana!';
+            const fullMsg = `Habari ${name}, ${customMsg} (Sherehe: ${eventData.title})`;
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            window.open(`sms:+${cleanPhone}?body=${encodeURIComponent(fullMsg)}`, '_blank');
+        }
+
+        function copyChairmanEventLink() {
+            const eventId = currentUser ? currentUser.uid : 'sherehe-001';
+            const shareUrl = `${window.location.origin}${window.location.pathname}?event_id=${eventId}`;
+            navigator.clipboard.writeText(shareUrl);
+            alert("🔗 Link ya Sherehe imekopiwa! Tuma WhatsApp ili wageni waone bajeti na kuchangia.");
+        }
+
+        function openVipModal() {
+            document.getElementById('modal-vip').classList.remove('hidden');
+            document.getElementById('modal-vip').classList.add('flex');
+        }
+        function closeVipModal() {
+            document.getElementById('modal-vip').classList.add('hidden');
+            document.getElementById('modal-vip').classList.remove('flex');
+        }
+
+        async function handleSubmitVipProof(e) {
+            e.preventDefault();
+            const tx = document.getElementById('vip-tx-code').value;
+            if(currentUser && currentUser.uid !== 'demo-user') {
+                await rdb.ref('users/' + currentUser.uid).update({ status: 'PENDING', txCode: tx });
+            }
+            closeVipModal();
+            alert("Malipo yamewasilishwa!");
+        }
+
+        function openAdminModal() {
+            document.getElementById('modal-admin').classList.remove('hidden');
+            document.getElementById('modal-admin').classList.add('flex');
+        }
+        function closeAdminModal() {
+            document.getElementById('modal-admin').classList.add('hidden');
+            document.getElementById('modal-admin').classList.remove('flex');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            document.getElementById('admin-login-box').classList.add('hidden');
+            document.getElementById('admin-panel-box').classList.remove('hidden');
+            loadAdminUsers();
+        }
+
+        async function loadAdminUsers() {
+            const snapshot = await rdb.ref('users').once('value');
+            const list = document.getElementById('adm-users-list');
+            let users = [];
+            snapshot.forEach(child => {
+                users.push({ id: child.key, ...child.val() });
+            });
+
+            document.getElementById('adm-count-total').innerText = users.length;
+            document.getElementById('adm-count-clicked').innerText = users.filter(u => u.status === 'PENDING').length;
+            document.getElementById('adm-count-vip').innerText = users.filter(u => u.isVIP).length;
+
+            list.innerHTML = users.map(u => `
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1 text-xs">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="font-bold text-white block">${u.name} (${u.phone})</span>
+                            <span class="text-[10px] text-slate-400 font-mono">${u.email}</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.isVIP ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'}">
+                            ${u.isVIP ? 'VIP ACTIVE' : u.status}
+                        </span>
+                    </div>
+                    <div class="footer flex justify-between items-center pt-1 border-t border-slate-900 text-[10px]">
+                        <span class="text-gold-400 font-mono">Muamala: ${u.txCode || 'Hakuna'}</span>
+                        <div>
+                            ${!u.isVIP ? `<button type="button" onclick="approveVIP('${u.id}')" class="px-2 py-1 rounded bg-gold-500 text-slate-950 font-bold">APPROVE VIP</button>` : 
+                                         `<button type="button" onclick="revokeVIP('${u.id}')" class="px-2 py-1 rounded bg-rose-600 text-white font-bold">TOA VIP</button>`}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function approveVIP(uid) {
+            await rdb.ref('users/' + uid).update({ isVIP: true, status: 'VIP' });
+            loadAdminUsers();
+            alert("Amethibitishwa kuwa VIP!");
+        }
+
+        async function revokeVIP(uid) {
+            await rdb.ref('users/' + uid).update({ isVIP: false, status: 'TRIAL' });
+            loadAdminUsers();
+            alert("VIP imeondolewa.");
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Utumishi Swap - Mfumo wa Kubadilishana Vituo vya Kazi Utumishi wa Umma</title>
+    <meta name="google-site-verification" content="Np-VA5zJvnrY7bsmivrMAaDOOhXHZhu-Vnjj46f_zqQ" />
+    <meta name="description" content="Utumishi Swap ni mfumo rasmi wa kulinganisha na kubadilishana vituo vya kazi kwa watumishi wa umma Tanzania.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Supabase JS Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Top Helpline Bar -->
+    <div class="bg-emerald-900 text-emerald-100 py-2 px-4 text-xs md:text-sm text-center font-medium">
+        <i class="fa-solid fa-headset mr-2 text-emerald-400"></i> Huduma kwa Wateja / Support: 
+        <a href="tel:0657576696" class="underline font-bold text-white hover:text-emerald-300">0657 576 696</a> | 
+        <a href="tel:0755154363" class="underline font-bold text-white hover:text-emerald-300">0755 154 363</a>
+    </div>
+
+    <!-- Header / Navigation Bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="navigate('authView')">
+                <img src="logo.jpg" alt="Utumishi Swap Logo" class="h-10 w-auto rounded-lg object-contain shadow-sm border border-slate-100" onerror="this.onerror=null; this.src=''; this.className='hidden'; document.getElementById('fallbackLogo').classList.remove('hidden');">
+                <div id="fallbackLogo" class="hidden bg-emerald-600 text-white p-2 rounded-lg font-black text-xl">US</div>
+                <div>
+                    <h1 class="font-bold text-lg leading-none text-slate-900">Utumishi<span class="text-emerald-600">Swap</span></h1>
+                    <p class="text-xs text-slate-500">Mfumo wa Kubadilishana Vituo Utumishi</p>
+                </div>
+            </div>
+
+            <!-- Logged In Navigation Links -->
+            <nav id="appNavLinks" class="hidden flex items-center space-x-1 md:space-x-3">
+                <button onclick="navigate('dashboardView')" class="px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">
+                    <i class="fa-solid fa-chart-line mr-1"></i> Dashboard
+                </button>
+                <button onclick="navigate('profileView')" class="px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">
+                    <i class="fa-solid fa-user mr-1"></i> Profile Yangu
+                </button>
+                <button onclick="navigate('commentsView')" class="px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">
+                    <i class="fa-solid fa-comments mr-1"></i> Maoni
+                </button>
+                <button onclick="logoutUser()" class="bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold px-3 py-1.5 rounded-lg transition ml-2">
+                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Toka
+                </button>
+            </nav>
+
+            <!-- Admin Button -->
+            <button id="adminLoginNavBtn" onclick="navigate('adminView')" class="bg-slate-800 text-slate-100 text-xs font-bold px-3 py-2 rounded-lg hover:bg-slate-900 transition">
+                <i class="fa-solid fa-user-shield mr-1"></i> Admin
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 w-full flex-1">
+
+        <!-- ================= PAGE 1: LOGIN / REGISTER ================= -->
+        <div id="authView" class="space-y-6">
+            <section class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 text-white rounded-2xl p-6 md:p-8 shadow-xl text-center md:text-left">
+                <div class="max-w-2xl">
+                    <span class="bg-emerald-900/80 text-emerald-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Mfumo wa Kitaalamu</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold mt-2 mb-2">Kubadilishana Vituo vya Kazi Utumishi wa Umma</h2>
+                    <p class="text-emerald-100 text-sm leading-relaxed">Sajili taarifa zako kwa kuchagua Mkoa na Wilaya. Mfumo utakutafutia mtumishi wa kada yako na masomo yanayomatch kiotomatiki!</p>
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Registration Form -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between border-b pb-3 mb-4">
+                        <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-user-plus text-emerald-600 mr-2"></i> Form ya Usajili Mpya</h3>
+                        <span class="text-xs text-slate-400">Jaza Taarifa</span>
+                    </div>
+
+                    <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Email / Username *</label>
+                                <input type="email" id="signEmail" required placeholder="example@gmail.com" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Password (Nenosiri) *</label>
+                                <div class="relative">
+                                    <input type="password" id="signPass" required placeholder="••••••••" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500 pr-10">
+                                    <button type="button" onclick="togglePasswordVisibility('signPass', 'signPassEye')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                                        <i id="signPassEye" class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Jina Kamili *</label>
+                                <input type="text" id="signName" required placeholder="Mf. Mwl. Juma Ally" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Namba ya Simu / WhatsApp *</label>
+                                <input type="tel" id="signPhone" required placeholder="07XXXXXXXX" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Kada Yako *</label>
+                                <select id="signKada" onchange="toggleSubjectsSignup()" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <option value="">-- Chagua Kada --</option>
+                                    <option value="Ualimu - Sekondari">Ualimu - Sekondari</option>
+                                    <option value="Ualimu - Shule ya Msingi">Ualimu - Shule ya Msingi</option>
+                                    <option value="Afya - Tabibu / Daktari">Afya - Tabibu / Daktari</option>
+                                    <option value="Afya - Muuguzi (Nurse)">Afya - Muuguzi (Nurse)</option>
+                                    <option value="Afya - Maabara">Afya - Maabara</option>
+                                    <option value="Afisa Kilimo / Mifugo">Afisa Kilimo / Mifugo</option>
+                                    <option value="Utawala / Afisa Muhtasi">Utawala / Afisa Muhtasi</option>
+                                    <option value="Kada Nyingine">Kada Nyingine</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Miaka Kazini *</label>
+                                <input type="number" id="signYears" min="0" max="45" required placeholder="Mf. 4" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                        </div>
+
+                        <!-- Masomo kwa Walimu -->
+                        <div id="signupSubjectSec" class="hidden grid-cols-1 md:grid-cols-2 gap-3 bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                            <div>
+                                <label class="block text-xs font-semibold text-emerald-800 mb-1">Somo la Kwanza</label>
+                                <input type="text" id="signSub1" placeholder="Mf. Mathematics" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-emerald-800 mb-1">Somo la Pili</label>
+                                <input type="text" id="signSub2" placeholder="Mf. Physics" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
+                            </div>
+                        </div>
+
+                        <!-- Mkoa na Wilaya ya Sasa -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Mkoa Uliopo Sasa *</label>
+                                <select id="signCurrentRegion" onchange="loadDistricts('signCurrentRegion', 'signCurrentDistrict')" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <option value="">-- Chagua Mkoa --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Wilaya Yako *</label>
+                                <select id="signCurrentDistrict" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <option value="">-- Chagua Wilaya --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Mkoa na Wilaya Target -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Mkoa Unakotaka Kwenda *</label>
+                                <select id="signTargetRegion" onchange="loadDistricts('signTargetRegion', 'signTargetDistrict')" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <option value="">-- Chagua Mkoa --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Wilaya Unakotaka Kwenda</label>
+                                <select id="signTargetDistrict" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <option value="">-- Chagua Wilaya --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition mt-2">
+                            Kamilisha Usajili Sasa
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Login Form -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="border-b pb-3 mb-4">
+                            <h3 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-right-to-bracket text-emerald-600 mr-2"></i> Kuingia Kwenye Akaunti (Login)</h3>
+                            <p class="text-xs text-slate-500">Weka Email na Password yako hapa ili kuingia kwenye mfumo wa kubadilishana vituo.</p>
+                        </div>
+
+                        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Email / Username *</label>
+                                <input type="email" id="loginEmail" required placeholder="example@gmail.com" class="w-full px-3 py-2.5 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Password (Nenosiri) *</label>
+                                <div class="relative">
+                                    <input type="password" id="loginPass" required placeholder="••••••••" class="w-full px-3 py-2.5 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500 pr-10">
+                                    <button type="button" onclick="togglePasswordVisibility('loginPass', 'loginPassEye')" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
+                                        <i id="loginPassEye" class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
+                                Ingia Kwenye Mfumo (Login)
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mt-6 text-xs text-slate-600 space-y-1">
+                        <p class="font-bold text-slate-800"><i class="fa-solid fa-circle-info text-emerald-600 mr-1"></i> Mfumo wa Utumishi Swap:</p>
+                        <p>Ukishaingia, mfumo utakutafutia watumishi wenzako wa kada na masomo yako walio tayari kubadilishana vituo na wewe mara moja.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 2: USER DASHBOARD ================= -->
+        <div id="dashboardView" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span id="dashPaidBadge" class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-1 rounded-full uppercase">Account Status: FREE</span>
+                    <h2 id="dashWelcomeName" class="text-2xl font-bold text-slate-900 mt-2">Karibu, Mtumishi!</h2>
+                    <p id="dashUserSummary" class="text-xs text-slate-500 mt-1">...</p>
+                </div>
+            </div>
+
+            <!-- Matches Section -->
+            <section>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-slate-800">
+                        <i class="fa-solid fa-users-line text-emerald-600 mr-2"></i> Watumishi Wanaomatch na Wewe (<span id="dashMatchCount">0</span>)
+                    </h3>
+                </div>
+                <div id="dashMatchesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamic Matches Cards -->
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= PAGE 3: MY PROFILE ================= -->
+        <div id="profileView" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 max-w-2xl mx-auto space-y-6">
+                <div class="border-b pb-3 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-800"><i class="fa-solid fa-id-card text-emerald-600 mr-2"></i> Profile na Taarifa Zako Kamili</h3>
+                    <span class="text-xs bg-emerald-50 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-200">Zilizopo Live</span>
+                </div>
+
+                <form id="updateProfileForm" onsubmit="handleUpdateProfile(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Email / Username (Isiyobadilika)</label>
+                            <input type="email" id="profEmail" readonly class="w-full px-3 py-2 border rounded-lg text-sm bg-slate-100 font-bold text-slate-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Jina Kamili *</label>
+                            <input type="text" id="profName" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Namba ya Simu / WhatsApp *</label>
+                            <input type="tel" id="profPhone" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Miaka Kazini *</label>
+                            <input type="number" id="profYears" min="0" max="45" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Kada Yako *</label>
+                            <select id="profKada" onchange="toggleSubjectsProfile()" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="Ualimu - Sekondari">Ualimu - Sekondari</option>
+                                <option value="Ualimu - Shule ya Msingi">Ualimu - Shule ya Msingi</option>
+                                <option value="Afya - Tabibu / Daktari">Afya - Tabibu / Daktari</option>
+                                <option value="Afya - Muuguzi (Nurse)">Afya - Muuguzi (Nurse)</option>
+                                <option value="Afya - Maabara">Afya - Maabara</option>
+                                <option value="Afisa Kilimo / Mifugo">Afisa Kilimo / Mifugo</option>
+                                <option value="Utawala / Afisa Muhtasi">Utawala / Afisa Muhtasi</option>
+                                <option value="Kada Nyingine">Kada Nyingine</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Masomo ya Walimu Profile -->
+                    <div id="profSubjectSec" class="hidden grid-cols-1 md:grid-cols-2 gap-3 bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                        <div>
+                            <label class="block text-xs font-semibold text-emerald-800 mb-1">Somo la Kwanza</label>
+                            <input type="text" id="profSub1" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-emerald-800 mb-1">Somo la Pili</label>
+                            <input type="text" id="profSub2" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Mkoa Uliopo Sasa</label>
+                            <select id="profCurrentReg" onchange="loadDistricts('profCurrentReg', 'profCurrentDist')" class="w-full px-3 py-2 border rounded-lg text-sm"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Wilaya Yako</label>
+                            <select id="profCurrentDist" class="w-full px-3 py-2 border rounded-lg text-sm"></select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Mkoa Unakotaka Kwenda</label>
+                            <select id="profTargetReg" onchange="loadDistricts('profTargetReg', 'profTargetDist')" class="w-full px-3 py-2 border rounded-lg text-sm"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Wilaya Unakotaka Kwenda</label>
+                            <select id="profTargetDist" class="w-full px-3 py-2 border rounded-lg text-sm"></select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+                        <i class="fa-solid fa-floppy-disk mr-1"></i> Sasisha Taarifa za Profile (Update Profile)
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 4: COMMENTS ================= -->
+        <div id="commentsView" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 max-w-3xl mx-auto space-y-6">
+                <div class="border-b pb-3 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-800"><i class="fa-solid fa-comments text-emerald-600 mr-2"></i> Maoni na Mrejesho wa Watumishi</h3>
+                    <span class="text-xs text-slate-400">Jumuia ya Utumishi Swap</span>
+                </div>
+
+                <form onsubmit="postComment(event)" class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <label class="block text-xs font-bold text-slate-700">Andika Maoni au Mrejesho Wako Hapa:</label>
+                    <textarea id="cmtText" required rows="3" placeholder="Andika maoni yako hapa..." class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500 bg-white"></textarea>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-5 py-2.5 rounded-lg transition shadow">
+                        <i class="fa-solid fa-paper-plane mr-1"></i> Tuma Maoni
+                    </button>
+                </form>
+
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold text-slate-700">Maoni Yaliyotolewa Hivi Karibuni:</h4>
+                    <div id="commentsFeed" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                        <!-- Dynamic Comments via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 5: ADMIN PANEL ================= -->
+        <div id="adminView" class="hidden space-y-6">
+            <!-- Admin Login Box -->
+            <div id="adminLoginForm" class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-md border border-slate-200 space-y-4">
+                <h3 class="text-lg font-bold text-slate-800 text-center"><i class="fa-solid fa-user-shield text-emerald-600 mr-1"></i> Admin Login</h3>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Username / Email</label>
+                    <input type="text" id="adminUser" placeholder="Ingiza Admin Email" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
+                    <div class="relative">
+                        <input type="password" id="adminPass" placeholder="••••••••" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500 pr-10">
+                        <button type="button" onclick="togglePasswordVisibility('adminPass', 'adminPassEye')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                            <i id="adminPassEye" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button onclick="loginAdmin()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2 rounded-lg text-sm transition">
+                    Ingia Kwenye Mfumo wa Admin
+                </button>
+            </div>
+
+            <!-- Admin Dashboard Content -->
+            <div id="adminDashboard" class="hidden space-y-6">
+                <div class="flex justify-between items-center bg-slate-900 text-white p-4 rounded-xl">
+                    <h2 class="font-bold text-lg">Admin Management Dashboard</h2>
+                    <button onclick="logoutAdmin()" class="bg-red-600 text-xs px-3 py-1.5 rounded font-bold hover:bg-red-700">Log Out Admin</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <p class="text-xs text-slate-500 font-bold">Jumla ya Watumishi</p>
+                        <h3 id="statTotalUsers" class="text-2xl font-black text-slate-800">0</h3>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <p class="text-xs text-slate-500 font-bold">Waliolipia (VIP Active)</p>
+                        <h3 id="statPaidUsers" class="text-2xl font-black text-emerald-600">0</h3>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <p class="text-xs text-slate-500 font-bold">Jumla ya Mapato</p>
+                        <h3 id="statEarnings" class="text-2xl font-black text-amber-600">TZS 0</h3>
+                    </div>
+                </div>
+
+                <!-- Admin Navigation Tabs -->
+                <div class="flex space-x-2 border-b border-slate-200 pb-2 overflow-x-auto">
+                    <button onclick="switchAdminTab('users')" id="tabBtnUsers" class="px-4 py-2 text-xs font-bold bg-emerald-600 text-white rounded-lg whitespace-nowrap">Orodha ya Watumishi</button>
+                    <button onclick="switchAdminTab('matches')" id="tabBtnMatches" class="px-4 py-2 text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 rounded-lg whitespace-nowrap">Watumishi Wanaomatch (<span id="adminMatchCount">0</span>)</button>
+                    <button onclick="switchAdminTab('searches')" id="tabBtnSearches" class="px-4 py-2 text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 rounded-lg whitespace-nowrap">Watu Waliotafutana</button>
+                    <button onclick="switchAdminTab('comments')" id="tabBtnComments" class="px-4 py-2 text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 rounded-lg whitespace-nowrap">Maoni ya Watumishi</button>
+                </div>
+
+                <!-- TAB 1: ALL USERS WITH APPROVAL WORKFLOW -->
+                <div id="adminTabUsers" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+                    <h3 class="font-bold text-sm mb-3 text-slate-800">Orodha Kamili ya Watumishi na Usimamizi wa U-VIP</h3>
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 text-slate-600 border-b">
+                            <tr>
+                                <th class="p-2">Jina</th>
+                                <th class="p-2">Email</th>
+                                <th class="p-2">Simu</th>
+                                <th class="p-2">Kada</th>
+                                <th class="p-2">Mkoa Sasa</th>
+                                <th class="p-2">Mkoa Target</th>
+                                <th class="p-2">Tx ID</th>
+                                <th class="p-2">Hali ya VIP</th>
+                                <th class="p-2">Badili Hali (Action)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminUserTable">
+                            <!-- Rows via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TAB 2: MATCHING USERS OVERVIEW -->
+                <div id="adminTabMatches" class="hidden bg-white p-4 rounded-xl border border-slate-200 shadow-sm overflow-x-auto space-y-3">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <h3 class="font-bold text-sm text-slate-800"><i class="fa-solid fa-people-arrows text-emerald-600 mr-2"></i> Pairs za Watumishi Wanaomatch</h3>
+                        <span class="text-xs text-slate-500">Matching Engine Live</span>
+                    </div>
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 text-slate-600 border-b">
+                            <tr>
+                                <th class="p-2">Mtumishi 1</th>
+                                <th class="p-2">Kada & Masomo</th>
+                                <th class="p-2">Mkoa Sasa ➔ Target</th>
+                                <th class="p-2">Mtumishi 2 (Match)</th>
+                                <th class="p-2">Mkoa Sasa ➔ Target</th>
+                                <th class="p-2">Tuma SMS / WhatsApp Update</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminMatchesTable">
+                            <!-- Matching Pairs via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TAB 3: CONTACTS VIEWED / INTERACTIONS -->
+                <div id="adminTabSearches" class="hidden bg-white p-4 rounded-xl border border-slate-200 shadow-sm overflow-x-auto space-y-3">
+                    <h3 class="font-bold text-sm mb-3 text-slate-800"><i class="fa-solid fa-eye text-emerald-600 mr-2"></i> Watu Waliotafutana & Kuangalia Namba</h3>
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 text-slate-600 border-b">
+                            <tr>
+                                <th class="p-2">Mtumishi Aliyetafuta</th>
+                                <th class="p-2">Simu Yake</th>
+                                <th class="p-2">Mtumishi Aliyetazamwa</th>
+                                <th class="p-2">Tx ID</th>
+                                <th class="p-2">Hali ya Malipo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminSearchesTable">
+                            <!-- Interactions via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TAB 4: ADMIN COMMENTS MANAGEMENT & DELETE -->
+                <div id="adminTabComments" class="hidden bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <h3 class="font-bold text-sm mb-3 text-slate-800"><i class="fa-solid fa-comments text-emerald-600 mr-2"></i> Usimamizi wa Maoni (Admin Comment Control)</h3>
+                    <div id="adminCommentsList" class="space-y-3">
+                        <!-- Dynamic Admin Comments via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-slate-800 text-lg">Lipia TZS 2,000 Kuona Mawasiliano</h4>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            </div>
+
+            <p class="text-xs text-slate-600">
+                Ili kupata namba ya simu na kuwasiliana na mtumishi huyu moja kwa moja, tafadhali tuma TZS 2,000 kupitia maelezo hapa chini:
+            </p>
+
+            <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs space-y-1">
+                <p class="font-bold text-amber-800"><i class="fa-solid fa-mobile-screen-button mr-1"></i> Namba ya Kulipia M-Pesa:</p>
+                <p class="text-amber-700">Tuma <strong>TZS 2,000</strong> kwenda Vodacom M-Pesa:</p>
+                <p class="text-base font-black text-amber-900 bg-amber-100 p-2 rounded text-center my-1 select-all">0755 154 363</p>
+                <p class="text-amber-700">Jina la Mpokeaji: <strong class="text-emerald-900">EDSON MHAGAMA</strong></p>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Weka Namba ya Muamala (Transaction ID):</label>
+                <input type="text" id="payTxCode" placeholder="Mf. 9AB87XX..." class="w-full px-3 py-2 border rounded-lg text-sm outline-none uppercase">
+            </div>
+
+            <button onclick="submitPayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
+                Tuma Namba ya Muamala
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 mt-8 text-xs">
+        <div class="max-w-6xl mx-auto px-4 text-center space-y-2">
+            <p class="font-semibold text-slate-300">&copy; Utumishi Swap Tanzania. Haki zote zimehifadhiwa.</p>
+            <p>Huduma kwa Wateja / Msaada wa Mfumo: <strong class="text-emerald-400">0657 576 696</strong> au <strong class="text-emerald-400">0755 154 363</strong> (Edson Mhagama)</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic & Supabase Integration -->
+    <script>
+        // SUPABASE URL NA ANON KEY ZAKO SAHIHI ZILIZOWEKWA:
+        const SUPABASE_URL = "https://pbkengmawoabssqknwiu.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_QJ2v777k9XfSKVzlzRSTOQ_MrGd8yYY"; 
+
+        // Connect to Supabase Backend
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let selectedTargetContactUser = null;
+
+        const tanzaniaRegions = {
+            "Dar es Salaam": ["Kinondoni", "Ilala", "Temeke", "Ubungo", "Kigamboni"],
+            "Dodoma": ["Dodoma Mjini", "Bahi", "Chamwino", "Chemba", "Kondoa", "Kongwa", "Mpwapwa"],
+            "Mwanza": ["Nyamagana", "Ilemela", "Misungwi", "Magu", "Kwimba", "Sengerema", "Ukerewe"],
+            "Arusha": ["Arusha Mjini", "Arumeru", "Karatu", "Longido", "Monduli", "Ngorongoro"],
+            "Mbeya": ["Mbeya Jiji", "Mbeya Vijijini", "Chunya", "Kyela", "Rungwe"],
+            "Morogoro": ["Morogoro Mjini", "Gairo", "Kilombero", "Kilosa", "Luangwa", "Mvomero"],
+            "Tanga": ["Tanga Jiji", "Muheza", "Korogwe", "Lushoto", "Pangani", "Handeni"],
+            "Kilimanjaro": ["Moshi Mjini", "Moshi Vijijini", "Hai", "Siha", "Rombo", "Same", "Mwanga"],
+            "Tabora": ["Tabora Mjini", "Igunga", "Kaliua", "Nzega", "Sikonge", "Urambo"],
+            "Kagera": ["Bukoba Mjini", "Bukoba Vijijini", "Muleba", "Karagwe", "Ngara", "Biharamulo"],
+            "Shinyanga": ["Shinyanga Mjini", "Kahama Mjini", "Kishapu", "Msalala"],
+            "Iringa": ["Iringa Mjini", "Iringa Vijijini", "Kilolo", "Mufindi"],
+            "Mara": ["Musoma Mjini", "Bunda", "Tarime", "Rorya", "Serengeti"],
+            "Ruvuma": ["Songea Mjini", "Mbinga", "Namtumbo", "Nyasa", "Tunduru"],
+            "Songwe": ["Vwawa", "Mbozi", "Ileje", "Momba"],
+            "Kigoma": ["Kigoma Ujiji", "Kasulu", "Kibondo", "Kakonko"],
+            "Singida": ["Singida Mjini", "Iramba", "Manyoni", "Ikungi"],
+            "Katavi": ["Mpanda Mjini", "Mlele", "Tanganyika"],
+            "Lindi": ["Lindi Mjini", "Kilwa", "Liwale", "Nachingwea"],
+            "Mtwara": ["Mtwara Mikindani", "Masasi", "Nanyumbu", "Newala"],
+            "Njombe": ["Njombe Mjini", "Makambako", "Ludewa", "Wanging'ombe"],
+            "Pwani": ["Kibaha Mjini", "Bagamoyo", "Kisarawe", "Mkuranga", "Rufiji"],
+            "Rukwa": ["Sumbawanga Mjini", "Kalambo", "Nkasi"],
+            "Simiyu": ["Bariadi Mjini", "Busega", "Itilima", "Maswa", "Meatu"],
+            "Geita": ["Geita Mjini", "Chato", "Mbogwe", "Nyang'hwale", "Bukombe"],
+            "Manyara": ["Babati Mjini", "Hanang", "Kiteto", "Mbulu", "Simanjiro"]
+        };
+
+        // Toggle Password Eye Visibility
+        function togglePasswordVisibility(inputId, eyeIconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(eyeIconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('utumishi_current_user'));
+        }
+
+        function setCurrentUser(user) {
+            localStorage.setItem('utumishi_current_user', JSON.stringify(user));
+        }
+
+        function populateRegions() {
+            const regSelectors = ['signCurrentRegion', 'signTargetRegion', 'profCurrentReg', 'profTargetReg'];
+            regSelectors.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.innerHTML = '<option value="">-- Chagua Mkoa --</option>';
+                    Object.keys(tanzaniaRegions).forEach(reg => {
+                        el.innerHTML += `<option value="${reg}">${reg}</option>`;
+                    });
+                }
+            });
+        }
+
+        function loadDistricts(regSelectId, distSelectId) {
+            const regVal = document.getElementById(regSelectId).value;
+            const distEl = document.getElementById(distSelectId);
+            if(!distEl) return;
+            distEl.innerHTML = '<option value="">-- Chagua Wilaya --</option>';
+            if(regVal && tanzaniaRegions[regVal]) {
+                tanzaniaRegions[regVal].forEach(dist => {
+                    distEl.innerHTML += `<option value="${dist}">${dist}</option>`;
+                });
+            }
+        }
+
+        function toggleSubjectsSignup() {
+            const kada = document.getElementById('signKada').value;
+            const subSec = document.getElementById('signupSubjectSec');
+            if(kada.includes('Ualimu')) {
+                subSec.classList.remove('hidden');
+                subSec.classList.add('grid');
+            } else {
+                subSec.classList.remove('grid');
+                subSec.classList.add('hidden');
+            }
+        }
+
+        function toggleSubjectsProfile() {
+            const kada = document.getElementById('profKada').value;
+            const subSec = document.getElementById('profSubjectSec');
+            if(subSec) {
+                if(kada.includes('Ualimu')) {
+                    subSec.classList.remove('hidden');
+                    subSec.classList.add('grid');
+                } else {
+                    subSec.classList.remove('grid');
+                    subSec.classList.add('hidden');
+                }
+            }
+        }
+
+        function navigate(viewId) {
+            ['authView', 'dashboardView', 'profileView', 'commentsView', 'adminView'].forEach(v => {
+                const el = document.getElementById(v);
+                if(el) el.classList.add('hidden');
+            });
+            
+            const targetEl = document.getElementById(viewId);
+            if(targetEl) targetEl.classList.remove('hidden');
+
+            const currentUser = getCurrentUser();
+            if(currentUser) {
+                document.getElementById('appNavLinks').classList.remove('hidden');
+                if(viewId === 'dashboardView') loadDashboard();
+                if(viewId === 'profileView') loadProfileForm();
+                if(viewId === 'commentsView') fetchComments();
+            } else {
+                document.getElementById('appNavLinks').classList.add('hidden');
+            }
+
+            if(viewId === 'adminView') {
+                document.getElementById('adminLoginForm').classList.remove('hidden');
+                document.getElementById('adminDashboard').classList.add('hidden');
+            }
+        }
+
+        // Signup User to Supabase Cloud Database
+        async function handleSignup(e) {
+            e.preventDefault();
+            const email = document.getElementById('signEmail').value.trim();
+            const pass = document.getElementById('signPass').value;
+            const name = document.getElementById('signName').value.trim();
+            const phone = document.getElementById('signPhone').value.trim();
+            const kada = document.getElementById('signKada').value;
+            const years = parseInt(document.getElementById('signYears').value) || 0;
+            const sub1 = document.getElementById('signSub1').value.trim();
+            const sub2 = document.getElementById('signSub2').value.trim();
+            const current_region = document.getElementById('signCurrentRegion').value;
+            const current_district = document.getElementById('signCurrentDistrict').value;
+            const target_region = document.getElementById('signTargetRegion').value;
+            const target_district = document.getElementById('signTargetDistrict').value;
+
+            const { data, error } = await _supabase.from('users').insert([
+                { email, pass, name, phone, kada, years, sub1, sub2, current_region, current_district, target_region, target_district, paid: false, payment_status: 'none' }
+            ]);
+
+            if (error) {
+                alert("Makosa katika usajili: " + error.message);
+            } else {
+                alert('Usajili wako umekamilika kikamilifu! Sasa unaweza kuingia (Login) kuona watumishi walio tayari kubadilishana vituo na wewe.');
+                document.getElementById('signupForm').reset();
+            }
+        }
+
+        // Login User from Supabase
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPass').value;
+
+            const { data, error } = await _supabase.from('users').select('*').eq('email', email).eq('pass', pass).single();
+
+            if (data) {
+                setCurrentUser(data);
+                navigate('dashboardView');
+            } else {
+                alert('Email au Nenosiri sio sahihi. Tafadhali jaribu tena.');
+            }
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('utumishi_current_user');
+            document.getElementById('appNavLinks').classList.add('hidden');
+            navigate('authView');
+        }
+
+        // LOAD CURRENT USER DATA DIRECTLY INTO PROFILE FORM
+        async function loadProfileForm() {
+            let user = getCurrentUser();
+            if(!user) return;
+
+            // Fetch absolute latest data from Supabase
+            const { data: latest } = await _supabase.from('users').select('*').eq('email', user.email).single();
+            if(latest) {
+                user = latest;
+                setCurrentUser(user);
+            }
+
+            document.getElementById('profEmail').value = user.email || '';
+            document.getElementById('profName').value = user.name || '';
+            document.getElementById('profPhone').value = user.phone || '';
+            document.getElementById('profYears').value = user.years || 0;
+            document.getElementById('profKada').value = user.kada || '';
+            document.getElementById('profSub1').value = user.sub1 || '';
+            document.getElementById('profSub2').value = user.sub2 || '';
+
+            toggleSubjectsProfile();
+
+            // Populate region dropdowns & select user's saved choices
+            populateRegions();
+
+            if(user.current_region) {
+                document.getElementById('profCurrentReg').value = user.current_region;
+                loadDistricts('profCurrentReg', 'profCurrentDist');
+                if(user.current_district) document.getElementById('profCurrentDist').value = user.current_district;
+            }
+
+            if(user.target_region) {
+                document.getElementById('profTargetReg').value = user.target_region;
+                loadDistricts('profTargetReg', 'profTargetDist');
+                if(user.target_district) document.getElementById('profTargetDist').value = user.target_district;
+            }
+        }
+
+        // SAVE UPDATED PROFILE DATA BACK TO SUPABASE
+        async function handleUpdateProfile(e) {
+            e.preventDefault();
+            let user = getCurrentUser();
+            if(!user) return;
+
+            const name = document.getElementById('profName').value.trim();
+            const phone = document.getElementById('profPhone').value.trim();
+            const years = parseInt(document.getElementById('profYears').value) || 0;
+            const kada = document.getElementById('profKada').value;
+            const sub1 = document.getElementById('profSub1').value.trim();
+            const sub2 = document.getElementById('profSub2').value.trim();
+            const current_region = document.getElementById('profCurrentReg').value;
+            const current_district = document.getElementById('profCurrentDist').value;
+            const target_region = document.getElementById('profTargetReg').value;
+            const target_district = document.getElementById('profTargetDist').value;
+
+            const { data, error } = await _supabase.from('users').update({
+                name, phone, years, kada, sub1, sub2, current_region, current_district, target_region, target_district
+            }).eq('email', user.email);
+
+            if(error) {
+                alert("Makosa katika kusasisha profile: " + error.message);
+            } else {
+                user.name = name;
+                user.phone = phone;
+                user.years = years;
+                user.kada = kada;
+                user.sub1 = sub1;
+                user.sub2 = sub2;
+                user.current_region = current_region;
+                user.current_district = current_district;
+                user.target_region = target_region;
+                user.target_district = target_district;
+                setCurrentUser(user);
+
+                alert("Taarifa zako za Profile zimesasishwa kikamilifu kwenye mfumo!");
+                loadDashboard();
+            }
+        }
+
+        // Load Dashboard & Flexible Broad Match Logic from Supabase
+        async function loadDashboard() {
+            let user = getCurrentUser();
+            if(!user) return;
+
+            // Refresh latest user status directly from Supabase DB
+            const { data: latestUser } = await _supabase.from('users').select('*').eq('email', user.email).single();
+            if(latestUser) {
+                user = latestUser;
+                setCurrentUser(user);
+            }
+
+            document.getElementById('dashWelcomeName').innerText = `Karibu, ${user.name}!`;
+            document.getElementById('dashUserSummary').innerText = `Kada: ${user.kada} | Uliopo: ${user.current_region} (${user.current_district}) ➔ Unataka: ${user.target_region} (${user.target_district})`;
+            
+            const badge = document.getElementById('dashPaidBadge');
+            if(user.paid === true) {
+                badge.className = "bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-1 rounded-full uppercase";
+                badge.innerText = "Account Status: VIP ACTIVE";
+            } else if(user.payment_status === 'pending') {
+                badge.className = "bg-blue-100 text-blue-800 text-[11px] font-bold px-2.5 py-1 rounded-full uppercase";
+                badge.innerText = "Account Status: MUAMALA UNAPITIWA NA ADMIN (PENDING)";
+            } else {
+                badge.className = "bg-amber-100 text-amber-800 text-[11px] font-bold px-2.5 py-1 rounded-full uppercase";
+                badge.innerText = "Account Status: FREE";
+            }
+
+            // Fetch All Users from Supabase
+            const { data: users, error } = await _supabase.from('users').select('*');
+            if (error || !users) return;
+
+            // FLEXIBLE MATCHING LOGIC
+            let matches = users.filter(other => {
+                if(other.email.toLowerCase() === user.email.toLowerCase()) return false;
+                if(other.kada !== user.kada) return false;
+
+                // Broad Region Matching
+                let regionMatch = (other.current_region.toLowerCase() === user.target_region.toLowerCase()) || 
+                                  (other.target_region.toLowerCase() === user.current_region.toLowerCase());
+
+                if(!regionMatch) return false;
+
+                // Teachers Subject Match
+                if(user.kada.includes('Ualimu')) {
+                    let uSubs = [user.sub1, user.sub2].map(s => (s || '').trim().toLowerCase()).filter(s => s.length > 0);
+                    let oSubs = [other.sub1, other.sub2].map(s => (s || '').trim().toLowerCase()).filter(s => s.length > 0);
+                    
+                    if(uSubs.length > 0 && oSubs.length > 0) {
+                        let hasCommonSub = uSubs.some(s => oSubs.some(os => os.includes(s) || s.includes(os)));
+                        if(!hasCommonSub) return false;
+                    }
+                }
+
+                return true;
+            });
+
+            document.getElementById('dashMatchCount').innerText = matches.length;
+            const grid = document.getElementById('dashMatchesGrid');
+            grid.innerHTML = '';
+
+            if(matches.length === 0) {
+                grid.innerHTML = `<div class="col-span-full bg-white p-6 rounded-xl text-center text-slate-500 text-sm border">Hakuna mtumishi aliyepatikana kwa sasa anayefanana na vigezo au masomo yako. Tafadhali subiri wengine wajisajili au sasisha mkoa unaotaka.</div>`;
+                return;
+            }
+
+            matches.forEach(m => {
+                let contactDisplay = (user.paid === true) ? `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-phone mr-1"></i> ${m.phone}</span>` : `<span class="text-slate-400 italic"><i class="fa-solid fa-lock mr-1"></i> Namba imefungwa</span>`;
+                
+                let actionBtn = "";
+                if(user.paid === true) {
+                    actionBtn = `<a href="https://wa.me/255${m.phone.replace(/^0+/, '')}" target="_blank" class="block text-center bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-lg transition"><i class="fa-brands fa-whatsapp mr-1"></i> Chat WhatsApp</a>`;
+                } else if(user.payment_status === 'pending') {
+                    actionBtn = `<div class="bg-blue-50 text-blue-800 text-[11px] p-2.5 rounded-lg font-bold text-center border border-blue-200"><i class="fa-solid fa-clock fa-spin mr-1"></i> Transaction ID yako inahakikiwa na Admin. Subiri kidogo...</div>`;
+                } else {
+                    actionBtn = `<button onclick="triggerPaymentForUser('${m.name}', '${m.email}')" class="w-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2 rounded-lg transition shadow"><i class="fa-solid fa-lock mr-1"></i> Bonyeza Uone Namba & WhatsApp</button>`;
+                }
+
+                grid.innerHTML += `
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                        <div class="flex justify-between items-start">
+                            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full">${m.kada}</span>
+                            <span class="text-[11px] text-slate-400"><i class="fa-regular fa-clock mr-1"></i> ${m.years} Miaka Kazini</span>
+                        </div>
+                        <div class="space-y-1 text-xs text-slate-600">
+                            <p><strong class="text-slate-800">Jina:</strong> ${m.name}</p>
+                            <p><strong class="text-slate-800">Yupo Sasa:</strong> ${m.current_region} (${m.current_district})</p>
+                            <p><strong class="text-slate-800">Anataka Kwenda:</strong> ${m.target_region} (${m.target_district})</p>
+                            ${m.sub1 ? `<p><strong class="text-slate-800">Masomo:</strong> ${m.sub1}${m.sub2 ? ', '+m.sub2 : ''}</p>` : ''}
+                            <p class="pt-2">${contactDisplay}</p>
+                        </div>
+                        <div class="pt-2">
+                            ${actionBtn}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ================= COMMENTS SYSTEM =================
+        async function postComment(e) {
+            e.preventDefault();
+            const user = getCurrentUser();
+            if(!user) {
+                alert("Tafadhali ingia kwenye akaunti kwanza ili kutoa maoni.");
+                return;
+            }
+
+            const comment_text = document.getElementById('cmtText').value.trim();
+            if(!comment_text) return;
+
+            const { data, error } = await _supabase.from('comments').insert([
+                { user_name: user.name, user_email: user.email, region: user.current_region, comment_text }
+            ]);
+
+            if(error) {
+                alert("Makosa katika kutuma maoni: " + error.message);
+            } else {
+                document.getElementById('cmtText').value = '';
+                alert("Maoni yako yametumwa kikamilifu!");
+                fetchComments();
+            }
+        }
+
+        async function fetchComments() {
+            const feed = document.getElementById('commentsFeed');
+            if(!feed) return;
+            feed.innerHTML = '<p class="text-xs text-slate-400">Inapakua maoni...</p>';
+
+            const { data: comments, error } = await _supabase.from('comments').select('*').order('id', { ascending: false });
+
+            if(error || !comments) {
+                feed.innerHTML = '<p class="text-xs text-slate-500">Bado hakuna maoni kwa sasa.</p>';
+                return;
+            }
+
+            if(comments.length === 0) {
+                feed.innerHTML = '<p class="text-xs text-slate-500">Kuwa wa kwanza kutoa maoni hapa!</p>';
+                return;
+            }
+
+            feed.innerHTML = '';
+            comments.forEach(c => {
+                feed.innerHTML += `
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-xs text-slate-900"><i class="fa-solid fa-circle-user text-emerald-600 mr-1"></i> ${c.user_name} (${c.region || 'Mtanzania'})</span>
+                            <span class="text-[10px] text-slate-400"><i class="fa-regular fa-clock mr-1"></i> Live</span>
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed">${c.comment_text}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function triggerPaymentForUser(targetName, targetEmail) {
+            selectedTargetContactUser = { name: targetName, email: targetEmail };
+            openPaymentModal();
+        }
+
+        // Admin Auth Logic
+        function loginAdmin() {
+            const u = document.getElementById('adminUser').value.trim();
+            const p = document.getElementById('adminPass').value.trim();
+
+            if(u === 'eprazil@gmail.com' && p === '1995') {
+                document.getElementById('adminLoginForm').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                loadAdminData();
+            } else {
+                alert('Username au Password ya Admin si sahihi!');
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('adminLoginForm').classList.remove('hidden');
+            document.getElementById('adminUser').value = '';
+            document.getElementById('adminPass').value = '';
+        }
+
+        function switchAdminTab(tabName) {
+            ['Users', 'Matches', 'Searches', 'Comments'].forEach(t => {
+                const el = document.getElementById('adminTab' + t);
+                const btn = document.getElementById('tabBtn' + t);
+                if(el) el.classList.add('hidden');
+                if(btn) btn.className = "px-4 py-2 text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 rounded-lg whitespace-nowrap";
+            });
+
+            if(tabName === 'users') {
+                document.getElementById('adminTabUsers').classList.remove('hidden');
+                document.getElementById('tabBtnUsers').className = "px-4 py-2 text-xs font-bold bg-emerald-600 text-white rounded-lg whitespace-nowrap";
+            } else if(tabName === 'matches') {
+                document.getElementById('adminTabMatches').classList.remove('hidden');
+                document.getElementById('tabBtnMatches').className = "px-4 py-2 text-xs font-bold bg-emerald-600 text-white rounded-lg whitespace-nowrap";
+            } else if(tabName === 'searches') {
+                document.getElementById('adminTabSearches').classList.remove('hidden');
+                document.getElementById('tabBtnSearches').className = "px-4 py-2 text-xs font-bold bg-emerald-600 text-white rounded-lg whitespace-nowrap";
+            } else if(tabName === 'comments') {
+                document.getElementById('adminTabComments').classList.remove('hidden');
+                document.getElementById('tabBtnComments').className = "px-4 py-2 text-xs font-bold bg-emerald-600 text-white rounded-lg whitespace-nowrap";
+                loadAdminComments();
+            }
+        }
+
+        // Fetch Real Users Live into Admin Panel
+        async function loadAdminData() {
+            const { data: users, error } = await _supabase.from('users').select('*');
+            if(error) {
+                alert("Makosa katika kupakua orodha ya watumishi: " + error.message);
+                return;
+            }
+            if(!users) return;
+
+            let paidCount = users.filter(u => u.paid === true).length;
+            
+            document.getElementById('statTotalUsers').innerText = users.length;
+            document.getElementById('statPaidUsers').innerText = paidCount;
+            document.getElementById('statEarnings').innerText = `TZS ${(paidCount * 2000).toLocaleString()}`;
+
+            // TAB 1: USERS TABLE WITH DIRECT REALTIME REVOKE/APPROVE
+            const tbody = document.getElementById('adminUserTable');
+            tbody.innerHTML = '';
+            users.forEach(u => {
+                let statusBadge = "";
+                let actionBtn = "";
+
+                if(u.paid === true) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">VIP Active</span>`;
+                    actionBtn = `<button onclick="forceSetVIPStatus('${u.email}', false)" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-[10px] font-bold shadow transition"><i class="fa-solid fa-user-xmark mr-1"></i> Kumtoa VIP (Revoke)</button>`;
+                } else if(u.payment_status === 'pending') {
+                    statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">Pending Review</span>`;
+                    actionBtn = `
+                        <button onclick="forceSetVIPStatus('${u.email}', true)" class="bg-emerald-600 text-white hover:bg-emerald-700 px-2.5 py-1 rounded text-[10px] font-bold shadow mr-1"><i class="fa-solid fa-check mr-1"></i> Approve VIP</button>
+                        <button onclick="forceSetVIPStatus('${u.email}', false)" class="bg-red-600 text-white hover:bg-red-700 px-2 py-1 rounded text-[10px] font-bold"><i class="fa-solid fa-xmark mr-1"></i> Reject</button>
+                    `;
+                } else {
+                    statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Free</span>`;
+                    actionBtn = `<button onclick="forceSetVIPStatus('${u.email}', true)" class="bg-emerald-600 text-white hover:bg-emerald-700 px-2.5 py-1 rounded text-[10px] font-bold shadow"><i class="fa-solid fa-user-check mr-1"></i> Kumuweka VIP</button>`;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-slate-50">
+                        <td class="p-2 font-bold">${u.name}</td>
+                        <td class="p-2">${u.email}</td>
+                        <td class="p-2">${u.phone}</td>
+                        <td class="p-2">${u.kada}</td>
+                        <td class="p-2">${u.current_region}</td>
+                        <td class="p-2">${u.target_region}</td>
+                        <td class="p-2 font-mono text-xs font-bold text-slate-700">${u.tx_code || '-'}</td>
+                        <td class="p-2">${statusBadge}</td>
+                        <td class="p-2">${actionBtn}</td>
+                    </tr>
+                `;
+            });
+
+            // TAB 2: MATCHING PAIRS FOR ADMIN NOTIFICATIONS
+            const matchesTbody = document.getElementById('adminMatchesTable');
+            matchesTbody.innerHTML = '';
+            let pairCount = 0;
+
+            for(let i=0; i<users.length; i++) {
+                for(let j=i+1; j<users.length; j++) {
+                    let u1 = users[i];
+                    let u2 = users[j];
+
+                    if(u1.kada === u2.kada) {
+                        let isMatch = (u1.current_region.toLowerCase() === u2.target_region.toLowerCase()) || 
+                                      (u2.current_region.toLowerCase() === u1.target_region.toLowerCase());
+
+                        if(isMatch) {
+                            pairCount++;
+                            let subs1 = u1.sub1 ? `${u1.sub1} / ${u1.sub2}` : 'N/A';
+                            
+                            let msgText = `Habari ${u1.name}, kutokea Utumishi Swap. Tumpata mtumishi wa kada yako (${u2.name} wa ${u2.current_region}) anayetaka kwenda ${u2.target_region}. Ingia kwenye mfumo uweze kuwasiliana naye.`;
+                            let waLink1 = `https://wa.me/255${u1.phone.replace(/^0+/, '')}?text=${encodeURIComponent(msgText)}`;
+                            let waLink2 = `https://wa.me/255${u2.phone.replace(/^0+/, '')}?text=${encodeURIComponent(msgText)}`;
+
+                            matchesTbody.innerHTML += `
+                                <tr class="border-b hover:bg-slate-50">
+                                    <td class="p-2 font-bold text-emerald-900">${u1.name}<br><span class="text-[10px] text-slate-500">${u1.phone}</span></td>
+                                    <td class="p-2">${u1.kada}<br><span class="text-[10px] text-slate-500">${subs1}</span></td>
+                                    <td class="p-2">${u1.current_region} ➔ ${u1.target_region}</td>
+                                    <td class="p-2 font-bold text-teal-900">${u2.name}<br><span class="text-[10px] text-slate-500">${u2.phone}</span></td>
+                                    <td class="p-2">${u2.current_region} ➔ ${u2.target_region}</td>
+                                    <td class="p-2 space-y-1">
+                                        <a href="${waLink1}" target="_blank" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold px-2 py-1 rounded"><i class="fa-brands fa-whatsapp"></i> Tuma U1</a>
+                                        <a href="${waLink2}" target="_blank" class="inline-block bg-teal-600 hover:bg-teal-700 text-white text-[10px] font-bold px-2 py-1 rounded"><i class="fa-brands fa-whatsapp"></i> Tuma U2</a>
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                    }
+                }
+            }
+            document.getElementById('adminMatchCount').innerText = pairCount;
+
+            // TAB 3: SEARCHED / CONTACTS INTERACTED
+            const searchesTbody = document.getElementById('adminSearchesTable');
+            searchesTbody.innerHTML = '';
+            users.forEach(u => {
+                if(u.paid === true || u.payment_status === 'pending') {
+                    searchesTbody.innerHTML += `
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="p-2 font-bold">${u.name}</td>
+                            <td class="p-2">${u.phone}</td>
+                            <td class="p-2 text-slate-500">Mtumishi Aliyematch</td>
+                            <td class="p-2 font-mono">${u.tx_code || '-'}</td>
+                            <td class="p-2">${u.paid === true ? '<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">VIP Active</span>' : '<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">Pending Approval</span>'}</td>
+                        </tr>
+                    `;
+                }
+            });
+        }
+
+        // LOAD ADMIN COMMENTS TAB WITH DELETE BUTTON
+        async function loadAdminComments() {
+            const list = document.getElementById('adminCommentsList');
+            if(!list) return;
+            list.innerHTML = '<p class="text-xs text-slate-400">Inapakua maoni...</p>';
+
+            const { data: comments, error } = await _supabase.from('comments').select('*').order('id', { ascending: false });
+
+            if(error || !comments || comments.length === 0) {
+                list.innerHTML = '<p class="text-xs text-slate-500">Hakuna maoni yoyote kwenye mfumo kwa sasa.</p>';
+                return;
+            }
+
+            list.innerHTML = '';
+            comments.forEach(c => {
+                list.innerHTML += `
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-start gap-4">
+                        <div class="space-y-1 text-xs">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-slate-900">${c.user_name}</span>
+                                <span class="text-slate-400">(${c.user_email})</span>
+                            </div>
+                            <p class="text-slate-700">${c.comment_text}</p>
+                        </div>
+                        <button onclick="deleteComment(${c.id})" class="bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold px-2.5 py-1 rounded shadow transition whitespace-nowrap">
+                            <i class="fa-solid fa-trash mr-1"></i> Futa Comment
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        async function deleteComment(commentId) {
+            if(!confirm("Je, una uhakika unataka kufuta maoni haya kabisa?")) return;
+
+            const { error } = await _supabase.from('comments').delete().eq('id', commentId);
+
+            if(error) {
+                alert("Makosa katika kufuta comment: " + error.message);
+            } else {
+                alert("Maoni yamefutwa kikamilifu!");
+                loadAdminComments();
+            }
+        }
+
+        // DIRECT SIMPLE UPDATE FUNCTION FOR VIP STATUS
+        async function forceSetVIPStatus(targetEmail, status) {
+            const { data, error } = await _supabase
+                .from('users')
+                .update({ paid: status, payment_status: status ? 'approved' : 'none' })
+                .eq('email', targetEmail);
+
+            if (error) {
+                alert("Makosa kutoka Supabase: " + error.message);
+            } else {
+                let currentUser = getCurrentUser();
+                if(currentUser && currentUser.email.toLowerCase() === targetEmail.toLowerCase()) {
+                    currentUser.paid = status;
+                    currentUser.payment_status = status ? 'approved' : 'none';
+                    setCurrentUser(currentUser);
+                }
+
+                alert(`Mabadiliko yamefanikiwa!\nEmail: ${targetEmail}\nHali Mpya: ${status ? 'VIP ACTIVE' : 'FREE / REVOKED'}`);
+                loadAdminData();
+            }
+        }
+
+        function openPaymentModal() {
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        // SUBMIT PAYMENT FOR ADMIN APPROVAL
+        async function submitPayment() {
+            const tx = document.getElementById('payTxCode').value.trim();
+            if(!tx) {
+                alert('Tafadhali weka namba ya muamala (Transaction ID).');
+                return;
+            }
+
+            let user = getCurrentUser();
+            if(user) {
+                user.paid = false;
+                user.payment_status = 'pending';
+                user.tx_code = tx;
+                setCurrentUser(user);
+
+                await _supabase.from('users').update({ paid: false, payment_status: 'pending', tx_code: tx }).eq('email', user.email);
+            }
+
+            closeModal();
+            alert('Namba yako ya muamala imepokelewa kikamilifu! Tafadhali subiri uhakiki wa Admin (Wait for Approval). Utakapoidhinishwa, utaona namba za simu papo hapo.');
+            loadDashboard();
+        }
+
+        window.onload = function() {
+            populateRegions();
+        };
+    </script>
+</body>
+</html>
