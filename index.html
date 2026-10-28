@@ -3844,18 +3844,65 @@
         }
 
         // Login User from Supabase
+        // NOTE: Database, signup data, automatic card logic and all other systems remain unchanged.
+        // Login is intentionally checked in two steps so existing users are not rejected because
+        // of email letter-case or because more than one old record exists.
         async function handleLogin(e) {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const pass = document.getElementById('loginPass').value;
 
-            const { data, error } = await _supabase.from('users').select('*').eq('email', email).eq('pass', pass).single();
+            const emailInput = document.getElementById('loginEmail');
+            const passInput = document.getElementById('loginPass');
+            const email = (emailInput?.value || '').trim();
+            const pass = passInput?.value || '';
 
-            if (data) {
-                setCurrentUser(data);
+            if (!email || !pass) {
+                alert('Tafadhali weka Email na Nenosiri.');
+                return;
+            }
+
+            try {
+                // First try exact email match. limit(1) avoids .single() failing on legacy duplicate rows.
+                let { data: users, error } = await _supabase
+                    .from('users')
+                    .select('*')
+                    .eq('email', email)
+                    .limit(1);
+
+                // If the email was saved with different capitalization, try case-insensitive match.
+                if ((!users || users.length === 0) && !error) {
+                    const retry = await _supabase
+                        .from('users')
+                        .select('*')
+                        .ilike('email', email)
+                        .limit(1);
+                    users = retry.data || [];
+                    error = retry.error;
+                }
+
+                if (error) {
+                    console.error('Login database error:', error);
+                    alert('Kuna tatizo la kuunganisha na database: ' + error.message);
+                    return;
+                }
+
+                const user = users && users.length ? users[0] : null;
+
+                if (!user) {
+                    alert('Email/Username haipo kwenye database. Tafadhali hakikisha umetumia Email uliyotumia wakati wa usajili.');
+                    return;
+                }
+
+                // Password is compared with the same field used by the existing signup system.
+                if (String(user.pass ?? '') !== String(pass)) {
+                    alert('Nenosiri sio sahihi. Tafadhali jaribu tena.');
+                    return;
+                }
+
+                setCurrentUser(user);
                 navigate('dashboardView');
-            } else {
-                alert('Email au Nenosiri sio sahihi. Tafadhali jaribu tena.');
+            } catch (err) {
+                console.error('Login exception:', err);
+                alert('Imeshindikana kuingia: ' + (err?.message || err));
             }
         }
 
